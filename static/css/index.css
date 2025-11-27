@@ -2,27 +2,49 @@
 
 /* 儀表板專用樣式 */
 
-/* 針對模型卡片 (使用 <a> 標籤) */
+/* 模型卡片基礎樣式：確保為方格、立體感和動畫 */
 .model-card {
-    display: flex; /* 確保內容在卡片內可以自定義對齊 */
+    /* 結構設定 */
+    display: flex;
     flex-direction: column;
-    text-decoration: none; /* 移除 a 標籤的底線 */
-    color: inherit; /* 繼承文字顏色 */
+    text-decoration: none;
+    color: inherit; 
+    height: 100%; /* 確保網格中卡片高度一致 */
+    text-align: center; /* 讓內容預設置中 */
+    
+    /* 視覺設定 */
+    background-color: white;
+    border-radius: 12px;
+    border: 1px solid #e5e7eb; /* 淺灰色邊框 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); /* 預設陰影 */
+
+    /* 動畫設定 */
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
-    height: 100%; /* 確保網格中的所有卡片高度一致 */
 }
 
-/* 增強 hover 效果，使其看起來像被提起 (還原為最初的優秀效果) */
+/* 懸停動畫 */
 .model-card:hover {
-    transform: translateY(-5px); 
-    box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.15), 0 8px 15px -5px rgba(0, 0, 0, 0.08);
+    transform: translateY(-5px); /* 向上抬升 */
+    box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.15), 0 8px 15px -5px rgba(0, 0, 0, 0.08); /* 增強陰影 */
 }
 
-/* 確保預留卡片 (灰色佔位卡片) 在 hover 時沒有 transform */
+/* 預留卡片樣式：灰色背景，虛線邊框，居中內容 */
+.model-card.card-placeholder {
+    /* 視覺設定 */
+    background-color: #f9fafb;
+    border: 2px dashed #d1d5db; /* 虛線邊框 */
+    cursor: pointer;
+    opacity: 0.9;
+    
+    /* 確保內容居中 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 確保預留卡片在 hover 時沒有 transform，避免視覺干擾 */
 .model-card.card-placeholder:hover {
     transform: none; 
     box-shadow: none; 
+    opacity: 1; /* 滑鼠移入時更亮 */
 }
-
-/* *** 移除所有 Swiper 相關的 .model-swiper-container 樣式！ *** */
-/* *** 移除 card-blue, card-green 等專門為 Swiper 設計的背景色 *** */

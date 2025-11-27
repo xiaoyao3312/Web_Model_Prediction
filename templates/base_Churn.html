@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}客戶流失預測平台{% endblock %}</title>
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Color_BG_Control.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/base_Churn.css') }}">
     {% block extra_css %}{% endblock %}
@@ -60,7 +60,7 @@
     <div class="main-content" id="main-content">
         {% block content %}{% endblock %}
     </div>
-    
+    <script src="{{ url_for('static', filename='js/Color_BG_Control.js') }}"></script>
     <script src="{{ url_for('static', filename='js/base_Churn.js') }}"></script>
     {% block extra_js %}{% endblock %}
 
