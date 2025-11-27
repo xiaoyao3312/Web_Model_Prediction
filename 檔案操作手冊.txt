@@ -1,0 +1,18 @@
+Web_Learning_Model 專案操作手冊
+
+1. 環境設置：
+   - 建議使用 Python 虛擬環境 (venv)。
+   - 執行 `pip install -r requirements.txt` 安裝所有依賴。
+
+2. 模型文件：
+   - 請將訓練好的模型（例如 .pkl 或 .cbm 檔案）放置於 data/models/ 中。
+
+3. 啟動服務：
+   - 在根目錄下執行 `python app.py`。
+
+4. 訪問：
+   - 打開瀏覽器訪問：http://127.0.0.1:5000/
+   - 銀行模型頁面：http://127.0.0.1:5000/customer_churn_bank_model
+
+5. 測試：
+   - 銀行模型頁面的 API 呼叫已在 app.py 中模擬，您只需要輸入 API Key 和數據即可測試前端交互。

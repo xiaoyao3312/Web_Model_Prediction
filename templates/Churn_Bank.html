@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}銀行客戶流失預測{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/Churn_html.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="main-container">
+    <header class="header">
+        <h1>銀行客戶流失_模型操作平台</h1>
+        <div id="apiKeySetup" class="api-setup">
+            <input type="password" id="apiKeyInput" placeholder="輸入 Gemini API 金鑰">
+            <button id="executeBtn" class="btn btn-primary" disabled>
+                執行分析 <span id="spinner" class="spinner" style="display: none;"></span>
+            </button>
+        </div>
+    </header>
+
+    <div class="content-wrapper">
+        <div class="left-panels">
+            <section id="inputPanel" class="panel input-panel">
+                <h2>客戶特徵輸入 (10 項)</h2>
+                <div id="inputForm" class="form-grid">
+                </div>
+            </section>
+
+            <section id="explanationPanel" class="panel explanation-panel">
+                <h2>AI 解釋與行動建議</h2>
+                <div id="explanationOutput" class="output-content">
+                    <p class="initial-message">請輸入特徵並點擊「執行分析」以獲得 AI 解釋。</p>
+                    <p class="churn-prob"></p>
+                </div>
+            </section>
+        </div>
+
+        <section id="chartPanel" class="panel chart-panel">
+            <h2>模型內建輸出圖表</h2>
+            <div id="chartDisplay" class="chart-display">
+                <p class="initial-message">模型執行後，圖表將顯示於此。</p>
+            </div>
+        </section>
+    </div>
+</div>
+{% endblock %}
+
+{% block script_extra %}
+<script>
+    // 嵌入特徵名稱供 JS 使用 (必須在 Churn_Bank.js 之前)
+    const FEATURE_NAMES = JSON.parse('{{ feature_names | tojson | safe }}');
+</script>
+<script src="{{ url_for('static', filename='js/Runner_Core.js') }}"></script>
+<script src="{{ url_for('static', filename='js/Churn_Bank.js') }}"></script>
+{% endblock %}

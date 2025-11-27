@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}AI 模型平台{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Color_BG_Control.css') }}">
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+    <nav class="main-nav">
+        <a href="{{ url_for('index') }}">主頁</a>
+        <a href="{{ url_for('bank_churn_page') }}">銀行流失</a>
+        <a href="{{ url_for('telco_churn_page') }}">電信流失</a>
+    </nav>
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    
+        <script src="{{ url_for('static', filename='js/Color_BG_Control.js') }}"></script>
+    
+        {% block script_extra %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block title %}首頁 - 模型平台{% endblock %}
+
+{% block head_extra %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index_html.css') }}">
+{% endblock %}
+
+{% block content %}
+<header>
+    <h1>歡迎來到深度學習操作平台</h1>
+    <p>請點擊下方連結開始模型分析。</p>
+</header>
+<div class="card-container">
+    <a href="{{ url_for('bank_churn_page') }}" class="model-card">
+        <img src="{{ url_for('static', filename='img/doro.gif') }}" alt="銀行流失">
+        <h2>客戶流失_銀行_MODEL</h2>
+        <p>使用 CatBoost 預測銀行客戶流失風險並獲得 AI 解釋。</p>
+    </a>
+    <a href="{{ url_for('telco_churn_page') }}" class="model-card">
+        <img src="{{ url_for('static', filename='img/doro.gif') }}" alt="電信流失">
+        <h2>客戶流失_電信_MODEL</h2>
+        <p>（尚未實作）</p>
+    </a>
+</div>
+{% endblock %}

@@ -1,0 +1,44 @@
+Web_Learning_Model 專案目錄結構說明
+
+Web_Learning_Model/
+│
+├─ app.py                                   # Flask 主程式入口
+├─ config.py                                # 應用程式配置
+├─ requirements.txt                         # Python 依賴清單
+├─ 檔案操作手冊.txt                          # 專案文件
+├─ 檔案架構.txt                              # 本文件
+│
+├─ data/                                    # 數據資產存放區
+│   ├─ models/                              # 存放模型權重檔案 (.pkl, .cbm, etc.)
+│   │   └─ placeholder_models.txt           
+│   └─ datasets/                            # 存放小型資料集
+│       └─ placeholder_datasets.txt
+│
+├─ projects/                                # 存放模型開發/訓練原始碼 (非 Web 運行代碼)
+│   ├─ Churn_Bank_code/                     # 銀行流失專案原始碼
+│   │   └─ Churn_Bank_analysis.ipynb
+│   └─ Churn_Telco_code/                    # 電信流失專案原始碼
+│       └─ Churn_Telco_script.py
+│
+├─ templates/                               # HTML 模板文件 (Jinja2)
+│   ├─ index.html                           # 網站主頁
+│   ├─ base.html                            # 網站結構通用基礎模板
+│   ├─ Churn_Bank.html                      # 銀行流失專案頁面
+│   └─ Churn_Telco.html                     # 電信流失專案頁面
+│
+└─ static/                                  # 靜態資源 (CSS, JS, 圖片)
+    ├─ css/                                 # 樣式表
+    │   ├─ Color_BG_Control.css             # 全域顏色/背景控制
+    │   ├─ Churn_html.css                   # 學習頁面專用樣式 (三面板佈局)
+    │   └─ index_html.css                   # 主頁面專用樣式
+    │
+    ├─ img/                                 # 圖片資源
+    │   ├─ logo.png                         # 網站 Logo (Placeholder)
+    │   ├─ Churn_Bank.jpg                   # 銀行模型卡片圖片 (Placeholder)
+    │   └─ Churn_Telco.jpg                  # 電信模型卡片圖片 (Placeholder)
+    │
+    └─ js/                                  # JavaScript 腳本
+        ├─ Color_BG_Control.js              # 顏色/主題控制腳本
+        ├─ Runner_Core.js                   # 核心共用邏輯 (AJAX 模板, UI控制)
+        ├─ Churn_Bank.js                    # 銀行流失頁面專有邏輯
+        └─ Churn_Telco.js                   # 電信流失頁面專有邏輯
