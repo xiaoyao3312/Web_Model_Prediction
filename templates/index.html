@@ -1,26 +1,53 @@
-{% extends "base.html" %}
+{% extends "base_Churn.html" %}
 
-{% block title %}首頁 - 模型平台{% endblock %}
+{% block title %}儀表板 - 客戶流失預測平台{% endblock %}
 
-{% block head_extra %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index_html.css') }}">
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
 {% block content %}
-<header>
-    <h1>歡迎來到深度學習操作平台</h1>
-    <p>請點擊下方連結開始模型分析。</p>
-</header>
-<div class="card-container">
-    <a href="{{ url_for('bank_churn_page') }}" class="model-card">
-        <img src="{{ url_for('static', filename='img/doro.gif') }}" alt="銀行流失">
-        <h2>客戶流失_銀行_MODEL</h2>
-        <p>使用 CatBoost 預測銀行客戶流失風險並獲得 AI 解釋。</p>
-    </a>
-    <a href="{{ url_for('telco_churn_page') }}" class="model-card">
-        <img src="{{ url_for('static', filename='img/doro.gif') }}" alt="電信流失">
-        <h2>客戶流失_電信_MODEL</h2>
-        <p>（尚未實作）</p>
-    </a>
+<div id="dashboard" class="page-content">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">📊 模型儀表板總覽</h1>
+
+    <div class="bg-white rounded-xl shadow-lg p-6 mt-8"> 
+        <h2 class="text-xl font-semibold mb-5 text-gray-700 border-b pb-3">選擇分析模型</h2>
+        
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"> 
+            
+            <a href="{{ url_for('bank_churn_page') }}" class="model-card group bg-white border border-blue-200 p-6 rounded-xl shadow-md transition duration-300 ease-in-out">
+                <div class="flex items-center mb-4">
+                    <img src="{{ url_for('static', filename='img/bank_icon.png') }}" alt="銀行模型圖示" class="w-10 h-10 object-contain mr-4">
+                    <h3 class="text-xl font-bold text-blue-800">銀行流失模型</h3>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">利用客戶的財務行為和人口統計數據，評估其離開銀行的風險。</p>
+                <div class="flex justify-between items-center text-sm font-medium text-blue-500 group-hover:text-blue-700 mt-auto pt-2 border-t border-gray-100">
+                    <span>進入分析</span>
+                    <i class="fas fa-arrow-right ml-2 transition group-hover:translate-x-1"></i>
+                </div>
+            </a>
+            
+            <a href="{{ url_for('telco_churn_page') }}" class="model-card group bg-white border border-green-200 p-6 rounded-xl shadow-md transition duration-300 ease-in-out">
+                <div class="flex items-center mb-4">
+                    <img src="{{ url_for('static', filename='img/telco_icon.png') }}" alt="電信模型圖示" class="w-10 h-10 object-contain mr-4">
+                    <h3 class="text-xl font-bold text-green-800">電信流失模型</h3>
+                </div>
+                <p class="text-gray-600 text-sm mb-4">基於服務使用模式和合約資訊，預測電信客戶終止服務的可能性。</p>
+                <div class="flex justify-between items-center text-sm font-medium text-green-500 group-hover:text-green-700 mt-auto pt-2 border-t border-gray-100">
+                    <span>進入分析</span>
+                    <i class="fas fa-arrow-right ml-2 transition group-hover:translate-x-1"></i>
+                </div>
+            </a>
+            
+            <div class="model-card card-placeholder bg-gray-50 border border-dashed border-gray-300 p-6 rounded-xl text-center flex flex-col justify-center items-center opacity-70 cursor-pointer hover:opacity-100 transition duration-300">
+                <i class="fas fa-plus-circle text-3xl text-gray-400 mb-2"></i>
+                <p class="text-md font-semibold text-gray-500">新增模型</p>
+                <p class="text-xs text-gray-400 mt-1">未來可擴增新領域模型</p>
+            </div>
+            
+        </div>
+    </div>
 </div>
 {% endblock %}
+
+{% block extra_js %}{% endblock %}

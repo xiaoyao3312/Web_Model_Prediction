@@ -1,119 +1,100 @@
-// 銀行流失專案特有的 JS 邏輯
+/**
+ * Churn_Bank.js
+ * 銀行流失頁面專有邏輯：收集輸入、呼叫後端 API、渲染結果
+ */
 
-// ⚠️ FEATURE_NAMES 變數已在 Churn_Bank.html 中定義
+const API_ENDPOINT = '/api/churn_bank/predict_and_explain';
 
-let API_KEY = localStorage.getItem('gemini_api_key') || ''; 
-const API_ENDPOINT = '/api/churn_bank_execute'; 
-
-// DOM 元素參考 (從 HTML 獲取)
-const apiKeyInput = document.getElementById('apiKeyInput');
-const executeBtn = document.getElementById('executeBtn');
-const inputForm = document.getElementById('inputForm');
-const explanationOutput = document.getElementById('explanationOutput');
-const chartDisplay = document.getElementById('chartDisplay');
-const spinner = document.getElementById('spinner');
-
-// --- 核心邏輯（複製上一個回應的邏輯） ---
-
-// 1. 輔助函數：創建輸入欄位
-function createInputField(name) {
-    const group = document.createElement('div');
-    group.className = 'form-group';
-    const label = document.createElement('label');
-    label.setAttribute('for', name);
-    label.textContent = name;
-    group.appendChild(label);
-
-    let input;
-    // 這裡進行簡單的類型判斷，實際應更精確
-    if (name === 'Gender') {
-        input = document.createElement('select');
-        input.id = name;
-        input.innerHTML = `<option value="Male">Male (男性)</option><option value="Female">Female (女性)</option>`;
-    } else if (name === 'Geography') {
-        input = document.createElement('select');
-        input.id = name;
-        input.innerHTML = `<option value="France">France (法國)</option><option value="Germany">Germany (德國)</option><option value="Spain">Spain (西班牙)</option>`;
-    } else if (name === 'HasCrCard' || name === 'IsActiveMember') {
-        input = document.createElement('select');
-        input.id = name;
-        input.innerHTML = `<option value="1">Yes (是)</option><option value="0">No (否)</option>`;
-    } 
-    else {
-        input = document.createElement('input');
-        input.type = 'number';
-        input.id = name;
-        input.placeholder = `輸入 ${name}`;
-    }
+document.addEventListener('DOMContentLoaded', () => {
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const explanationOutput = document.getElementById('explanationOutput');
+    const initialMessage = document.getElementById('initialMessage');
     
-    input.name = name;
-    input.required = true;
-    group.appendChild(input);
-    return group;
-}
-
-// 2. 檢查 API 金鑰狀態並更新 UI
-function checkApiKeyStatus() {
-    const isKeySet = API_KEY.trim().length > 0;
-    executeBtn.disabled = !isKeySet;
-    
-    if (isKeySet) {
-        apiKeyInput.placeholder = "API 金鑰已設定";
-        apiKeyInput.value = '';
-        executeBtn.textContent = "執行分析";
-    } else {
-        apiKeyInput.placeholder = "請輸入 Gemini API 金鑰";
-        executeBtn.textContent = "請先設定金鑰";
-    }
-}
-
-// 3. 收集輸入數據
-function collectInputData() {
-    const data = {};
-    const inputs = inputForm.querySelectorAll('input, select');
-    
-    inputs.forEach(input => {
-        if (input.type === 'number') {
-            data[input.name] = parseFloat(input.value);
-        } else if (input.name === 'HasCrCard' || input.name === 'IsActiveMember') {
-            data[input.name] = parseInt(input.value);
-        } else {
-            data[input.name] = input.value;
-        }
+    // 1. 監聽 base_Churn.js 派發的 API Key 狀態變更事件
+    document.addEventListener('apiKeyStatusChange', (event) => {
+        const isEnabled = event.detail.isEnabled;
+        updateUIState(isEnabled);
     });
-    
-    if (Object.keys(data).length !== FEATURE_NAMES.length) {
-        throw new Error("請填寫所有 10 個特徵輸入欄位。");
-    }
-    return data;
-}
 
-// 4. 處理分析請求
-async function executeAnalysis() {
-    if (!API_KEY) {
-        CORE.displayError(explanationOutput, "請先設定 Gemini API 金鑰。");
+    // 2. 初始化時檢查 sessionStorage 是否有 Key (從 base_Churn.js 繼承邏輯)
+    const savedApiKey = sessionStorage.getItem('geminiApiKey');
+    updateUIState(!!savedApiKey);
+
+    /**
+     * 根據 API Key 狀態更新 UI
+     * @param {boolean} isEnabled - API Key 是否已啟用
+     */
+    function updateUIState(isEnabled) {
+        if (!analyzeBtn) return;
+        
+        if (isEnabled) {
+            analyzeBtn.disabled = false;
+            if (initialMessage) {
+                initialMessage.innerHTML = '<p class="text-gray-500">AI 功能已啟用。請調整輸入值，然後點擊按鈕執行分析。</p>';
+            }
+        } else {
+            analyzeBtn.disabled = true;
+            if (initialMessage) {
+                initialMessage.innerHTML = '<p class="text-red-500 font-semibold">AI 功能已禁用！請在頂部導航欄輸入 API Key 並點擊啟用按鈕。</p>';
+            }
+        }
+    }
+});
+
+
+/**
+ * 收集輸入數據並呼叫後端 API 進行分析和解釋
+ */
+async function runPredictionAndExplain() {
+    // ⚠️ 從 sessionStorage 獲取 API Key
+    const apiKey = sessionStorage.getItem('geminiApiKey'); 
+    
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    const spinner = document.getElementById('spinner');
+    const explanationOutput = document.getElementById('explanationOutput');
+    const errorMsg = document.getElementById('errorMsg');
+    
+    // 檢查 API Key 是否存在
+    if (!apiKey) {
+        errorMsg.textContent = '錯誤：請在頂部導航欄輸入並啟用您的 Gemini API Key。';
+        errorMsg.classList.remove('hidden');
+        explanationOutput.innerHTML = '<p class="text-red-500 font-semibold">AI 功能未啟用。</p>';
+        return; // Key 不存在時直接退出
+    }
+
+    errorMsg.classList.add('hidden');
+    explanationOutput.innerHTML = '<p class="text-blue-600 initial-message flex items-center"><div class="loading-spinner"></div> 正在執行模型預測並生成 AI 解釋，請稍候...</p>';
+    analyzeBtn.disabled = true;
+    spinner.classList.remove('hidden');
+
+
+    // 收集輸入數據 (按照 HTML 模板中 feature_names 的順序)
+    const featureInputs = document.querySelectorAll('#inputForm input[data-feature-name]');
+    const input_values = [];
+    let isValid = true;
+
+    featureInputs.forEach(input => {
+        const value = parseFloat(input.value);
+        if (isNaN(value)) {
+            isValid = false;
+        }
+        input_values.push(value);
+    });
+
+    if (!isValid) {
+        errorMsg.textContent = '錯誤：所有輸入欄位都必須是有效的數字。';
+        errorMsg.classList.remove('hidden');
+        analyzeBtn.disabled = false;
+        spinner.classList.add('hidden');
         return;
     }
-    
-    let inputFeatures;
-    try {
-        inputFeatures = collectInputData();
-    } catch (e) {
-        CORE.displayError(explanationOutput, e.message);
-        return;
-    }
-    
-    // 設置 UI 狀態
-    executeBtn.disabled = true;
-    CORE.showSpinner(spinner);
-    explanationOutput.innerHTML = '<p class="initial-message">AI 正在執行模型預測並生成解釋中，請稍候...</p>';
-    chartDisplay.innerHTML = '<p class="initial-message">圖表正在生成...</p>';
 
     const payload = {
-        api_key: API_KEY,
-        input_features: inputFeatures
+        api_key: apiKey,
+        input_values: input_values // 傳遞 NumPy 格式的數組 (JS Array)
     };
 
+    // 呼叫後端 Flask API
     try {
         const response = await fetch(API_ENDPOINT, {
             method: 'POST',
@@ -123,74 +104,32 @@ async function executeAnalysis() {
 
         const result = await response.json();
 
-        if (!response.ok || result.status !== 'success') {
-            const errorMessage = result.error || 'Flask 服務器發生未知錯誤。';
-            throw new Error(errorMessage);
-        }
-
-        // 1. 左下：AI 解釋
-        explanationOutput.innerHTML = `
-            <h2>流失風險機率：<span style="color: ${result.churn_probability > 50 ? 'red' : 'green'};">${result.churn_probability}%</span></h2>
-            <hr>
-            ${result.explanation.replace(/\n/g, '<br>')}
-        `;
-
-        // 2. 右方：圖表顯示
-        chartDisplay.innerHTML = ''; 
-        if (result.charts && result.charts.length > 0) {
-            result.charts.forEach(base64Image => {
-                const img = document.createElement('img');
-                img.src = base64Image;
-                img.alt = 'Model Output Chart';
-                chartDisplay.appendChild(img);
-            });
+        if (response.ok && result.success) {
+            const churn_percentage = (result.churn_probability * 100).toFixed(2);
+            
+            // 渲染結果到左下方 Panel
+            explanationOutput.innerHTML = `
+                <h3 class="text-lg font-bold mb-3 text-red-700">【模型預測結果】</h3>
+                <p class="text-xl font-extrabold mb-4">流失機率: <span class="text-red-600">${churn_percentage}%</span> (${result.prediction_status})</p>
+                <hr class="my-4">
+                <h3 class="text-lg font-bold mb-3 text-gray-700">【AI 風控專家解釋】</h3>
+                <p>${result.explanation.replace(/\n/g, '<br>')}</p>
+            `;
         } else {
-             chartDisplay.innerHTML = `<p class="initial-message">模型未提供圖表輸出。</p>`;
+            errorMsg.textContent = `後端錯誤: ${result.error || '未知錯誤'}`;
+            errorMsg.classList.remove('hidden');
+            explanationOutput.innerHTML = '<p class="text-red-500">分析失敗，請檢查 API Key 或服務狀態。</p>';
         }
 
     } catch (error) {
-        console.error("執行分析錯誤:", error);
-        CORE.displayError(explanationOutput, error.message);
+        console.error("Fetch 錯誤:", error);
+        errorMsg.textContent = `連線錯誤: 無法連接到後端服務。`;
+        errorMsg.classList.remove('hidden');
+        explanationOutput.innerHTML = '<p class="text-red-500">連線錯誤，請確保 Flask 服務正在運行。</p>';
     } finally {
-        // 恢復 UI 狀態
-        executeBtn.disabled = false;
-        CORE.hideSpinner(spinner);
+        // 分析結束後，檢查 API Key 是否仍存在，才重新啟用按鈕
+        const isKeyStillAvailable = !!sessionStorage.getItem('geminiApiKey');
+        analyzeBtn.disabled = !isKeyStillAvailable;
+        spinner.classList.add('hidden');
     }
 }
-
-
-// --- 初始化與事件監聽 ---
-
-// 1. 動態生成輸入表單
-function initializeInputForm() {
-    FEATURE_NAMES.forEach(name => {
-        inputForm.appendChild(createInputField(name));
-    });
-}
-
-// 2. 設置 API 金鑰處理
-function setupApiKeyHandler() {
-    checkApiKeyStatus();
-
-    apiKeyInput.addEventListener('input', () => {
-        const key = apiKeyInput.value.trim();
-        if (key.length > 10) { 
-            API_KEY = key; 
-            localStorage.setItem('gemini_api_key', key);
-        } else {
-            API_KEY = '';
-            localStorage.removeItem('gemini_api_key');
-        }
-        checkApiKeyStatus();
-    });
-}
-
-// 3. 綁定執行按鈕
-executeBtn.addEventListener('click', executeAnalysis);
-
-
-// 頁面載入完成後執行
-document.addEventListener('DOMContentLoaded', () => {
-    initializeInputForm();
-    setupApiKeyHandler();
-});

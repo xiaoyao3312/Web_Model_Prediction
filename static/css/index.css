@@ -1,0 +1,28 @@
+/* index.css */
+
+/* 儀表板專用樣式 */
+
+/* 針對模型卡片 (使用 <a> 標籤) */
+.model-card {
+    display: flex; /* 確保內容在卡片內可以自定義對齊 */
+    flex-direction: column;
+    text-decoration: none; /* 移除 a 標籤的底線 */
+    color: inherit; /* 繼承文字顏色 */
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    height: 100%; /* 確保網格中的所有卡片高度一致 */
+}
+
+/* 增強 hover 效果，使其看起來像被提起 (還原為最初的優秀效果) */
+.model-card:hover {
+    transform: translateY(-5px); 
+    box-shadow: 0 15px 30px -8px rgba(0, 0, 0, 0.15), 0 8px 15px -5px rgba(0, 0, 0, 0.08);
+}
+
+/* 確保預留卡片 (灰色佔位卡片) 在 hover 時沒有 transform */
+.model-card.card-placeholder:hover {
+    transform: none; 
+    box-shadow: none; 
+}
+
+/* *** 移除所有 Swiper 相關的 .model-swiper-container 樣式！ *** */
+/* *** 移除 card-blue, card-green 等專門為 Swiper 設計的背景色 *** */

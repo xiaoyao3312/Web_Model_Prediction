@@ -1,10 +1,17 @@
-{% extends "base.html" %}
+{% extends "base_Churn.html" %}
 
-{% block title %}電信客戶流失預測{% endblock %}
+{% block title %}電信客戶流失預測 - 客戶流失預測平台{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/Churn_Telco.css') }}">
+{% endblock %}
 
 {% block content %}
-<div class="main-container">
-    <h1>客戶流失_電信_MODEL (尚未實作)</h1>
-    <p>此頁面將用於電信客戶流失模型的操作。</p>
+<div id="churn_telco" class="page-content">
+    <h1 class="text-3xl font-bold mb-6 text-gray-800">客戶流失_電信MODEL - 預測分析</h1>
+     <div class="p-6 bg-white rounded-xl shadow-lg border-l-4 border-green-500">
+        <p class="text-lg text-gray-600">此頁面結構與銀行模型類似，但電信模型功能尚未啟用。</p>
+        <p class="text-md font-semibold text-gray-800 mt-2">敬請期待！</p>
+    </div>
 </div>
 {% endblock %}

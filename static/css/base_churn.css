@@ -1,0 +1,316 @@
+/* base_Churn.css - 雙層 TopBar 結構 (使用 JS 動態定位) */
+
+:root {
+    --topbar-primary-height: 50px; 
+    --topbar-secondary-height: 45px;
+    
+    /* JS 會更新這些變數以反映實際高度 */
+    --current-primary-topbar-height: var(--topbar-primary-height); 
+    --current-total-header-height: calc(var(--topbar-primary-height) + var(--topbar-secondary-height)); 
+    
+    --primary-color: #3f51b5;
+    --text-color: #555;
+    --active-bg-color: #3f51b5;
+    --spacing: 15px;
+}
+/* --- 全域設置 --- */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f7f9;
+    min-height: 100vh;
+}
+
+/* -------------------------------------- */
+/* --- 1. 頂部導航欄 (主層: topbar-primary) --- */
+/* -------------------------------------- */
+.topbar { /* 適用於所有 topbar 類別 */
+    position: fixed;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-sizing: border-box;
+    display: flex; 
+    align-items: center; 
+    padding: 0 var(--spacing);
+}
+
+.topbar-primary {
+    top: 0;
+    /* 這裡使用固定高度，但在小螢幕會被 @media 覆蓋成 auto */
+    height: var(--topbar-primary-height); 
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 縮放切換按鈕, 品牌, 導航連結 (Primary TopBar 元素) 樣式保持不變 */
+.toggle-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--primary-color);
+    font-size: 1.1rem;
+    padding: 5px;
+    margin-right: 15px;
+    transition: transform 0.3s;
+    flex-shrink: 0; 
+}
+.topbar.collapsed .toggle-btn {
+    transform: rotate(180deg); 
+}
+.brand {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--primary-color);
+    display: flex;
+    align-items: center;
+    white-space: nowrap;
+    margin-right: 20px;
+    transition: margin 0.3s;
+    flex-shrink: 0; 
+}
+.brand i {
+    font-size: 1.5rem;
+    margin-right: 10px;
+}
+.topbar.collapsed .brand-text {
+    display: none;
+}
+.topbar.collapsed .brand {
+    margin-right: 10px;
+}
+.nav-links {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-grow: 1; 
+    overflow-x: hidden; 
+    white-space: nowrap;
+    min-width: 0; 
+}
+.menu-item {
+    text-decoration: none;
+    flex-shrink: 0; 
+}
+.menu-button {
+    display: flex;
+    align-items: center;
+    height: 40px;
+    padding: 8px 12px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--text-color);
+    font-size: 0.9rem;
+    border-radius: 6px;
+    transition: background-color 0.2s;
+}
+.menu-button i {
+    font-size: 1.1rem;
+    margin-right: 8px;
+    transition: margin 0.3s;
+}
+.menu-item:hover .menu-button {
+    background-color: #f0f0f0;
+    color: var(--primary-color);
+}
+.menu-item.active .menu-button {
+    background-color: var(--active-bg-color);
+    color: white;
+}
+.menu-item.active:hover .menu-button {
+    background-color: #303f9f;
+}
+.topbar.collapsed .menu-text {
+    display: none;
+}
+.topbar.collapsed .menu-button {
+    padding: 8px 10px;
+}
+.topbar.collapsed .menu-button i {
+    margin-right: 0;
+}
+
+
+/* -------------------------------------- */
+/* --- 2. 頂部導航欄 (次層: topbar-secondary - API Key) --- */
+/* -------------------------------------- */
+.topbar-secondary {
+    /* *** 關鍵修改：使用 JS 動態設定的變數來定位 *** */
+    top: var(--current-primary-topbar-height); 
+    
+    height: var(--topbar-secondary-height);
+    background-color: #e9ecef; 
+    border-top: 1px solid #ddd;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    z-index: 999; 
+    justify-content: flex-start; 
+}
+
+.api-label {
+    font-size: 0.9rem;
+    color: var(--text-color);
+    margin-right: var(--spacing);
+    font-weight: bold;
+    flex-shrink: 0;
+}
+
+.api-key-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    /* 保持靠左對齊，因此沒有 margin-left: auto; */
+}
+/* --- API 輸入框和按鈕樣式 --- */
+.api-input-field {
+    padding: 6px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    width: 250px;
+    min-width: 150px; 
+    font-size: 0.9rem;
+    transition: all 0.3s;
+}
+
+.api-key-button {
+    height: 34px;
+    padding: 0 15px;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.api-key-button i {
+    margin-right: 5px;
+}
+
+
+/* -------------------------------------- */
+/* --- 3. 主要內容區域 --- */
+/* -------------------------------------- */
+.main-content {
+    /* *** 關鍵修改：使用 JS 動態設定的變數來計算 padding-top *** */
+    /* 這裡必須是固定的 padding-top，JS 會直接設定 style.paddingTop */
+    /* 這裡使用一個較大的變數作為後備 */
+    padding-top: calc(var(--current-total-header-height) + 10px); 
+    padding-left: var(--spacing);
+    padding-right: var(--spacing);
+    min-height: calc(100vh - var(--current-total-header-height) - 10px); 
+    box-sizing: border-box;
+    width: 100%;
+}
+
+
+/* ======================================= */
+/* 響應式設計 (平板/中型螢幕: < 900px) */
+/* ======================================= */
+
+@media (max-width: 900px) {
+    /* ... (縮小樣式不變) ... */
+    .topbar:not(.collapsed) .brand-text,
+    .topbar:not(.collapsed) .menu-text {
+        display: none;
+    }
+    .topbar:not(.collapsed) .menu-button {
+        padding: 8px 10px;
+    }
+    .topbar:not(.collapsed) .menu-button i {
+        margin-right: 0;
+    }
+    .topbar:not(.collapsed) .toggle-btn {
+        transform: rotate(180deg);
+    }
+}
+
+
+/* -------------------------------------- */
+/* === 響應式設計 (手機/小型螢幕: < 600px) === */
+/* -------------------------------------- */
+
+@media (max-width: 600px) {
+    /* 1. Primary TopBar 處理: 換行 */
+    .topbar-primary {
+        height: auto; 
+        padding-top: 5px;
+        padding-bottom: 5px;
+        flex-wrap: wrap; 
+        overflow-x: hidden;
+        /* 確保內容垂直居中對齊，以解決按鈕位置奇怪的問題 */
+        align-items: center; /* 改為 center 以確保所有元素在同一行時垂直居中 */
+    }
+
+    /* 導航連結群組 (nav-links) - 移除強制換行 order */
+    .nav-links {
+        /* *** 關鍵修改：移除 width: 100%; 和 order: 10; *** */
+        width: auto; /* 讓寬度根據內容決定 */
+        order: unset; /* 移除強制排序 */
+        
+        flex-grow: 1; /* 讓 nav-links 佔用剩餘空間，在空間不足時引導換行 */
+        
+        justify-content: flex-start; 
+        padding: 5px 0;
+        flex-wrap: wrap; 
+        white-space: normal;
+        min-width: unset; 
+    }
+
+    /* 品牌和縮放按鈕佈局修復 */
+    .brand {
+        /* *** 關鍵修改：移除 order: 1; 和 margin-right: auto; *** */
+        order: unset; /* 移除強制排序 */
+        margin-right: var(--spacing); /* 保持適當的間距 */
+        
+        /* 由於 Primary TopBar 設置了 align-items: center，這裡不再需要 align-self: center; */
+        /* align-self: center; */ 
+    }
+    
+    .toggle-btn {
+        /* *** 關鍵修改：移除 order: 2; *** */
+        order: unset; /* 移除強制排序 */
+        
+        /* 確保按鈕緊鄰品牌，在 nav-links 之前 */
+        margin-left: 0; 
+        margin-right: var(--spacing); /* 給按鈕右側留點空間 */
+        
+        /* 由於 Primary TopBar 設置了 align-items: center，這裡不再需要 align-self: center; */
+        /* align-self: center; */ 
+    }
+    
+    /* ---------------------------------------------------- */
+    /* 2. Secondary TopBar 處理: 定位和換行 (保持靠左對齊的修正) */
+    /* ---------------------------------------------------- */
+    .topbar-secondary {
+        /* top 值由 JS 動態設置 */
+        height: auto;
+        padding: 5px var(--spacing);
+        flex-wrap: wrap; 
+        justify-content: flex-start; /* 靠左對齊 */
+    }
+
+    .api-label {
+        width: auto; 
+        text-align: left;
+        margin-right: var(--spacing);
+        margin-bottom: 0; 
+    }
+
+    .api-key-container {
+        width: auto; 
+        justify-content: flex-start; 
+        margin-left: 0;
+    }
+    
+    .api-input-field {
+        width: 60%;
+        min-width: 100px;
+        padding: 5px 8px;
+    }
+}

@@ -1,5 +1,20 @@
 Web_Learning_Model 專案操作手冊
 
+更新專案到 GitHub
+git status                                # 1️⃣ 檢查狀態
+git add .                                 # 2️⃣ 暫存修改
+git commit -m "你的描述"                   # 3️⃣ Commit
+git push                                  # 4️⃣ 推送到 GitHub
+
+背景顏色調整小工具(Color_BG_Control) 使用方法（任意頁面）
+引入 CSS：
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/Color_BG_Control.css') }}">
+引入 JS（放在 <body> 結尾）：
+    <script src="{{ url_for('static', filename='js/Color_BG_Control.js') }}"></script>
+
+在 runner.js 檔裡找到這行 API改成自己的就能用
+    const API_KEY
+
 1. 環境設置：
    - 建議使用 Python 虛擬環境 (venv)。
    - 執行 `pip install -r requirements.txt` 安裝所有依賴。
@@ -16,3 +31,45 @@ Web_Learning_Model 專案操作手冊
 
 5. 測試：
    - 銀行模型頁面的 API 呼叫已在 app.py 中模擬，您只需要輸入 API Key 和數據即可測試前端交互。
+
+專案操作手冊 - Web 模型預測平台
+
+1. 啟動後端服務
+
+安裝依賴:
+
+pip install -r requirements.txt
+
+
+啟動 Flask 應用程式:
+
+python app.py
+
+
+服務將預設在 https://www.google.com/search?q=http://127.0.0.1:5000/ 運行。
+
+2. 前端操作
+
+訪問儀表板: 打開瀏覽器並訪問 http://127.0.0.1:5000/。
+
+進入銀行模型: 點擊左側導航欄的「客戶流失_銀行MODEL」或儀表板上的連結。
+
+執行分析:
+a. 在左上方的輸入框中填入或使用預設的 10 項客戶特徵數據。
+b. 必須在頂部輸入框中填入您的 Gemini API Key。
+c. 點擊「執行分析並取得 AI 解釋」。
+
+結果顯示:
+
+左下方 Panel (AI 解釋與行動建議) 將顯示模型預測的流失機率，以及透過 Gemini API 生成的專業解釋和挽留建議。
+
+右方 Panel (模型內建輸出圖表) 為模擬圖表顯示區。
+
+3. 注意事項
+
+API Key: 為了安全性和功能完整性，Gemini API 的呼叫是在後端 Flask 服務中執行的，但 Key 是從前端傳遞的。
+
+模型與數據: 目前的模型預測是模擬的 (mock_bank_churn_prediction 函數)。若要集成真正的深度學習模型，請在 routes/churn_bank_routes.py 中替換此模擬函數。
+
+靜態資源: 確保所有 CSS/JS/圖片都放在 static/ 目錄下。
+   
