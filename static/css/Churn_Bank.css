@@ -1,225 +1,215 @@
-/* Churn_Bank.css - 銀行客戶流失預測頁面特定樣式 (含佈局) */
+/* Churn_Bank.css - 銀行客戶流失預測頁面特定樣式 (垂直佈局) */
 
 /* 確保所有標題也使用這個高對比顏色 (強調色/主題色) */
 h1, h2, h3, h4, h5, h6 {
-    color: var(--header-font-color);
-    transition: color 0.5s linear;
+    color: var(--header-font-color); /* 設定標題文字顏色為主題定義的高對比色 */
+    transition: color 0.5s linear;    /* 設定顏色變化的過渡效果，以便在主題切換時平滑過渡 */
 }
 
 /* -------------------------------------- */
-/* --- 1. 通用元件樣式 (從 base 提取) --- */
+/* --- 1. 通用元件樣式 (從 base 提取/修改) --- */
 /* -------------------------------------- */
 
 /* 通用卡片容器 */
 .card {
-    background-color: var(--panel-bg-color); /* 使用主題面板背景色 */
-    color: var(--panel-font-color);          /* 使用主題文字色 */
-    padding: var(--spacing);
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.5s linear, color 0.5s linear;
+    background-color: var(--panel-bg-color); 
+    color: var(--panel-font-color);           
+    padding: var(--spacing);                  
+    border-radius: 8px;                       
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    transition: background-color 0.5s linear, color 0.5s linear; 
+    margin-bottom: var(--spacing); /* 新增：卡片間距 */
 }
 
 /* 頁面主要標題 */
 .page-title {
-    font-size: 1.875rem; /* text-3xl */
-    font-weight: 700;    /* font-bold */
-    margin-bottom: 1.5rem; /* mb-6 */
-    color: var(--header-font-color) !important; /* 高對比標題色 */
+    font-size: 1.875rem; 
+    font-weight: 700;    
+    margin-bottom: 1.5rem; 
+    color: var(--header-font-color) !important; 
 }
 
 /* 卡片內標題 */
 .card-title {
-    font-size: 1.25rem; /* text-xl */
-    font-weight: 600;   /* font-semibold */
-    margin-bottom: 1rem;
-    color: var(--panel-font-color) !important;
+    font-size: 1.25rem; 
+    font-weight: 600;   
+    margin-bottom: 1rem; 
+    color: var(--panel-font-color) !important; 
 }
 
 /* 輸入欄位群組 */
 .input-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* 調整為兩欄佈局 */
+    gap: 1rem; /* 增加間距 */
+}
+
+.input-field-container {
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
 }
 
 /* 標籤樣式 */
-.input-group label {
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--global-font-color) !important;
+.input-field-container label {
+    font-size: 0.875rem; 
+    font-weight: 500;    
+    color: var(--global-font-color) !important; 
 }
 
-/* 輔助與次要文本 */
-.initial-message,
-.chart-display p,
-.text-gray-500,
-.text-gray-600,
-.text-gray-700,
-.text-gray-800 {
-    color: var(--global-font-color) !important;
-    opacity: 0.85;
-}
-
-/* 通用輸入框 */
+/* 通用輸入框和文本區域 */
 .theme-input-field {
-    background-color: var(--panel-bg-color);
-    color: var(--panel-font-color);
-    border: 1px solid color-mix(in srgb, var(--panel-font-color) 30%, transparent);
-    transition: background-color 0.5s linear, color 0.5s linear, border-color 0.3s;
+    background-color: var(--panel-bg-color); 
+    color: var(--panel-font-color); 
+    border: 1px solid color-mix(in srgb, var(--panel-font-color) 30%, transparent); 
+    transition: background-color 0.5s linear, color 0.5s linear, border-color 0.3s; 
 
-    width: 100%;
-    padding: 0.5rem;
-    border-radius: 0.375rem;
-    font-size: 0.875rem;
-    box-sizing: border-box;
+    width: 100%; 
+    padding: 0.5rem; 
+    border-radius: 0.375rem; 
+    font-size: 0.875rem; 
+    box-sizing: border-box; 
+    /* 確保 textarea 尺寸不會亂跑 */
+    resize: vertical; 
 }
 
-/* 輸入框 Focus */
+/* 輸入框 Focus (聚焦狀態) */
 .theme-input-field:focus {
-    border-color: var(--primary-color);
-    outline: none;
-    box-shadow: 0 0 0 1px var(--primary-color);
+    border-color: var(--primary-color); 
+    outline: none; 
+    box-shadow: 0 0 0 1px var(--primary-color); 
 }
 
-/* API Key 輸入框 */
-.api-input-field {
-    padding: 6px 10px;
-    border: 1px solid color-mix(in srgb, var(--panel-font-color) 30%, transparent);
-    border-radius: 6px;
-    width: 250px;
-    min-width: 150px;
-    font-size: 0.9rem;
-    transition: all 0.3s;
-    background-color: var(--panel-bg-color);
-    color: var(--panel-font-color);
-}
-
-/* 分析按鈕 */
+/* 分析按鈕 (用於 Analyze 和 Save API Key) */
 .analyze-btn {
-    width: 100%;
-    margin-top: 1.5rem;
-    background-color: var(--primary-color);
-    color: white;
-    font-weight: 600;
-    padding: 0.625rem 1rem;
-    border-radius: 0.5rem;
-    transition: background-color 0.3s, opacity 0.3s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-}
-
-/* 按鈕 Hover */
-.analyze-btn:hover:not(:disabled) {
-    filter: brightness(0.9);
-}
-
-/* 按鈕 Disabled */
-.analyze-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
+    width: auto; /* 不強制滿寬 */
+    margin-top: 0; 
+    background-color: var(--primary-color); 
+    color: rgb(255, 255, 255); 
+    font-weight: 600; 
+    padding: 0.625rem 1rem; 
+    border-radius: 0.5rem; 
+    transition: background-color 0.3s, opacity 0.3s; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    border: none; 
+    cursor: pointer; 
+    text-decoration: none; 
 }
 
 /* 錯誤訊息 */
 .error-message {
+    color: var(--error-color, #ef4444); 
+    font-size: 0.875rem; 
+    margin-top: 0.5rem; 
+}
+
+/* 預測結果樣式 */
+.prediction-result {
+    border-left: 5px solid var(--primary-color);
+    padding-left: 10px;
+    margin-bottom: 15px;
+}
+.prob-value {
+    font-size: 1.5rem;
+    font-weight: 800;
+}
+.high-risk {
     color: var(--error-color, #ef4444);
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
+}
+.low-risk {
+    color: var(--success-color, #10b981);
 }
 
-/* 隱藏元素 */
-.hidden {
-    display: none !important;
-}
-
-/* 圖表底部訊息 */
-.chart-footer-message {
-    text-align: center;
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-    opacity: 0.85;
+.card-divider {
+    border: 0;
+    height: 1px;
+    background-color: color-mix(in srgb, var(--panel-font-color) 20%, transparent);
+    margin: 1.5rem 0;
 }
 
 /* -------------------------------------- */
-/* --- 2. 三欄版面佈局 --- */
+/* --- 2. 佈局調整 (垂直堆疊) --- */
 /* -------------------------------------- */
 
-.three-panel-grid {
-    display: grid;
-    grid-template-columns: 2fr 3fr; /* 40% / 60% */
-    grid-template-rows: auto 1fr;
-    gap: var(--spacing);
-    margin-bottom: var(--spacing);
-}
-
-.left-col-top {
-    grid-column: 1 / 2;
-    grid-row: 1 / 2;
-}
-
-.left-col-bottom {
-    grid-column: 1 / 2;
-    grid-row: 2 / 3;
-    overflow-y: auto;
-    max-height: 40vh;
+/* API Key 區塊調整 */
+.api-key-panel .api-key-container {
     display: flex;
-    flex-direction: column;
+    gap: 10px;
+    align-items: center;
 }
 
-.right-col {
-    grid-column: 2 / 3;
-    grid-row: 1 / 3;
+.api-key-panel .api-key-container .theme-input-field {
+    flex-grow: 1;
+    max-width: 400px;
+}
+/* 總輸入區塊，包含參數和 Prompt */
+.input-and-prompt-panel {
+    /* 調整 max-width 以適應單欄佈局的輸入欄位 */
+    max-width: 100%; 
+}
+
+/* AI 解釋區塊 */
+.explanation-panel {
+    min-height: 250px;
+    max-height: 50vh; /* 限制最大高度，允許滾動 */
     overflow-y: auto;
 }
 
-/* 圖表區 */
+/* 圖表顯示區塊 */
+.chart-panel {
+    max-height: 80vh; /* 限制最大高度，允許滾動 */
+    overflow-y: auto;
+}
+
 .chart-display {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing);
+    display: flex; 
+    flex-direction: column; 
+    gap: var(--spacing); 
 }
 
 .chart-placeholder {
-    height: 300px;
-    background-color: color-mix(in srgb, var(--panel-bg-color) 80%, var(--global-theme-color));
-    border: 1px dashed var(--global-font-color);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--global-font-color);
-    opacity: 0.7;
-    border-radius: 4px;
+    height: 300px; 
+    background-color: color-mix(in srgb, var(--panel-bg-color) 80%, var(--global-theme-color)); 
+    border: 1px dashed var(--global-font-color); 
+    display: flex; 
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center; 
+    color: var(--global-font-color); 
+    opacity: 0.7; 
+    border-radius: 4px; 
+    padding: 15px;
+}
+
+.loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 3px solid #f3f3f3; 
+    border-top: 3px solid var(--primary-color); 
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-right: 8px;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
 
 /* -------------------------------------- */
 /* --- 3. 響應式設計 --- */
 /* -------------------------------------- */
-
-@media (max-width: 900px) {
-    .three-panel-grid {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto;
-        gap: var(--spacing);
+@media (max-width: 600px) {
+    .input-group {
+        grid-template-columns: 1fr; /* 小螢幕改為單欄 */
     }
-
-    .left-col-top {
-        grid-column: 1 / 2;
-        grid-row: 1 / 2;
+    .api-key-panel .api-key-container {
+        flex-direction: column;
+        align-items: stretch;
     }
-
-    .right-col {
-        grid-column: 1 / 2;
-        grid-row: 2 / 3;
-        max-height: 80vh;
-    }
-
-    .left-col-bottom {
-        grid-column: 1 / 2;
-        grid-row: 3 / 4;
-        max-height: 60vh;
+    .api-key-panel .api-key-container .theme-input-field {
+        max-width: unset;
     }
 }

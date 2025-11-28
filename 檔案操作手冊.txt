@@ -12,18 +12,16 @@ git push                                  # 4️⃣ 推送到 GitHub
 引入 JS（放在 <body> 結尾）：
     <script src="{{ url_for('static', filename='js/Color_BG_Control.js') }}"></script>
 
-在 runner.js 檔裡找到這行 API改成自己的就能用
-    const API_KEY
+
 
 1. 環境設置：
-   - 建議使用 Python 虛擬環境 (venv)。
-   - 執行 `pip install -r requirements.txt` 安裝所有依賴。
+pip install -r requirements.txt
 
 2. 模型文件：
    - 請將訓練好的模型（例如 .pkl 或 .cbm 檔案）放置於 data/models/ 中。
 
 3. 啟動服務：
-   - 在根目錄下執行 `python app.py`。
+python app.py
 
 4. 訪問：
    - 打開瀏覽器訪問：http://127.0.0.1:5000/
@@ -73,3 +71,11 @@ API Key: 為了安全性和功能完整性，Gemini API 的呼叫是在後端 Fl
 
 靜態資源: 確保所有 CSS/JS/圖片都放在 static/ 目錄下。
    
+
+cd C:\Users\user\Desktop\Web_Model_Prediction
+pip install -r requirements.txt
+python app.py
+
+python churn_bank_train.py --train_file "C:\Users\user\Desktop\Web_Model_Prediction\data\datasets\train.csv" --test_file "C:\Users\user\Desktop\Web_Model_Prediction\data\datasets\test.csv"
+
+

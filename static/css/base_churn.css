@@ -1,53 +1,46 @@
-/* base_Churn.css - 雙層 TopBar 結構 (通用骨架，不含內容佈局) */
+/* base_Churn.css - 單層 TopBar 結構 (通用骨架，不含內容佈局) */
 
 :root {
-    /* --- 導航欄固定參數 --- */
-    --topbar-primary-height: 50px; 
-    --topbar-secondary-height: 45px;
+    /* --- 導航欄固定參數 (僅保留 Primary TopBar) --- */
+    --topbar-primary-height: 50px;                                              /* 主導航欄的固定高度 */
     
     /* JS 會更新這些變數以反映實際高度 */
-    --current-primary-topbar-height: var(--topbar-primary-height); 
-    --current-total-header-height: calc(var(--topbar-primary-height) + var(--topbar-secondary-height)); 
+    /* 次導航欄已移除，現在總高度只取 Primary TopBar 的高度 */
+    --current-total-header-height: var(--topbar-primary-height); 
     
-    --spacing: 15px;
+    --spacing: 15px; /* 通用間距變數 */
 
     /* --- Color_BG_Control.js 預期提供的動態顏色備用值 (僅用於頁面內容和卡片) --- */
-    --global-theme-color: #f4f7f9; /* 頁面背景色 (仍由 JS 控制) */
-    --global-font-color: #333333; /* 頁面文字色 (仍由 JS 控制) */
-    --panel-bg-color: #ffffff; /* 卡片背景色 (仍由 JS 控制) */
-    --panel-font-color: #333333; /* 卡片文字色 (仍由 JS 控制) */
+    --global-theme-color: #f4f7f9; /* 頁面背景色 (由 JS 控制，用於 body) */
+    --global-font-color: #333333;  /* 頁面文字色 (由 JS 控制，用於 body) */
+    --panel-bg-color: #ffffff;     /* 卡片背景色 (由 JS 控制) */
+    --panel-font-color: rgba(0, 0, 0, 1);  /* 卡片文字色 (由 JS 控制) */
     
-    /* --- 固定 TopBar 顏色定義 (不再動態變更) --- */
-    --FIXED-PRIMARY-COLOR: #3f51b5; /* 固定強調色/品牌色 (藍紫) */
-    --FIXED-TOPBAR-BG: #ffffff; /* 固定導航欄背景 (白色) */
-    --FIXED-TOPBAR-FONT: #1a1a1a; /* 固定導航欄文字/Icon 預設色 (深黑) */
-    --FIXED-SECONDARY-BG: #f0f0f0; /* 固定次導航欄背景 (淺灰) */
+    /* --- 固定 TopBar 顏色定義 (不隨主題動態變更) --- */
+    --FIXED-PRIMARY-COLOR: rgba(85, 85, 85, 1);      /* 固定強調色/品牌色 (藍紫) */
+    --FIXED-TOPBAR-BG: rgba(0, 0, 0, 1);             /* 固定主導航欄背景 (白色) */
+    --FIXED-TOPBAR-FONT: rgba(0, 128, 128, 1);       /* 固定導航欄文字/Icon 預設色 (深黑) */
+    /* 已移除：--FIXED-SECONDARY-BG, --FIXED-INPUT-COLOR 等 API 相關變數 */
 
-    /* *** 新增：固定輸入框顏色 (確保它在 TopBar 區域不變) *** */
-    --FIXED-INPUT-BG: #ffffff;      /* 輸入框背景色 (白色) */
-    --FIXED-INPUT-FONT: #333333;    /* 輸入框文字色 (深灰) */
-    --FIXED-INPUT-BORDER: #cccccc;  /* 輸入框邊框色 (淺灰) */
-
-
-    /* --- 舊的動態變數 (僅保留名稱，不再用於 TopBar) --- */
-    --header-font-color: var(--FIXED-PRIMARY-COLOR); 
-    --primary-color: var(--header-font-color);      
-    --text-color: var(--FIXED-TOPBAR-FONT); 
-    --active-bg-color: var(--header-font-color);    
-    --topbar-primary-bg: var(--FIXED-TOPBAR-BG); 
-    --topbar-secondary-bg: var(--FIXED-SECONDARY-BG);
+    /* --- 舊的動態變數 (僅保留名稱，將其指向固定值或用於頁面內容) --- */
+    --header-font-color: var(--FIXED-PRIMARY-COLOR);                       /* 頁面標題色使用固定強調色 */
+    --primary-color: var(--header-font-color);                             /* 主色使用標題色 (即固定強調色) */
+    --text-color: var(--FIXED-TOPBAR-FONT);                                /* 預設文字色 */
+    --active-bg-color: var(--header-font-color);                           /* 活躍背景色使用強調色 */
+    --topbar-primary-bg: var(--FIXED-TOPBAR-BG);                           /* 主導航欄背景使用固定值 */
 }
+
 /* --- 全域設置 (配合 Color_BG_Control.js) --- */
 body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, sans-serif;
-    min-height: 100vh;
-    box-sizing: border-box;
+    margin: 0;                                                             /* 移除瀏覽器預設外邊距 */
+    padding: 0;                                                            /* 移除瀏覽器預設內邊距 */
+    font-family: "Inter", "PingFang TC", "Microsoft JhengHei", "Noto Sans TC", sans-serif;
+    min-height: 100vh;                                                     /* 確保內容至少佔滿整個視窗高度 */
+    box-sizing: border-box;                                                /* 邊框模型設定為 border-box */
     
     /* 關鍵：從 JS 獲取背景和文字顏色 (這部分仍響應主題) */
-    background-color: var(--global-theme-color);
-    color: var(--global-font-color);
+    background-color: var(--global-theme-color);                           /* 頁面背景色使用動態主題色 */
+    color: var(--global-font-color);                                       /* 頁面文字色使用動態主題色 */
     
     /* 確保主題切換時平滑過渡 */
     transition: background-color 0.5s linear, color 0.5s linear;
@@ -56,77 +49,81 @@ body {
 /* -------------------------------------- */
 /* --- 1. 頂部導航欄 (主層: topbar-primary) --- */
 /* -------------------------------------- */
-.topbar { /* 適用於所有 topbar 類別 */
+.topbar {
     position: fixed;
     left: 0;
     width: 100%;
     z-index: 1000;
     box-sizing: border-box;
-    display: flex; 
-    align-items: center; 
+    display: flex;
+    align-items: center;
     padding: 0 var(--spacing);
-    transition: box-shadow 0.2s; /* 移除顏色過渡 */
+    transition: box-shadow 0.2s;
 }
 
 .topbar-primary {
     top: 0;
-    height: var(--topbar-primary-height); 
-    /* *** 關鍵變動 1: 使用固定背景色 *** */
+    height: var(--topbar-primary-height);
     background-color: var(--FIXED-TOPBAR-BG);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* 縮放切換按鈕, 品牌, 導航連結 (Primary TopBar 元素) */
 .toggle-btn {
     background: none;
     border: none;
     cursor: pointer;
-    /* *** 關鍵變動 2: 使用固定強調色 *** */
     color: var(--FIXED-PRIMARY-COLOR);
     font-size: 1.1rem;
     padding: 5px;
     margin-right: 15px;
-    transition: transform 0.3s; /* 移除顏色過渡 */
-    flex-shrink: 0; 
+    transition: transform 0.3s;
+    flex-shrink: 0;
 }
+
 .topbar.collapsed .toggle-btn {
-    transform: rotate(180deg); 
+    transform: rotate(180deg);
 }
+
 .brand {
     font-size: 1.2rem;
     font-weight: bold;
-    /* *** 關鍵變動 3: 使用固定強調色 *** */
-    color: var(--FIXED-PRIMARY-COLOR);
+    color: var(--FIXED-TOPBAR-FONT);
     display: flex;
     align-items: center;
     white-space: nowrap;
     margin-right: 20px;
-    transition: margin 0.3s; /* 移除顏色過渡 */
-    flex-shrink: 0; 
+    transition: margin 0.3s;
+    flex-shrink: 0;
 }
+
 .brand i {
     font-size: 1.5rem;
     margin-right: 10px;
 }
+
 .topbar.collapsed .brand-text {
     display: none;
 }
+
 .topbar.collapsed .brand {
     margin-right: 10px;
 }
+
 .nav-links {
     display: flex;
     align-items: center;
     gap: 5px;
-    flex-grow: 1; 
-    overflow-x: hidden; 
+    flex-grow: 1;
+    overflow-x: hidden;
     white-space: nowrap;
-    min-width: 0; 
+    min-width: 0;
 }
+
 .menu-item {
     text-decoration: none;
-    flex-shrink: 0; 
+    flex-shrink: 0;
 }
+
 .menu-button {
     display: flex;
     align-items: center;
@@ -135,149 +132,66 @@ body {
     background: none;
     border: none;
     cursor: pointer;
-    /* *** 關鍵變動 4: 使用固定預設文字色 *** */
     color: var(--FIXED-TOPBAR-FONT) !important;
     font-size: 0.9rem;
     border-radius: 6px;
-    transition: background-color 0.2s; /* 移除顏色過渡 */
+    transition: background-color 0.2s;
 }
+
 .menu-button i {
     font-size: 1.1rem;
     margin-right: 8px;
     transition: margin 0.3s;
 }
+
 .menu-item:hover .menu-button {
-    /* 使用固定強調色進行 hover 效果 */
-    background-color: color-mix(in srgb, var(--FIXED-PRIMARY-COLOR) 10%, transparent); 
+    background-color: color-mix(in srgb, var(--FIXED-PRIMARY-COLOR) 10%, transparent);
     color: var(--FIXED-PRIMARY-COLOR);
 }
+
 .menu-item.active .menu-button {
-    /* 使用固定強調色作為 active 背景 */
     background-color: var(--FIXED-PRIMARY-COLOR);
-    color: white; /* 保持白色文字/Icon */
+    color: white;
 }
+
 .menu-item.active:hover .menu-button {
     background-color: color-mix(in srgb, var(--FIXED-PRIMARY-COLOR) 90%, black);
 }
+
 .topbar.collapsed .menu-text {
     display: none;
 }
+
 .topbar.collapsed .menu-button {
     padding: 8px 10px;
 }
+
 .topbar.collapsed .menu-button i {
     margin-right: 0;
 }
 
-
 /* -------------------------------------- */
-/* --- 2. 頂部導航欄 (次層: topbar-secondary - API Key) --- */
+/* --- 2. 頂部導航欄 (次層: topbar-secondary - **已移除**) --- */
 /* -------------------------------------- */
-.topbar-secondary {
-    top: var(--current-primary-topbar-height); 
-    height: var(--topbar-secondary-height);
-    /* *** 關鍵變動 5: 使用固定次級背景色 *** */
-    background-color: var(--FIXED-SECONDARY-BG); 
-    border-top: 1px solid color-mix(in srgb, var(--FIXED-SECONDARY-BG) 80%, black);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
-    z-index: 999; 
-    justify-content: flex-start; 
-}
-
-.api-label {
-    font-size: 0.9rem;
-    /* *** 關鍵變動 6: 使用固定預設文字色 *** */
-    color: var(--FIXED-TOPBAR-FONT) !important;
-    margin-right: var(--spacing);
-    font-weight: bold;
-    flex-shrink: 0;
-}
-
-.api-key-container {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
-}
-
-/* *** 新增/修正：固定 API Key 輸入框樣式 (使用 !important) *** */
-.api-input-field {
-    padding: 6px 10px;
-    /* *** 使用固定顏色變數 *** */
-    border: 1px solid var(--FIXED-INPUT-BORDER);
-    border-radius: 6px;
-    width: 250px;
-    min-width: 150px; 
-    font-size: 0.9rem;
-    transition: all 0.3s;
-    /* *** 關鍵修正：強制使用固定顏色，防止被主題或瀏覽器覆蓋 *** */
-    background-color: var(--FIXED-INPUT-BG) !important;
-    color: var(--FIXED-INPUT-FONT) !important; 
-}
-
-.api-input-field::placeholder {
-    color: color-mix(in srgb, var(--FIXED-INPUT-FONT) 60%, transparent);
-    opacity: 1; /* 確保瀏覽器不會自行調低透明度 */
-}
-
-.api-input-field:disabled,
-.api-input-field:read-only {
-    /* 關鍵修正：強制使用固定顏色 */
-    background-color: #eeeeee !important; /* 淺灰色背景，固定 */
-    color: #666666 !important; /* 深灰色文字，固定 */
-    cursor: not-allowed;
-    border-color: #dddddd;
-}
-
-.api-input-field:focus {
-    /* 使用固定的強調色作為焦點框線 */
-    border-color: var(--FIXED-PRIMARY-COLOR);
-    outline: none;
-    box-shadow: 0 0 0 1px var(--FIXED-PRIMARY-COLOR);
-}
-
-/* API 按鈕樣式 (顏色已固定在上一個步驟) */
-.api-key-button {
-    height: 34px;
-    padding: 0 15px;
-    /* *** 關鍵變動 7: 使用固定強調色作為按鈕背景 *** */
-    background-color: var(--FIXED-PRIMARY-COLOR);
-    color: white; /* 保持白色文字/Icon */
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-}
-.api-key-button i {
-    margin-right: 5px;
-}
-.api-key-button:hover {
-    background-color: color-mix(in srgb, var(--FIXED-PRIMARY-COLOR) 90%, black);
-}
-
+/* 相關樣式已被移除 */
 
 /* -------------------------------------- */
 /* --- 3. 主要內容區域 (容器) --- */
 /* -------------------------------------- */
 .main-content {
-    /* *** 關鍵修改：使用 JS 動態設定的變數來計算 padding-top *** */
-    padding-top: calc(var(--current-total-header-height) + 10px); 
+    /* 現在 padding-top 直接使用 Primary TopBar 的高度 + 10px 間距 */
+    padding-top: calc(var(--current-total-header-height) + 10px);
     padding-left: var(--spacing);
     padding-right: var(--spacing);
-    min-height: calc(100vh - var(--current-total-header-height) - 10px); 
+    /* 總高度計算也僅基於 Primary TopBar */
+    min-height: calc(100vh - var(--current-total-header-height) - 10px);
     box-sizing: border-box;
     width: 100%;
 }
 
-
 /* -------------------------------------- */
 /* === 響應式設計 (Media Queries 僅處理 TopBar) === */
 /* -------------------------------------- */
-
 @media (max-width: 900px) {
     .topbar:not(.collapsed) .brand-text,
     .topbar:not(.collapsed) .menu-text {
@@ -294,69 +208,37 @@ body {
     }
 }
 
-
 @media (max-width: 600px) {
-    /* 1. Primary TopBar 處理: 換行 */
     .topbar-primary {
-        height: auto; 
+        height: auto;
         padding-top: 5px;
         padding-bottom: 5px;
-        flex-wrap: wrap; 
+        flex-wrap: wrap;
         overflow-x: hidden;
-        align-items: center; 
+        align-items: center;
     }
 
-    /* 導航連結群組 (nav-links) */
     .nav-links {
-        width: auto; 
-        order: unset; 
-        flex-grow: 1; 
-        justify-content: flex-start; 
+        width: auto;
+        order: unset;
+        flex-grow: 1;
+        justify-content: flex-start;
         padding: 5px 0;
-        flex-wrap: wrap; 
+        flex-wrap: wrap;
         white-space: normal;
-        min-width: unset; 
+        min-width: unset;
     }
 
-    /* 品牌和縮放按鈕佈局修復 */
     .brand {
-        order: unset; 
-        margin-right: var(--spacing); 
+        order: unset;
+        margin-right: var(--spacing);
     }
     
     .toggle-btn {
-        order: unset; 
-        margin-left: 0; 
-        margin-right: var(--spacing); 
-    }
-    
-    /* ---------------------------------------------------- */
-    /* 2. Secondary TopBar 處理: 定位和換行 */
-    /* ---------------------------------------------------- */
-    .topbar-secondary {
-        height: auto;
-        padding: 5px var(--spacing);
-        flex-wrap: wrap; 
-        justify-content: flex-start; /* 靠左對齊 */
-    }
-
-    .api-label {
-        font-size: 0.9rem;
-        color: var(--FIXED-TOPBAR-FONT) !important;
-        margin-right: var(--spacing);
-        font-weight: bold;
-        flex-shrink: 0;
-    }
-
-    .api-key-container {
-        width: auto; 
-        justify-content: flex-start; 
+        order: unset;
         margin-left: 0;
+        margin-right: var(--spacing);
     }
-    
-    .api-input-field {
-        width: 60%;
-        min-width: 100px;
-        padding: 5px 8px;
-    }
+
+    /* 已移除：topbar-secondary 的 media query 調整 */
 }

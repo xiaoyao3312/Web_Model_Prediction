@@ -1,113 +1,168 @@
-import json
-import requests
-from flask import Blueprint, request, jsonify
+import os
+import sys
+import logging
+from flask import Blueprint, jsonify, request
+import joblib
+import pandas as pd
+import numpy as np
+from werkzeug.exceptions import BadRequest
+from typing import Any
 
-# 初始化 Blueprint
+# ✅ 導入繪圖與圖表處理庫
+import matplotlib.pyplot as plt
+import io
+import base64
+
+# 設定專案路徑，導入 config.py
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from config import DevelopmentConfig
+
+# --- 特徵工程類 ---
+class FeatureEngineerForAPI:
+    @staticmethod
+    def cast_columns(df: pd.DataFrame, int_cols: Any = None, cat_cols: Any = None) -> pd.DataFrame:
+        df_copy = df.copy()
+        if int_cols:
+            for col in int_cols:
+                if col in df_copy.columns:
+                    df_copy[col] = df_copy[col].astype(int)
+        if cat_cols:
+            for col in cat_cols:
+                if col in df_copy.columns:
+                    df_copy[col] = df_copy[col].astype('category')
+        return df_copy
+
+    @staticmethod
+    def run_v1_preprocessing(df: pd.DataFrame) -> pd.DataFrame:
+        df_copy = df.copy()
+        df_copy['Gender'] = df_copy['Gender'].astype(int)
+        df_copy['Age_bin'] = pd.cut(df_copy['Age'], bins=[0, 25, 35, 45, 60, np.inf],
+                                    labels=['very_young', 'young', 'mid', 'mature', 'senior']).astype('category')
+        df_copy['Is_two_products'] = (df_copy['NumOfProducts'] == 2).astype(int)
+
+        geo_map = {0: 'France', 1: 'Spain', 2: 'Germany'}
+        df_copy['Geography'] = df_copy['Geography'].map(geo_map).astype('category')
+
+        df_copy['Germany_Female'] = ((df_copy['Geography'] == 'Germany') & (df_copy['Gender'] == 1)).astype(int)
+        df_copy['Germany_Inactive'] = ((df_copy['Geography'] == 'Germany') & (df_copy['IsActiveMember'] == 0)).astype(int)
+        df_copy['Has_Zero_Balance'] = (df_copy['Balance'] == 0).astype(int)
+        df_copy['Tenure_log'] = np.log1p(df_copy['Tenure'])
+
+        int_cols = ['HasCrCard', 'IsActiveMember', 'NumOfProducts', 'Is_two_products',
+                    'Has_Zero_Balance', 'Germany_Female', 'Germany_Inactive']
+        cat_cols = ['Geography', 'Age_bin']
+        df_copy = FeatureEngineerForAPI.cast_columns(df_copy, int_cols=int_cols, cat_cols=cat_cols)
+
+        # 不刪除 id，保留與模型一致
+        cols_to_drop = ['CustomerId', 'Tenure', 'Surname', 'RowNumber']
+        df_copy.drop(columns=[col for col in cols_to_drop if col in df_copy.columns], inplace=True, errors='ignore')
+
+        return df_copy
+
+    @staticmethod
+    def run_v2_preprocessing(df: pd.DataFrame) -> pd.DataFrame:
+        df_copy = FeatureEngineerForAPI.run_v1_preprocessing(df.copy())
+        df_copy['is_mature_inactive_transit'] = (
+                (df_copy['Has_Zero_Balance'] == 1) & (df_copy['IsActiveMember'] == 0) & (df_copy['Age'] > 40)
+        ).astype(int)
+        return df_copy
+
+# --- 日誌 ---
+logger = logging.getLogger('ChurnBankRoute')
+logger.setLevel(logging.INFO)
+
+# --- 載入模型 ---
+MODEL = None
+FEATURE_COLUMNS = None
+try:
+    MODEL_PATH = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                              DevelopmentConfig.MODEL_BANK_PATH)
+    if os.path.exists(MODEL_PATH):
+        MODEL = joblib.load(MODEL_PATH)
+        FEATURE_COLUMNS = getattr(MODEL, 'get_booster', lambda: None)()
+        if FEATURE_COLUMNS:
+            FEATURE_COLUMNS = MODEL.get_booster().feature_names
+        logger.info(f"成功加載模型: {MODEL_PATH}")
+    else:
+        logger.warning(f"模型文件不存在: {MODEL_PATH}, 將使用模擬預測")
+except Exception as e:
+    logger.error(f"載入模型失敗: {e}")
+
+# --- Blueprint ---
 churn_bank_bp = Blueprint('churn_bank_bp', __name__)
 
-# --- 模型和 API 配置 ---
-GEMINI_API_URL_BASE = "https://generativelanguage.googleapis.com/v1beta/models/"
-MODEL_NAME = "gemini-2.5-flash-preview-09-2025"
-# 確保此處的特徵名稱順序與 app.py 和前端的輸入順序一致
-FEATURE_NAMES = [
-    'CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts', 
-    'HasCrCard', 'IsActiveMember', 'EstimatedSalary', 'Geography', 'Gender'
-]
-
-# 模擬模型預測函數
-def mock_bank_churn_prediction(input_data):
-    """
-    模擬深度學習模型 (例如，一個已訓練的 Keras 模型) 的預測過程。
-    在實際應用中，此處會載入模型並進行推論。
-    """
-    # 將輸入數組轉換為易於分析的字典
-    input_map = dict(zip(FEATURE_NAMES, input_data))
-
-    # 模擬簡單的流失風險邏輯
-    churn_risk = 0.15 # 基礎風險
-
-    # 根據關鍵特徵調整風險
-    if input_map['Age'] > 45: churn_risk += 0.25
-    if input_map['IsActiveMember'] == 0: churn_risk += 0.30
-    if input_map['CreditScore'] < 650: churn_risk += 0.20
-    if input_map['Balance'] > 150000 and input_map['NumOfProducts'] == 1: churn_risk += 0.15
-    
-    # 確保機率在 0 到 1 之間
-    churn_probability = round(min(0.95, max(0.05, churn_risk)), 4)
-    
-    # 返回原始輸入地圖和預測機率
-    return input_map, churn_probability
-
-# --- API 路由：預測與 AI 解釋 ---
-@churn_bank_bp.route('/predict_and_explain', methods=['POST'])
-def predict_and_explain():
-    """
-    接收客戶特徵輸入，執行模擬模型預測，並呼叫 Gemini API 進行解釋。
-    """
-    data = request.get_json()
-    input_values = data.get('input_values')
-    api_key = data.get('api_key')
-
-    if not input_values or not api_key:
-        return jsonify({'error': '缺少必要的輸入資料或 API Key'}), 400
-
-    # 1. 執行模型預測
+@churn_bank_bp.route('/predict', methods=['POST'])
+def predict_churn():
     try:
-        input_data_map, churn_probability = mock_bank_churn_prediction(input_values)
-    except Exception as e:
-        return jsonify({'error': f'模型預測失敗: {str(e)}'}), 500
+        data = request.get_json()
+        if not data:
+            raise BadRequest("無效的 JSON 請求")
 
-    # 2. 準備 Gemini 提示詞
-    prediction_status = "高風險 (High Risk)" if churn_probability > 0.5 else "低風險 (Low Risk)"
-    churn_percentage = f"{churn_probability * 100:.2f}%"
-
-    system_prompt = (
-        "您是一位資深的金融風控和客戶關係管理 (CRM) 專家。您的任務是根據深度學習模型的預測結果，"
-        "對客戶的流失風險進行解釋，並提供具體的、可執行的挽留建議。請使用中文（繁體）回覆。 "
-        "將重點放在解釋風險原因和實用建議上。"
-    )
-    
-    user_query = f"""
-        模型類型: 銀行客戶流失預測
-        預測結果: 客戶流失機率為 {churn_percentage} ({prediction_status})。
-        客戶特徵資料:
-        {json.dumps(input_data_map, indent=2, ensure_ascii=False)}
-
-        請完成以下任務：
-        1. 根據提供的特徵和預測機率，詳細解釋客戶為何被判定為當前的風險級別。
-        2. 提供至少三條針對性的、可立即實施的客戶挽留行動建議。
-        3. 請以專業且具說服力的語氣撰寫，重點突出對銀行的價值。
-    """
-
-    # 3. 呼叫 Gemini API
-    try:
-        apiUrl = f"{GEMINI_API_URL_BASE}{MODEL_NAME}:generateContent?key={api_key}"
-        payload = {
-            "contents": [{"parts": [{"text": user_query}]}],
-            "systemInstruction": {"parts": [{"text": system_prompt}]},
+        # 數值轉換，補上 id
+        input_data = {
+            'id': 0,  # ✅ 補 id
+            'CreditScore': float(data.get('CreditScore', 0)),
+            'Age': float(data.get('Age', 0)),
+            'Tenure': float(data.get('Tenure', 0)),
+            'Balance': float(data.get('Balance', 0)),
+            'NumOfProducts': float(data.get('NumOfProducts', 0)),
+            'HasCrCard': float(data.get('HasCrCard', 0)),
+            'IsActiveMember': float(data.get('IsActiveMember', 0)),
+            'EstimatedSalary': float(data.get('EstimatedSalary', 0)),
+            'Geography': float(data.get('Geography', 0)),
+            'Gender': float(data.get('Gender', 0)),
+            'CustomerId': 0,
+            'Surname': 'A',
+            'RowNumber': 0
         }
 
-        # 實際應用中應實現指數退避和錯誤處理
-        response = requests.post(apiUrl, json=payload, timeout=60)
-        response.raise_for_status() # 對 HTTP 錯誤碼拋出異常
+        input_df = pd.DataFrame([input_data])
+        processed_df = FeatureEngineerForAPI.run_v2_preprocessing(input_df)
 
-        result = response.json()
-        explanation_text = result.get('candidates', [{}])[0].get('content', {}).get('parts', [{}])[0].get('text', 'AI 解釋生成失敗。')
+        # 模型存在則預測
+        if MODEL is not None and FEATURE_COLUMNS is not None:
+            missing_cols = set(FEATURE_COLUMNS) - set(processed_df.columns)
+            if missing_cols:
+                raise ValueError(f"缺少必要欄位: {missing_cols}")
+            X_predict = processed_df[FEATURE_COLUMNS]
+            proba_churn = MODEL.predict_proba(X_predict)[:, 1][0]
+        else:
+            # 模型不存在 → 模擬
+            score_risk = (850 - float(data.get('CreditScore', 650))) / 250
+            age_risk = (float(data.get('Age', 40)) - 30) / 40
+            proba_churn = float(np.clip(0.1 + score_risk * 0.4 + age_risk * 0.3, 0.01, 0.99))
+            logger.info("使用模擬預測")
+
+        # 可讀性輸出
+        geography_map = {0: "法國 (France)", 1: "西班牙 (Spain)", 2: "德國 (Germany)"}
+        gender_map = {0: "男性 (Male)", 1: "女性 (Female)"}
+        readable_data = {
+            '信用分數': data.get('CreditScore'),
+            '年齡': data.get('Age'),
+            '服務年限': data.get('Tenure'),
+            '餘額': f"${float(data.get('Balance',0)):.2f}",
+            '產品數量': data.get('NumOfProducts'),
+            '持有信用卡': "是" if data.get('HasCrCard') == 1 else "否",
+            '活躍會員': "是" if data.get('IsActiveMember') == 1 else "否",
+            '估計薪資': f"${float(data.get('EstimatedSalary',0)):.2f}",
+            '國家/地區': geography_map.get(data.get('Geography'), '未知'),
+            '性別': gender_map.get(data.get('Gender'), '未知')
+        }
+
+        explanation_prompt = f"客戶特徵: {readable_data}。\n模型預測的客戶流失機率為 {proba_churn:.4f}。"
 
         return jsonify({
-            'success': True,
-            'churn_probability': churn_probability,
-            'prediction_status': prediction_status,
-            'explanation': explanation_text,
-            'input_data_used': input_data_map
+            "status": "success",
+            "prediction": float(proba_churn),
+            "explanation_prompt": explanation_prompt
         })
 
-    except requests.exceptions.HTTPError as http_err:
-        error_msg = f"Gemini API HTTP 錯誤: {http_err}. 請檢查您的 API Key 是否正確或服務是否可用。"
-        return jsonify({'error': error_msg}), 502
-    except requests.exceptions.RequestException as req_err:
-        error_msg = f"網路連線錯誤: {req_err}"
-        return jsonify({'error': error_msg}), 503
+    except BadRequest as e:
+        logger.error(f"API 請求錯誤: {e}")
+        return jsonify({"error": str(e)}), 400
+    except ValueError as e:
+        logger.error(f"數據處理錯誤: {e}")
+        return jsonify({"error": f"數據處理失敗: {e}"}), 400
     except Exception as e:
-        error_msg = f"未知錯誤: {str(e)}"
-        return jsonify({'error': error_msg}), 500
+        logger.error(f"預測過程發生錯誤: {e}")
+        return jsonify({"error": f"伺服器內部錯誤: {e}"}), 500
