@@ -1,5 +1,15 @@
 /* Churn_Bank.css - 銀行客戶流失預測頁面特定樣式 (垂直佈局) */
 
+/* -------------------------------------- */
+/* --- 0. 響應式字體基線調整 --- */
+/* -------------------------------------- */
+
+/* 調整主體字體大小，使用 clamp 確保字體在 0.875rem (小) 到 1rem (大) 之間浮動 */
+body {
+    font-size: clamp(0.875rem, 0.8vw + 0.5rem, 1rem);
+}
+
+
 /* 確保所有標題也使用這個高對比顏色 (強調色/主題色) */
 h1, h2, h3, h4, h5, h6 {
     color: var(--header-font-color); /* 設定標題文字顏色為主題定義的高對比色 */
@@ -23,7 +33,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* 頁面主要標題 */
 .page-title {
-    font-size: 1.875rem; 
+    /* 使用 clamp 確保 H1 字體大小在 1.5rem (小) 到 2rem (大) 之間浮動 */
+    font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem); 
     font-weight: 700;    
     margin-bottom: 1.5rem; 
     color: var(--header-font-color) !important; 
@@ -31,7 +42,8 @@ h1, h2, h3, h4, h5, h6 {
 
 /* 卡片內標題 */
 .card-title {
-    font-size: 1.25rem; 
+    /* 使用 clamp 確保 H2 字體大小在 1rem (小) 到 1.25rem (大) 之間浮動 */
+    font-size: clamp(1rem, 1.5vw + 0.5rem, 1.25rem); 
     font-weight: 600;   
     margin-bottom: 1rem; 
     color: var(--panel-font-color) !important; 
@@ -52,7 +64,7 @@ h1, h2, h3, h4, h5, h6 {
 
 /* 標籤樣式 */
 .input-field-container label {
-    font-size: 0.875rem; 
+    font-size: 0.875rem; /* 保持這個相對較小的字體，但它會繼承 body 的基線變化 */
     font-weight: 500;    
     color: var(--global-font-color) !important; 
 }
@@ -67,7 +79,7 @@ h1, h2, h3, h4, h5, h6 {
     width: 100%; 
     padding: 0.5rem; 
     border-radius: 0.375rem; 
-    font-size: 0.875rem; 
+    font-size: 0.875rem; /* 保持這個相對較小的字體，但它會繼承 body 的基線變化 */
     box-sizing: border-box; 
     /* 確保 textarea 尺寸不會亂跑 */
     resize: vertical; 
@@ -84,8 +96,8 @@ h1, h2, h3, h4, h5, h6 {
 .analyze-btn {
     width: auto; /* 不強制滿寬 */
     margin-top: 0; 
-    background-color: var(--primary-color); 
-    color: rgb(255, 255, 255); 
+    background-color: var(--header-font-color); 
+    color: var(--panel-bg-color); 
     font-weight: 600; 
     padding: 0.625rem 1rem; 
     border-radius: 0.5rem; 
@@ -101,7 +113,8 @@ h1, h2, h3, h4, h5, h6 {
 /* 錯誤訊息 */
 .error-message {
     color: var(--error-color, #ef4444); 
-    font-size: 0.875rem; 
+    /* 調整字體大小，保持相對較小 */
+    font-size: clamp(0.75rem, 0.7vw + 0.5rem, 0.875rem); 
     margin-top: 0.5rem; 
 }
 
@@ -112,7 +125,8 @@ h1, h2, h3, h4, h5, h6 {
     margin-bottom: 15px;
 }
 .prob-value {
-    font-size: 1.5rem;
+    /* 調整重點數值字體大小 */
+    font-size: clamp(1.25rem, 2vw + 1rem, 1.5rem);
     font-weight: 800;
 }
 .high-risk {
@@ -130,8 +144,31 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* -------------------------------------- */
-/* --- 2. 佈局調整 (垂直堆疊) --- */
+/* --- 2. 佈局調整 (響應式面板佈局) --- */
 /* -------------------------------------- */
+
+/* 大視窗佈局 (>= 1024px) */
+.main-panel-grid {
+    display: grid;
+    /* 🌟 新增：確保 Grid 容器有足夠的高度讓 1fr 生效 */
+    min-height: 85vh; 
+    /* 左邊欄位佔 1 份，右邊欄位佔 1 份，形成雙欄等寬佈局 */
+    grid-template-columns: 1fr 1fr; 
+    gap: var(--spacing); /* 欄位間距 */
+    /* 🌟 修改：前兩行 auto (由內容決定)，第三行 1fr (佔滿剩餘空間) */
+    grid-template-rows: auto auto 1fr; 
+    /* 定義 row 區塊 */
+    grid-template-areas: 
+        "api_key chart_panel"   /* 第一行: API Key (auto) */
+        "input_prompt chart_panel" /* 第二行: 輸入/指令 (auto) */
+        "explanation chart_panel"; /* 第三行: 解釋/建議 (1fr) + 圖表 (跨三行) */
+}
+
+.api-key-panel    { grid-area: api_key; }
+.input-and-prompt-panel { grid-area: input_prompt; }
+.explanation-panel    { grid-area: explanation; }
+.chart-panel        { grid-area: chart_panel; }
+
 
 /* API Key 區塊調整 */
 .api-key-panel .api-key-container {
@@ -146,20 +183,24 @@ h1, h2, h3, h4, h5, h6 {
 }
 /* 總輸入區塊，包含參數和 Prompt */
 .input-and-prompt-panel {
-    /* 調整 max-width 以適應單欄佈局的輸入欄位 */
     max-width: 100%; 
 }
 
 /* AI 解釋區塊 */
 .explanation-panel {
-    min-height: 250px;
-    max-height: 50vh; /* 限制最大高度，允許滾動 */
+    /* 🌟 修改：移除 min-height，並設定 height: 100% 佔滿其 1fr 行空間 */
+    /* min-height: 250px; <- 已移除 */
+    height: 100%; /* 確保填滿 grid row 的 1fr 空間 */
+    /* 由於這是解釋區，內容可能很長，我們將其內容設為可滾動 */
     overflow-y: auto;
 }
 
 /* 圖表顯示區塊 */
 .chart-panel {
-    max-height: 80vh; /* 限制最大高度，允許滾動 */
+    /* 由於 chart_panel 佔用 grid-area: chart_panel (三行空間) */
+    /* 我們將其高度設為 100%，以確保它能填滿三行的總高度 */
+    height: 100%; 
+    /* 保持內容可以滾動，以便在內容超過視窗時查看 */
     overflow-y: auto;
 }
 
@@ -199,8 +240,29 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* -------------------------------------- */
-/* --- 3. 響應式設計 --- */
+/* --- 3. 響應式設計 (小視窗單欄堆疊) --- */
 /* -------------------------------------- */
+
+/* 小於 1024px 時切換為單欄佈局 (全部垂直堆疊) */
+@media (max-width: 1024px) {
+    .main-panel-grid {
+        display: flex;
+        flex-direction: column;
+        gap: var(--spacing);
+        /* 移除 grid-area 定義，讓所有元素按 HTML 順序堆疊 */
+        grid-template-columns: 1fr;
+        grid-template-rows: unset; /* 取消 1fr 設置 */
+        grid-template-areas: none;
+        min-height: unset; /* 取消大螢幕的最小高度限制 */
+    }
+    /* 小螢幕下，所有面板回歸內容驅動高度 */
+    .explanation-panel, .chart-panel {
+        height: auto;
+        overflow-y: visible;
+    }
+}
+
+/* 更小的視窗調整 (例如手機) */
 @media (max-width: 600px) {
     .input-group {
         grid-template-columns: 1fr; /* 小螢幕改為單欄 */
