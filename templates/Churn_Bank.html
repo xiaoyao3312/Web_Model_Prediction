@@ -8,130 +8,141 @@
 
 {% block content %}
 <div id="churn_bank" class="page-content">
-    <h1 class="text-3xl font-bold mb-6 text-gray-800">客戶流失_銀行MODEL - 預測分析</h1>
+    <!-- 應用自定義類別 .page-title (替代 text-3xl font-bold mb-6) -->
+    <h1 class="page-title">客戶流失_銀行MODEL - 預測分析</h1>
     
     <div class="three-panel-grid">
         
         <div class="left-col-top card">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">客戶特徵輸入 (10 項)</h2>
+            <!-- 應用自定義類別 .card-title (替代 text-xl font-semibold mb-4) -->
+            <h2 class="card-title">客戶特徵輸入 (10 項)</h2>
             
+            <!-- 應用自定義類別 .input-group (處理 space-y-1 間距) -->
             <div id="inputForm" class="input-group">
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">1. 信用分數 (600-850)</label>
+                <div class="input-field-container">
+                    <!-- 標籤樣式已在 CSS 中設定 -->
+                    <label>1. 信用分數 (600-850)</label>
+                    <!-- 應用自定義類別 .theme-input-field (整合 w-full p-2 rounded-md text-sm) -->
                     <input type="number" 
-                           id="input_CreditScore" 
-                           data-feature-name="CreditScore" 
-                           value="650" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_CreditScore" 
+                            data-feature-name="CreditScore" 
+                            value="650" 
+                            class="theme-input-field"> 
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">2. 年齡 (歲)</label>
+                <div class="input-field-container">
+                    <label>2. 年齡 (歲)</label>
                     <input type="number" 
-                           id="input_Age" 
-                           data-feature-name="Age" 
-                           value="38" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_Age" 
+                            data-feature-name="Age" 
+                            value="38" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">3. 服務年限 (年)</label>
+                <div class="input-field-container">
+                    <label>3. 服務年限 (年)</label>
                     <input type="number" 
-                           id="input_Tenure" 
-                           data-feature-name="Tenure" 
-                           value="4" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_Tenure" 
+                            data-feature-name="Tenure" 
+                            value="4" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">4. 餘額 ($)</label>
+                <div class="input-field-container">
+                    <label>4. 餘額 ($)</label>
                     <input type="number" 
-                           id="input_Balance" 
-                           data-feature-name="Balance" 
-                           value="120000" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_Balance" 
+                            data-feature-name="Balance" 
+                            value="120000" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">5. 產品數量 (1-4)</label>
+                <div class="input-field-container">
+                    <label>5. 產品數量 (1-4)</label>
                     <input type="number" 
-                           id="input_NumOfProducts" 
-                           data-feature-name="NumOfProducts" 
-                           value="2" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_NumOfProducts" 
+                            data-feature-name="NumOfProducts" 
+                            value="2" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">6. 持有信用卡 (0/1)</label>
+                <div class="input-field-container">
+                    <label>6. 持有信用卡 (0/1)</label>
                     <input type="number" 
-                           id="input_HasCrCard" 
-                           data-feature-name="HasCrCard" 
-                           value="1" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_HasCrCard" 
+                            data-feature-name="HasCrCard" 
+                            value="1" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">7. 活躍會員 (0/1)</label>
+                <div class="input-field-container">
+                    <label>7. 活躍會員 (0/1)</label>
                     <input type="number" 
-                           id="input_IsActiveMember" 
-                           data-feature-name="IsActiveMember" 
-                           value="0" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_IsActiveMember" 
+                            data-feature-name="IsActiveMember" 
+                            value="0" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">8. 估計薪資 ($)</label>
+                <div class="input-field-container">
+                    <label>8. 估計薪資 ($)</label>
                     <input type="number" 
-                           id="input_EstimatedSalary" 
-                           data-feature-name="EstimatedSalary" 
-                           value="95000" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_EstimatedSalary" 
+                            data-feature-name="EstimatedSalary" 
+                            value="95000" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">9. 國家/地區 (0:法 1:西 2:德)</label>
+                <div class="input-field-container">
+                    <label>9. 國家/地區 (0:法 1:西 2:德)</label>
                     <input type="number" 
-                           id="input_Geography" 
-                           data-feature-name="Geography" 
-                           value="0" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_Geography" 
+                            data-feature-name="Geography" 
+                            value="0" 
+                            class="theme-input-field">
                 </div>
                 
-                <div class="space-y-1">
-                    <label class="text-sm font-medium text-gray-600">10. 性別 (0:男 1:女)</label>
+                <div class="input-field-container">
+                    <label>10. 性別 (0:男 1:女)</label>
                     <input type="number" 
-                           id="input_Gender" 
-                           data-feature-name="Gender" 
-                           value="1" 
-                           class="w-full border border-gray-300 p-2 rounded-md text-sm">
+                            id="input_Gender" 
+                            data-feature-name="Gender" 
+                            value="1" 
+                            class="theme-input-field">
                 </div>
 
             </div>
             
-            <button id="analyzeBtn" class="w-full mt-6 bg-indigo-600 text-white font-semibold py-2.5 rounded-lg hover:bg-indigo-700 transition flex items-center justify-center disabled:opacity-50" onclick="runPredictionAndExplain()" disabled>
+            <!-- 應用自定義類別 .analyze-btn (整合按鈕所有樣式) 和 .hidden -->
+            <button id="analyzeBtn" class="analyze-btn" onclick="runPredictionAndExplain()" disabled>
                 <div id="spinner" class="loading-spinner hidden"></div>
                 <span>執行分析並取得 AI 解釋</span>
             </button>
-            <p id="errorMsg" class="text-red-500 text-sm mt-2 hidden"></p>
+            <!-- 應用自定義類別 .error-message 和 .hidden -->
+            <p id="errorMsg" class="error-message hidden"></p>
         </div>
         
         <div class="left-col-bottom card">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">AI 解釋與行動建議</h2>
+            <!-- 應用自定義類別 .card-title -->
+            <h2 class="card-title">AI 解釋與行動建議</h2>
             <div id="explanationOutput" class="output-content">
-                <p id="initialMessage" class="initial-message text-gray-500">請在頂部導航欄輸入 API Key 並點擊啟用按鈕，以開啟 AI 預測功能。</p>
+                <!-- 應用自定義類別 .initial-message -->
+                <p id="initialMessage" class="initial-message">請在頂部導航欄輸入 API Key 並點擊啟用按鈕，以開啟 AI 預測功能。</p>
             </div>
         </div>
 
         <div class="right-col card">
-            <h2 class="text-xl font-semibold mb-4 text-gray-700">模型內建輸出圖表顯示區 (可滾動)</h2>
+            <!-- 應用自定義類別 .card-title -->
+            <h2 class="card-title">模型內建輸出圖表顯示區 (可滾動)</h2>
             <div id="chartDisplay" class="chart-display">
                 <div class="chart-placeholder">圖表 1: 特徵重要性 (Feature Importance)</div>
                 <div class="chart-placeholder">圖表 2: 決策路徑 (SHAP / LIME Explanations)</div>
                 <div class="chart-placeholder">圖表 3: 客戶群組分佈 (Customer Segmentation)</div>
                 <div class="chart-placeholder">圖表 4: 預測機率分佈 (Prediction Probability)</div>
                 <div class="chart-placeholder">圖表 5: 歷史流失趨勢 (Historical Churn Trend)</div>
-                <p class="text-gray-500 text-center text-sm mt-2">使用上下拉桿檢視所有相關圖表。</p>
+                <!-- 應用自定義類別 .chart-footer-message (替代 text-gray-500 text-center text-sm mt-2) -->
+                <p class="chart-footer-message">使用上下拉桿檢視所有相關圖表。</p>
             </div>
         </div>
     </div>

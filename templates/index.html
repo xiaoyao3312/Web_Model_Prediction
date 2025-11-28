@@ -1,63 +1,53 @@
 {% extends "base_Churn.html" %}
 
-{% block title %}儀表板 - 客戶流失預測平台{% endblock %}
+{% block title %}AI 模型儀表板 - 客戶流失預測平台{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
 {% endblock %}
 
 {% block content %}
-<div id="dashboard" class="page-content">
-    <h1 class="text-3xl font-bold mb-6 text-gray-800">📊 模型儀表板總覽</h1>
 
-    <div class="bg-white rounded-xl shadow-lg p-6 mt-8"> 
-        <h2 class="text-xl font-semibold mb-5 text-gray-700 border-b pb-3">選擇分析模型</h2>
+<div id="dashboard">
+    
+    <h1 class="dashboard-title">歡迎使用 AI 模型儀表板</h1>
+
+    <div class="model-panel">
+        <h2 class="model-panel-header">選擇分析模型</h2>
         
-        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6"> 
+        <div class="model-grid">
             
-            <a href="{{ url_for('bank_churn_page') }}" class="model-card group">
-                
-                <div class="flex flex-col items-center p-4">
-                    <img src="{{ url_for('static', filename='img/bank_icon.png') }}" alt="銀行模型圖示" class="w-16 h-16 object-contain mb-3">
-                    <h3 class="text-xl font-bold text-blue-800 text-center">銀行流失模型</h3>
+            <a href="{{ url_for('bank_churn_page') }}" class="model-card model-card-bank">
+                <div class="model-card-content">
+                    <div class="model-icon">🏦</div> 
+                    <h3 class="model-card-title model-card-title-bank">銀行客戶流失預測</h3>
                 </div>
-                
-                <div class="p-4 pt-0 text-center flex-grow">
-                    <p class="text-gray-600 text-sm">利用客戶的財務行為和人口統計數據，評估其離開銀行的風險。</p>
+                <div class="model-card-description">
+                    <p class="model-card-text">利用交易數據和客戶行為模式，精準預測潛在流失的客戶。</p>
                 </div>
+                <div class="model-card-footer model-card-footer-bank">
+                    <span class="model-footer-text">進入分析</span>
+                    <span class="model-footer-icon">→</span>
+                </div>
+            </a>
 
-                <div class="flex justify-center items-center py-3 bg-blue-50 border-t border-blue-100 group-hover:bg-blue-100 transition duration-300">
-                    <span class="text-sm font-semibold text-blue-600">進入分析</span>
-                    <i class="fas fa-arrow-right ml-2 text-blue-600 transition group-hover:translate-x-1"></i>
+            <a href="{{ url_for('telco_churn_page') }}" class="model-card model-card-telco">
+                <div class="model-card-content">
+                    <div class="model-icon">📱</div> 
+                    <h3 class="model-card-title model-card-title-telco">電信服務續約模型</h3>
+                </div>
+                <div class="model-card-description">
+                    <p class="model-card-text">基於通話和數據使用量，識別高風險用戶並制定保留策略。</p>
+                </div>
+                <div class="model-card-footer model-card-footer-telco">
+                    <span class="model-footer-text">進入分析</span>
+                    <span class="model-footer-icon">→</span>
                 </div>
             </a>
             
-            <a href="{{ url_for('telco_churn_page') }}" class="model-card group">
-                
-                <div class="flex flex-col items-center p-4">
-                    <img src="{{ url_for('static', filename='img/telco_icon.png') }}" alt="電信模型圖示" class="w-16 h-16 object-contain mb-3">
-                    <h3 class="text-xl font-bold text-green-800 text-center">電信流失模型</h3>
-                </div>
-                
-                <div class="p-4 pt-0 text-center flex-grow">
-                    <p class="text-gray-600 text-sm">基於服務使用模式和合約資訊，預測電信客戶終止服務的可能性。</p>
-                </div>
-                
-                <div class="flex justify-center items-center py-3 bg-green-50 border-t border-green-100 group-hover:bg-green-100 transition duration-300">
-                    <span class="text-sm font-semibold text-green-600">進入分析</span>
-                    <i class="fas fa-arrow-right ml-2 text-green-600 transition group-hover:translate-x-1"></i>
-                </div>
-            </a>
-            
-            <div class="model-card card-placeholder">
-                <i class="fas fa-plus-circle text-4xl text-gray-400 mb-3"></i>
-                <p class="text-lg font-semibold text-gray-500">新增模型</p>
-                <p class="text-sm text-gray-400 mt-1">未來可擴增新領域模型</p>
             </div>
-            
-        </div>
     </div>
-</div>
-{% endblock %}
 
-{% block extra_js %}{% endblock %}
+</div>
+
+{% endblock %}
