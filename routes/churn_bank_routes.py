@@ -6,18 +6,20 @@ import joblib
 import pandas as pd
 import numpy as np
 from werkzeug.exceptions import BadRequest
-from typing import Any
-
+from typing import Any, Dict
+import matplotlib
+matplotlib.use('Agg') # 設置為 'Agg' 後端
 # ✅ 導入繪圖與圖表處理庫
 import matplotlib.pyplot as plt
 import io
 import base64
 
 # 設定專案路徑，導入 config.py
+# 假設 config.py 在上層目錄
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from config import DevelopmentConfig
+from config import DevelopmentConfig # 確保這行路徑是正確的
 
-# --- 特徵工程類 ---
+# --- 特徵工程類 (保持不變) ---
 class FeatureEngineerForAPI:
     @staticmethod
     def cast_columns(df: pd.DataFrame, int_cols: Any = None, cat_cols: Any = None) -> pd.DataFrame:
@@ -37,11 +39,12 @@ class FeatureEngineerForAPI:
         df_copy = df.copy()
         df_copy['Gender'] = df_copy['Gender'].astype(int)
         df_copy['Age_bin'] = pd.cut(df_copy['Age'], bins=[0, 25, 35, 45, 60, np.inf],
-                                    labels=['very_young', 'young', 'mid', 'mature', 'senior']).astype('category')
+                                     labels=['very_young', 'young', 'mid', 'mature', 'senior']).astype('category')
         df_copy['Is_two_products'] = (df_copy['NumOfProducts'] == 2).astype(int)
 
         geo_map = {0: 'France', 1: 'Spain', 2: 'Germany'}
-        df_copy['Geography'] = df_copy['Geography'].map(geo_map).astype('category')
+        # 注意：這裡假設輸入的 Geography 是 0/1/2，如果前端傳的是 'France'/'Spain'/'Germany'，這裡需要調整
+        df_copy['Geography'] = df_copy['Geography'].map(geo_map).astype('category') 
 
         df_copy['Germany_Female'] = ((df_copy['Geography'] == 'Germany') & (df_copy['Gender'] == 1)).astype(int)
         df_copy['Germany_Inactive'] = ((df_copy['Geography'] == 'Germany') & (df_copy['IsActiveMember'] == 0)).astype(int)
@@ -63,15 +66,47 @@ class FeatureEngineerForAPI:
     def run_v2_preprocessing(df: pd.DataFrame) -> pd.DataFrame:
         df_copy = FeatureEngineerForAPI.run_v1_preprocessing(df.copy())
         df_copy['is_mature_inactive_transit'] = (
-                (df_copy['Has_Zero_Balance'] == 1) & (df_copy['IsActiveMember'] == 0) & (df_copy['Age'] > 40)
+                    (df_copy['Has_Zero_Balance'] == 1) & (df_copy['IsActiveMember'] == 0) & (df_copy['Age'] > 40)
         ).astype(int)
         return df_copy
 
-# --- 日誌 ---
+# --- 圖表生成輔助函式 (新增/修改) ---
+def generate_base64_chart(data: Dict[str, float], title: str) -> str:
+    """
+    使用 Matplotlib 繪製水平柱狀圖並轉換為 Base64 圖片字串。
+    """
+    try:
+        # 根據數值排序，以便更好地顯示
+        sorted_data = dict(sorted(data.items(), key=lambda item: item[1], reverse=False))
+        features = list(sorted_data.keys())
+        importances = list(sorted_data.values())
+
+        plt.style.use('seaborn-v0_8-whitegrid')
+        plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei'] # 確保中文字體顯示
+        
+        plt.figure(figsize=(9, len(features) * 0.7 + 1)) # 根據特徵數量調整高度
+        plt.barh(features, importances, color='#4CAF50')
+        plt.xlabel("模型影響分數 (Feature Score)")
+        plt.title(title, fontsize=14)
+        plt.tight_layout()
+
+        # 儲存到 BytesIO 緩衝區
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png', bbox_inches='tight')
+        plt.close() # 關閉圖形以釋放內存
+        
+        # 轉換為 Base64 字串
+        return base64.b64encode(buf.getvalue()).decode('utf-8')
+
+    except Exception as e:
+        logger.error(f"生成圖表失敗: {e}")
+        return "" # 失敗時返回空字串
+
+# --- 日誌 (保持不變) ---
 logger = logging.getLogger('ChurnBankRoute')
 logger.setLevel(logging.INFO)
 
-# --- 載入模型 ---
+# --- 載入模型 (保持不變) ---
 MODEL = None
 FEATURE_COLUMNS = None
 try:
@@ -88,7 +123,7 @@ try:
 except Exception as e:
     logger.error(f"載入模型失敗: {e}")
 
-# --- Blueprint ---
+# --- Blueprint (保持不變) ---
 churn_bank_bp = Blueprint('churn_bank_bp', __name__)
 
 @churn_bank_bp.route('/predict', methods=['POST'])
@@ -98,9 +133,9 @@ def predict_churn():
         if not data:
             raise BadRequest("無效的 JSON 請求")
 
-        # 數值轉換，補上 id
+        # 數值轉換，補上 id (保持不變)
         input_data = {
-            'id': 0,  # ✅ 補 id
+            'id': 0, 
             'CreditScore': float(data.get('CreditScore', 0)),
             'Age': float(data.get('Age', 0)),
             'Tenure': float(data.get('Tenure', 0)),
@@ -119,21 +154,22 @@ def predict_churn():
         input_df = pd.DataFrame([input_data])
         processed_df = FeatureEngineerForAPI.run_v2_preprocessing(input_df)
 
-        # 模型存在則預測
+        # 模型預測邏輯 (保持不變)
         if MODEL is not None and FEATURE_COLUMNS is not None:
             missing_cols = set(FEATURE_COLUMNS) - set(processed_df.columns)
             if missing_cols:
                 raise ValueError(f"缺少必要欄位: {missing_cols}")
-            X_predict = processed_df[FEATURE_COLUMNS]
+            # 確保欄位順序正確
+            X_predict = processed_df[FEATURE_COLUMNS] 
             proba_churn = MODEL.predict_proba(X_predict)[:, 1][0]
         else:
-            # 模型不存在 → 模擬
+            # 模型不存在 → 模擬 (保持不變)
             score_risk = (850 - float(data.get('CreditScore', 650))) / 250
             age_risk = (float(data.get('Age', 40)) - 30) / 40
             proba_churn = float(np.clip(0.1 + score_risk * 0.4 + age_risk * 0.3, 0.01, 0.99))
             logger.info("使用模擬預測")
 
-        # 可讀性輸出
+        # 可讀性輸出 (保持不變)
         geography_map = {0: "法國 (France)", 1: "西班牙 (Spain)", 2: "德國 (Germany)"}
         gender_map = {0: "男性 (Male)", 1: "女性 (Female)"}
         readable_data = {
@@ -148,13 +184,32 @@ def predict_churn():
             '國家/地區': geography_map.get(data.get('Geography'), '未知'),
             '性別': gender_map.get(data.get('Gender'), '未知')
         }
-
-        explanation_prompt = f"客戶特徵: {readable_data}。\n模型預測的客戶流失機率為 {proba_churn:.4f}。"
-
+        
+        # ⚠️ 這裡使用可讀性數據來模擬特徵重要性，實際應用中應使用 LIME/SHAP 等庫。
+        mock_importances = {
+            f'餘額 (${data.get("Balance"):.0f})': 0.25, 
+            f'年齡 ({data.get("Age"):.0f})': 0.15, 
+            f'產品數量 ({data.get("NumOfProducts"):.0f})': 0.10,
+            f'信用分數 ({data.get("CreditScore"):.0f})': 0.08,
+            f'活躍會員 ({"是" if data.get("IsActiveMember")==1 else "否"})': 0.05
+        }
+        chart_base64 = generate_base64_chart(mock_importances, "模型特徵影響力分析")
+        
+        # 組裝用於 AI 解釋的 Prompt 片段
+        explanation_prompt_snippet = f"模型預測的客戶流失機率為 {proba_churn:.4f}。"
+        
         return jsonify({
             "status": "success",
             "prediction": float(proba_churn),
-            "explanation_prompt": explanation_prompt
+            "readable_features": readable_data, # 傳回可讀性數據給前端使用
+            "explanation_prompt": explanation_prompt_snippet, # 傳回 Prompt 片段
+            "charts": [
+                {
+                    "type": "image/png", 
+                    "base64_data": chart_base64,
+                    "title": "特徵重要性分析圖"
+                }
+            ]
         })
 
     except BadRequest as e:
