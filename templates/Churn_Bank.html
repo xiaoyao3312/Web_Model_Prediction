@@ -1,3 +1,4 @@
+C:\Users\user\Desktop\Web_Model_Prediction\templates\Churn_Bank.html
 {% extends "base_Churn.html" %}
 
 {% block title %}銀行客戶流失預測 - 客戶流失預測平台{% endblock %}
@@ -12,19 +13,19 @@
     
     <div class="main-panel-grid">
         
-                <div class="api-key-panel card">
+        <div class="api-key-panel card">
             <h2 class="card-title">🔑 Gemini API 啟用</h2>
             <div class="api-key-container">
-                <input type="password" id="apiKey" placeholder="請輸入 Gemini API Key..." class="theme-input-field" title="在此輸入您的 Gemini API Key">
+                                <input type="password" id="apiKey" placeholder="請輸入 Gemini API Key..." class="theme-input-field" title="在此輸入您的 Gemini API Key">
                 <button id="saveApiKeyBtn" class="analyze-btn" title="啟用 Gemini AI 功能">
                     <i class="fas fa-check"></i>
-                    <span class="key-status-text">啟用 AI</span>
+                                        <span class="key-status-text">尚未啟用</span>
                 </button>
             </div>
             <p id="apiStatusMsg" class="error-message" style="margin-top: 0.5rem; color: var(--primary-color);">請輸入 Key 以啟用 AI 解釋功能。</p>
         </div>
 
-                <div class="input-and-prompt-panel card">
+        <div class="input-and-prompt-panel card">
             
             <div class="input-section">
                 <h2 class="card-title">📈 客戶特徵輸入 (10 項)</h2>
@@ -56,22 +57,28 @@
 </textarea>
                 </div>
                 
-                <button id="analyzeBtn" class="analyze-btn" disabled>
-                    <div id="spinner" class="loading-spinner hidden"></div>
-                    <span>執行模型預測並取得 AI 解釋</span>
-                </button>
+                                <div class="action-buttons-container">
+                                        <button id="analyzeBtn" class="analyze-btn analyze-full" disabled>
+                        <span>執行模型預測並取得 AI 解釋</span>
+                    </button>
+                    
+                                        <button id="predictOnlyBtn" class="analyze-btn analyze-predict-only">
+                        <i class="fas fa-chart-line"></i>
+                        <span>僅執行模型預測</span>
+                    </button>
+                </div>
                 <p id="errorMsg" class="error-message hidden"></p>
             </div>
         </div>
 
-                <div class="explanation-panel card">
+        <div class="explanation-panel card">
             <h2 class="card-title">💡 AI 解釋與行動建議</h2>
             <div id="explanationOutput" class="output-content">
                 <p id="initialMessage" class="initial-message">請先在上方輸入並**啟用**您的 Gemini API Key，然後輸入參數和指令，才能執行分析。</p>
             </div>
         </div>
 
-                <div class="chart-panel card">
+        <div class="chart-panel card">
             <h2 class="card-title">📊 模型內建輸出圖表顯示區</h2>
             <div id="chartDisplay" class="chart-display">
                 <div class="chart-placeholder">圖表 1: **單一客戶局部 SHAP 影響力**</div>

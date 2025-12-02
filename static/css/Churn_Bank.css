@@ -1,3 +1,4 @@
+C:\Users\user\Desktop\Web_Model_Prediction\static\css\Churn_Bank.css
 /* Churn_Bank.css - 銀行客戶流失預測頁面特定樣式 (垂直佈局) */
 
 /* -------------------------------------- */
@@ -96,8 +97,8 @@ h1, h2, h3, h4, h5, h6 {
 .analyze-btn {
     width: auto; /* 不強制滿寬 */
     margin-top: 0; 
-    background-color: var(--header-font-color); 
-    color: var(--panel-bg-color); 
+    background-color: rgba(0, 0, 0, 1); 
+    color: rgba(0, 128, 128, 1);
     font-weight: 600; 
     padding: 0.625rem 1rem; 
     border-radius: 0.5rem; 
@@ -226,21 +227,6 @@ h1, h2, h3, h4, h5, h6 {
     padding: 15px;
 }
 
-.loading-spinner {
-    width: 20px;
-    height: 20px;
-    border: 3px solid #f3f3f3; 
-    border-top: 3px solid var(--primary-color); 
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-right: 8px;
-}
-
-@keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-
 /* -------------------------------------- */
 /* --- 3. 響應式設計 (小視窗單欄堆疊) --- */
 /* -------------------------------------- */
@@ -276,4 +262,33 @@ h1, h2, h3, h4, h5, h6 {
     .api-key-panel .api-key-container .theme-input-field {
         max-width: unset;
     }
+    
+    /* 🌟 手機佈局下，按鈕堆疊 */
+    .action-buttons-container {
+        flex-direction: column;
+    }
+    .analyze-full, .analyze-predict-only {
+        width: 100%;
+    }
+}
+
+/* -------------------------------------- */
+/* --- 4. 針對新增的按鈕容器佈局調整 (大螢幕) --- */
+/* -------------------------------------- */
+.action-buttons-container {
+    display: flex;
+    gap: 10px; /* 按鈕間的間距 */
+    margin-top: 1rem; /* 與上方 Prompt 區塊的間距 */
+}
+
+/* 確保全部分析按鈕佔滿較多空間，單純預測按鈕較小 */
+.analyze-full {
+    flex-grow: 1;
+}
+
+.analyze-predict-only {
+    /* 讓這個按鈕的顏色稍微不同，表示不同的操作等級 */
+    background-color: color-mix(in srgb, var(--FIXED-PRIMARY-COLOR) 80%, black) !important;
+    color: white !important;
+    flex-shrink: 0;
 }

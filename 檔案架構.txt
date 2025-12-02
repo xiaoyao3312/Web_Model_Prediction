@@ -18,17 +18,17 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  ├─Churn_Bank_code
 │  │  │  churn_bank_model.joblib
 │  │  │  churn_bank_shap.py
+│  │  │  churn_bank_test.csv
+│  │  │  churn_bank_train.csv
 │  │  │  churn_bank_train.py
 │  │  │  feature_columns.joblib
 │  │  │  fe_pipeline_name.txt
-│  │  │  params_XGBoost_Final_Tuned_run_v2_preprocessing.joblib
 │  │  │  shap_summary_plot.png
 │  │  │  submission.csv
-│  │  │  test.csv
-│  │  │  train.csv
-│  │  │  XGBoost_Final_Tuned_run_v2_preprocessing.joblib
 │  │  │
 │  │  └─__pycache__
+│  │          churn_bank_train.cpython-311.pyc
+│  │
 │  └─Churn_Telco_code
 │          Churn_Telco.ipynb
 │
@@ -43,6 +43,8 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  │  gemini_service.py
 │  │
 │  └─__pycache__
+│          churn_bank_service.cpython-311.pyc
+│
 ├─static
 │  ├─css
 │  │      base_churn.css
@@ -70,4 +72,3 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │      index.html
 │
 └─__pycache__
-        config.cpython-311.pyc
