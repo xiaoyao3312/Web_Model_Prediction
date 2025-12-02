@@ -17,12 +17,17 @@ import base64
 
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
+import shap
 
 # =======================================================================
 # 📌 修正：全局設定 Matplotlib 使用 Dockerfile 中安裝的字體
 # =======================================================================
-plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'sans-serif'] # 確保使用新安裝的字體
-plt.rcParams['axes.unicode_minus'] = False # 解決負號亂碼問題
+# 確保使用在 Dockerfile 中安裝的文泉驛正黑字體 (WenQuanYi Zen Hei)
+# Matplotlib 會在首次繪圖時檢查此字體是否存在並載入
+plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'sans-serif'] 
+plt.rcParams['axes.unicode_minus'] = False # 解決負號'-'顯示為方塊的問題
+# =======================================================================
+
 
 # --- 路徑配置與服務導入 ---
 # 設定專案路徑，導入 config.py
@@ -42,7 +47,6 @@ logger.setLevel(logging.INFO)
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
                          'projects', 'Churn_Bank_code')
 MODEL_PATH_FULL = os.path.join(MODEL_DIR, "churn_bank_model.joblib")
-# ⭐⭐⭐ 根據您的要求，更新全局 SHAP 圖的檔案名稱 ⭐⭐⭐
 GLOBAL_SHAP_FILE = os.path.join(MODEL_DIR, "shap_summary_plot.png") 
 
 # --- 特徵工程類 (保持不變) ---
@@ -118,13 +122,8 @@ def generate_local_shap_chart(shap_data: Dict[str, float], title: str) -> str:
         colors = ['#EF5350' if imp > 0 else '#66BB6A' for imp in importances] 
         
         # 繪圖
+        # 使用 plt.style.use() 應在 plt.rcParams 設定後執行
         plt.style.use('seaborn-v0_8-whitegrid')
-        
-        # =======================================================================
-        # 📌 修正：移除這裡的字體設定，改用檔案開頭的全局設定 (WenQuanYi Zen Hei)
-        # =======================================================================
-        # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS'] 
-        # plt.rcParams['axes.unicode_minus'] = False # 正常顯示負號
         
         fig, ax = plt.subplots(figsize=(10, len(features) * 0.7 + 1)) 
         
@@ -133,6 +132,7 @@ def generate_local_shap_chart(shap_data: Dict[str, float], title: str) -> str:
         # 添加中心線 (0 軸)
         ax.axvline(0, color='grey', linestyle='--', linewidth=0.8)
 
+        # Matplotlib 會使用全局設定的字體來渲染這些中文標籤
         ax.set_xlabel("SHAP 影響力 (正值推高流失機率 / 負值推低)")
         ax.set_title(title, fontsize=14)
         ax.invert_yaxis() # 讓最重要的特徵在頂部
