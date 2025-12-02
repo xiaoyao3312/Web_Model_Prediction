@@ -6,6 +6,8 @@ tree "C:\Users\user\Desktop\Web_Model_Prediction" /F
 C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  app.py
 │  config.py
+│  Dockerfile
+│  Procfile
 │  requirements.txt
 │  檔案操作手冊.txt
 │  檔案架構.txt
@@ -48,9 +50,9 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 ├─static
 │  ├─css
 │  │      base_churn.css
-│  │      Churn_Bank.css
-│  │      Churn_Telco.css
-│  │      Color_BG_Control.css
+│  │      churn_bank.css
+│  │      churn_telco.css
+│  │      color_bg_control.css
 │  │      index.css
 │  │
 │  ├─img
@@ -61,14 +63,12 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  │
 │  └─js
 │          base_churn.js
-│          Churn_Bank.js
-│          Churn_Telco.js
-│          Color_BG_Control.js
+│          churn_bank.js
+│          churn_telco.js
+│          color_bg_control.js
 │
-├─templates
-│      base_Churn.html
-│      Churn_Bank.html
-│      Churn_Telco.html
-│      index.html
-│
-└─__pycache__
+└─templates
+        base_churn.html
+        churn_bank.html
+        churn_telco.html
+        index.html
