@@ -31,29 +31,28 @@ logger.setLevel(logging.INFO)
 # 修正 2：'logger' 現在已被定義
 # =======================================================================
 try:
-    # 嘗試刪除 Matplotlib 的字體快取文件
-    # 使用 matplotlib.get_cachedir() 是官方推薦的獲取方法
+    # 獲取 Matplotlib 的快取目錄。
     cache_dir = matplotlib.get_cachedir()
     
-    # 檢查目錄是否存在，以防Matplotlib尚未創建
-    if not os.path.exists(cache_dir):
-        logger.info(f"Matplotlib 快取目錄 {cache_dir} 尚未創建。")
-    else:
+    # 檢查目錄是否存在
+    if os.path.exists(cache_dir):
         font_cache_files = [f for f in os.listdir(cache_dir) if f.startswith('fontlist-')]
         
         if font_cache_files:
-            logger.info(f"偵測到 Matplotlib 字體快取，正在清理...")
+            logger.info(f"偵測到 Matplotlib 字體快取 ({cache_dir})，正在清理...")
             for filename in font_cache_files:
                 os.remove(os.path.join(cache_dir, filename))
             
-            # 重建快取，這會強制 Matplotlib 重新掃描系統字體
-            fm.fontManager.findSystemFonts(cache_dir=cache_dir, force_load=True)
-            logger.info("Matplotlib 字體快取清理並重建完成。")
+            # Matplotlib 在下一次呼叫字體時會自動重建快取，無需手動呼叫複雜方法。
+            logger.info("Matplotlib 字體快取清理完成。期望中文亂碼問題已解決。")
         else:
             logger.info("Matplotlib 字體快取文件未找到，無需清理。")
-            
+    else:
+        logger.info(f"Matplotlib 快取目錄 {cache_dir} 尚未創建。")
+        
 except Exception as e:
-    logger.warning(f"Matplotlib 字體快取處理失敗: {e}")
+    # 這裡的錯誤通常是非致命的，我們記錄下來即可
+    logger.warning(f"Matplotlib 字體快取處理發生意外: {e}")
 
 # =======================================================================
 # 📌 全局設定 Matplotlib 使用 Dockerfile 中安裝的字體
@@ -61,7 +60,7 @@ except Exception as e:
 # 確保使用在 Dockerfile 中安裝的文泉驛正黑字體 (WenQuanYi Zen Hei)
 # 由於快取已重建，Matplotlib 應能找到此字體
 plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'sans-serif'] 
-plt.rcParams['axes.unicode_minus'] = False # 解決負號'-'顯示為方塊的問題
+plt.rcParams['axes.unicode_minus'] = False
 # =======================================================================
 
 
