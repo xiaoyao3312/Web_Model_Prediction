@@ -8,7 +8,7 @@ import sys
 import os 
 from typing import Any, Callable, Tuple, Dict, List
 import joblib 
-
+import logging
 # 設置警告和日誌
 warnings.filterwarnings("ignore", category=UserWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -19,13 +19,19 @@ logger = logging.getLogger('MainScript')
 try:
     import numpy as np
     import pandas as pd
-    from xgboost import XGBClassifier
+    # 檢查並處理特定版本的 XGBoost 警告
+    try:
+        from xgboost import XGBClassifier
+    except ImportError as e:
+        logger.error(f"錯誤: 缺少必要的庫。請執行 pip install numpy pandas xgboost optuna scikit-learn shap: {e}")
+        sys.exit(1)
+        
     from sklearn.model_selection import StratifiedKFold
     from sklearn.metrics import roc_auc_score
     from sklearn.base import clone
     import optuna
 except ImportError as e:
-    print(f"錯誤: 缺少必要的庫。請執行 pip install numpy pandas xgboost optuna scikit-learn shap: {e}")
+    logger.error(f"錯誤: 缺少必要的庫。請執行 pip install numpy pandas xgboost optuna scikit-learn shap: {e}")
     sys.exit(1)
 
 
@@ -70,7 +76,7 @@ class FeatureEngineer:
         # 1. 處理 Gender: 將 'Male'/'Female' 轉換為 0/1
         df_copy = FeatureEngineer.map_columns(df_copy, {'Gender': gender_map}) 
         
-        # ⭐ 修正：在強制轉換為 int 之前，將映射後產生的 NaN 填充為 0。
+        # 修正：在強制轉換為 int 之前，將映射後產生的 NaN 填充為 0。
         if 'Gender' in df_copy.columns:
             # 訓練集和測試集都可能有 NaN
             df_copy['Gender'] = df_copy['Gender'].fillna(0)
@@ -83,7 +89,7 @@ class FeatureEngineer:
         # 年齡分箱
         if 'Age' in df_copy.columns:
             df_copy['Age_bin'] = pd.cut(df_copy['Age'], bins=[0, 25, 35, 45, 60, np.inf],
-                                     labels=['very_young', 'young', 'mid', 'mature', 'senior']).astype(str)
+                                        labels=['very_young', 'young', 'mid', 'mature', 'senior']).astype(str)
         else:
             df_copy['Age_bin'] = 'unknown'
         
@@ -111,7 +117,8 @@ class FeatureEngineer:
 
         # 對 Tenure 進行 Log 轉換 (確保 Tenure 存在)
         if 'Tenure' in df_copy.columns:
-            df_copy['Tenure_log'] = np.log1p(df_copy['Tenure'])
+            # 確保 Tenure 非負
+            df_copy['Tenure_log'] = np.log1p(df_copy['Tenure'].clip(lower=0))
         else:
             df_copy['Tenure_log'] = 0.0
 
@@ -137,7 +144,7 @@ class FeatureEngineer:
         for col in df_copy.columns:
             if df_copy[col].dtype.name not in ['object', 'category', 'str']:
                  if col not in int_cols: 
-                      df_copy[col] = df_copy[col].astype(float) 
+                     df_copy[col] = df_copy[col].astype(float) 
 
         return df_copy
 
@@ -154,16 +161,16 @@ class FeatureEngineer:
         # 創建新的交互特徵 (確保 Balance, IsActiveMember, Age 存在)
         if all(col in original_df.columns for col in ['Balance', 'IsActiveMember', 'Age']):
             df_copy['is_mature_inactive_transit'] = (
-                                                        (original_df['Balance'] == 0) & 
-                                                        (original_df['IsActiveMember'] == 0) & 
-                                                        (original_df['Age'] > 40)).astype(int)
+                                                    (original_df['Balance'] == 0) & 
+                                                    (original_df['IsActiveMember'] == 0) & 
+                                                    (original_df['Age'] > 40)).astype(int)
         else:
             df_copy['is_mature_inactive_transit'] = 0 # 缺失則設為 0
         
         # 確保新的旗標是 int
         df_copy['is_mature_inactive_transit'] = df_copy['is_mature_inactive_transit'].astype(int)
         
-        # 移除目標欄位
+        # 移除目標欄位 (如果它在 V1 處理後仍然存在)
         if Config.TARGET_COL in df_copy.columns: 
              df_copy.drop(columns=[Config.TARGET_COL], inplace=True, errors='ignore')
         
@@ -228,7 +235,7 @@ class HyperparameterTuner:
     @staticmethod
     def tune(X: pd.DataFrame, y: pd.Series, n_trials: int) -> dict:
         """執行 Optuna 調優並返回最佳參數。"""
-        optuna.logging.set_verbosity(optuna.logging.WARNING) 
+        optuna.logging.set_verbosity(logging.WARNING)
         study = optuna.create_study(direction='maximize')
         objective_with_args = lambda trial: HyperparameterTuner._objective(trial, X, y)
 
@@ -237,7 +244,7 @@ class HyperparameterTuner:
         logger.info(f"調優完成。最佳 ROC AUC: {study.best_value:.5f}")
         logger.info("最佳參數:")
         for key, value in study.best_params.items():
-            logger.info(f"  {key}: {value}")
+            logger.info(f"  {key}: {value}")
 
         return study.best_params
 
@@ -249,13 +256,14 @@ class ModelTrainer:
         self.n_splits = n_splits
         self.random_state = random_state
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.best_model = None # 記錄最佳模型
 
     def run_experiment(self,
-                         train_df: pd.DataFrame,
-                         test_df: pd.DataFrame,
-                         feature_engineering_pipeline: Callable,
-                         models: Dict[str, Any], 
-                         target_col: str = Config.TARGET_COL) -> Tuple[pd.DataFrame, Dict[str, Any], Any, List[str]]: 
+                           train_df: pd.DataFrame,
+                           test_df: pd.DataFrame,
+                           feature_engineering_pipeline: Callable,
+                           models: Dict[str, Any], 
+                           target_col: str = Config.TARGET_COL) -> Tuple[pd.DataFrame, Dict[str, Any], Any, List[str]]: 
         """
         啟動完整的實驗週期：特徵工程 (FE)、訓練、生成提交文件，並返回最佳模型。
         """
@@ -332,6 +340,7 @@ class ModelTrainer:
             return pd.DataFrame(), all_results, None, [] 
 
         self.logger.info(f"最佳模型: {best_model_name} (CV ROC AUC: {best_roc_auc:.4f})")
+        self.best_model = best_model # 設定最佳模型實例
 
         # 4. 生成提交文件
         self.logger.info("步驟 4: 生成提交文件...")
@@ -432,14 +441,79 @@ class ModelTrainer:
                               model_name: str, 
                               best_params: Dict[str, Any], 
                               output_path: str = Config.MODEL_DIR) -> None:
-        """保存模型、特徵工程管道名稱和最佳參數。"""
+        """
+        保存模型、特徵工程管道名稱和最佳參數。
+        此處加入了 XGBoost 模型的強制修正邏輯，以解決 SHAP 的載入錯誤 (ValueError: could not convert string to float)。
+        """
         model_filename = "churn_bank_model.joblib" 
-        
-        # 1. 保存模型
         full_model_path = os.path.join(output_path, model_filename)
+
+        # ⭐⭐⭐ 關鍵修復：手動修正 base_score 為標準浮點數 ⭐⭐⭐
         try:
-            joblib.dump(model, full_model_path)
-            self.logger.info(f"模型成功保存至: {full_model_path}")
+            if isinstance(model, XGBClassifier):
+                
+                # 1. 儲存為臨時的 XGBoost 原生格式 (JSON)，這一步通常能修復大部分元數據
+                temp_model_json_path = os.path.join(output_path, "churn_bank_model_temp.json")
+                model.save_model(temp_model_json_path)
+
+                # 2. 重新載入這個文件到一個新的 XGBoost 實例中
+                fixed_model = XGBClassifier(random_state=Config.RANDOM_STATE, use_label_encoder=False)
+                fixed_model.load_model(temp_model_json_path)
+                
+                # 3. **強制修正** `base_score` 參數
+                bs_value_raw = fixed_model.get_params().get('base_score')
+                corrected_base_score = 0.5 # 預設安全值
+
+                try:
+                    if isinstance(bs_value_raw, str):
+                        # 處理字串形式: "[0.5]" 或 "0.5"
+                        if bs_value_raw.startswith('['):
+                            bs_value_raw = bs_value_raw.strip('[]')
+                        corrected_base_score = float(bs_value_raw)
+                    elif isinstance(bs_value_raw, list):
+                        # 處理列表形式: [0.5]
+                        if len(bs_value_raw) > 0:
+                            corrected_base_score = float(bs_value_raw[0])
+                    elif isinstance(bs_value_raw, (int, float)):
+                        # 處理數值形式
+                        corrected_base_score = float(bs_value_raw)
+                    
+                    # 設置修正後的參數
+                    fixed_model.set_params(base_score=corrected_base_score)
+                    
+                    # 同步更新底層 Booster 屬性 (這是 SHAP 讀取的關鍵)
+                    booster = fixed_model.get_booster()
+                    booster.set_param({"base_score": corrected_base_score})
+                    booster.set_attr(base_score=str(corrected_base_score))
+                    
+                    self.logger.info(f"強制修正 base_score 為 {corrected_base_score}。")
+
+                except Exception as e:
+                    self.logger.warning(f"解析 base_score 失敗: {e}。將使用預設值 0.5。")
+                    fixed_model.set_params(base_score=0.5)
+                
+                
+                # 4. 檢查並修正特徵名稱 (防止 Pylance 警告並確保兼容性)
+                if fixed_model.feature_names_in_ is not None:
+                    # 將特徵名稱保存到底層 Booster 屬性中，而不是嘗試修改 scikit-learn 的只讀屬性
+                    feature_names_str = ",".join([str(f) for f in fixed_model.feature_names_in_])
+                    fixed_model.get_booster().set_attr(feature_names=feature_names_str)
+
+
+                # 5. 使用 joblib 保存這個「已修復元數據」的模型
+                joblib.dump(fixed_model, full_model_path)
+                
+                # 6. 刪除臨時文件
+                if os.path.exists(temp_model_json_path):
+                    os.remove(temp_model_json_path)
+                    
+                self.logger.info(f"模型 (已修復 base_score) 成功保存至: {full_model_path}")
+
+            else:
+                # 非 XGBoost 模型，直接使用 joblib 保存
+                joblib.dump(model, full_model_path)
+                self.logger.info(f"模型成功保存至: {full_model_path}")
+                
         except Exception as e:
             self.logger.error(f"保存模型時發生錯誤: {e}")
         
@@ -462,11 +536,10 @@ def main(train_file: str, test_file: str, tune: bool, n_trials: int):
     try:
         df_train = pd.read_csv(train_file)
         
-        # 🎯 方案 A 修正：假設 test.csv 包含標頭 (Header)
+        # 修正：假設 test.csv 包含標頭 (Header)
         df_test = pd.read_csv(
             test_file, 
             header=0, # 假設 test.csv 包含標頭行，使用第 0 行作為欄位名稱
-            # 移除 names 參數，讓 pandas 自動使用標頭
             # 輔助：嘗試在讀取時就將數值欄位讀取為 float
             dtype={'CreditScore': float, 'Age': float, 'Tenure': float, 
                    'Balance': float, 'NumOfProducts': float, 'HasCrCard': float, 
@@ -480,10 +553,6 @@ def main(train_file: str, test_file: str, tune: bool, n_trials: int):
         return
     except Exception as e:
         logger.error(f"數據加載時發生錯誤: {e}")
-        # 如果修正後仍然報錯，將額外打印 DataFrame 的前幾行資訊以供進一步調試
-        # if 'df_train' in locals() and 'df_test' in locals():
-        #     logger.error(f"df_train columns: {df_train.columns.tolist()}")
-        #     logger.error(f"df_test columns: {df_test.columns.tolist()}")
         return
 
     trainer = ModelTrainer()
@@ -572,8 +641,8 @@ if __name__ == "__main__":
     
     # 預設路徑 (請根據實際情況修改)
     default_root = os.path.dirname(os.path.abspath(__file__))
-    default_train_path = os.path.join(default_root, "train.csv") 
-    default_test_path = os.path.join(default_root, "test.csv")
+    default_train_path = os.path.join(default_root, "churn_bank_train.csv") 
+    default_test_path = os.path.join(default_root, "churn_bank_test.csv")
 
     parser.add_argument("--train_file", type=str, default=default_train_path, help="訓練數據文件路徑")
     parser.add_argument("--test_file", type=str, default=default_test_path, help="測試數據文件路徑")

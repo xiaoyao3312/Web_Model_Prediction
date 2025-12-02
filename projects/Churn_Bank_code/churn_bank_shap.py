@@ -1,11 +1,13 @@
 # C:\Users\user\Desktop\Web_Model_Prediction\projects\Churn_Bank_code\churn_bank_shap.py
-# 銀行客戶流失預測 - SHAP 值分析
+# 銀行客戶流失預測 - SHAP 值分析 (最終修復版：物理文件修復與正確載入)
 
 import logging
 import warnings
 import argparse
 import sys
 import os 
+import json
+import re # 引入正則表達式用於文件修復
 from typing import Callable, Dict, Any, List
 import joblib 
 
@@ -19,11 +21,11 @@ logger = logging.getLogger('SHAPScript')
 try:
     import numpy as np
     import pandas as pd
+    import xgboost as xgb # 引入 xgboost 作為 xgb，用於載入修復後的 Booster
     from xgboost import XGBClassifier
     import shap
     import matplotlib.pyplot as plt
     # 導入訓練腳本中的 FeatureEngineer 類和 Config
-    # 假設 churn_bank_train.py 在同一目錄下
     from churn_bank_train import FeatureEngineer, Config 
 except ImportError as e:
     logger.error(f"錯誤: 缺少必要的庫。請執行 pip install numpy pandas xgboost shap matplotlib scikit-learn: {e}")
@@ -86,22 +88,18 @@ class ShapAnalyzer:
             return pd.DataFrame()
             
         # 1. 應用特徵工程管道
-        # 由於是分析，我們使用訓練集，且不傳遞 is_train (但 V2 內部處理了 is_train)
         df_processed = self.fe_pipeline(df.copy(), is_train=True) 
         
         # 2. 找出類別欄位並進行 OHE
         cat_cols = [col for col in df_processed.columns if df_processed[col].dtype.name in ['object', 'str']]
         X_oh = pd.get_dummies(df_processed, columns=cat_cols, dummy_na=False)
         
-        # 3. 嚴格對齊訓練時的欄位順序和存在性 (使用 self.feature_cols)
-        
-        # 補齊測試集缺少的欄位 (如果訓練集有，但當前分析數據沒有)
+        # 3. 嚴格對齊訓練時的欄位順序和存在性
         missing_cols = set(self.feature_cols) - set(X_oh.columns)
         for c in missing_cols:
             X_oh[c] = 0.0 # 確保為浮點數
             
         # 移除多餘的欄位，並確保順序一致
-        # 這一步是關鍵：確保分析數據的欄位名稱和順序與訓練模型時完全相同
         X_aligned = X_oh[[col for col in self.feature_cols if col in X_oh.columns]] 
         
         # 4. 確保所有數據都是 float
@@ -119,28 +117,67 @@ class ShapAnalyzer:
 
         self.logger.info(f"開始計算 {n_samples} 個樣本的 SHAP 值...")
         
-        # 隨機抽樣，避免計算時間過長
         if X_data.shape[0] > n_samples:
             X_sample = X_data.sample(n=n_samples, random_state=Config.RANDOM_STATE)
         else:
             X_sample = X_data
 
+        
+        booster = self.model.get_booster()
+        temp_model_path = os.path.join(self.model_dir, "shap_temp_model.json")
+        
+        # 預設使用原始模型，如果修復失敗，將回退到這個
+        final_model_for_shap = self.model 
+        
+        try:
+            # 1. 保存為 JSON 文件
+            booster.save_model(temp_model_path)
+            
+            # 2. 讀取並手動替換字串 (RegEx 替換)
+            with open(temp_model_path, 'r', encoding='utf-8') as f:
+                content = f.read()
+            
+            # 3. 使用正則表達式尋找並修復 "base_score": "[...]" 格式
+            #    將 "base_score": "[0.123]" 替換為 "base_score": "0.123"
+            new_content = re.sub(r'"base_score":\s*"\[(.*?)\]"', r'"base_score": "\1"', content)
+            
+            # 4. 寫回文件
+            with open(temp_model_path, 'w', encoding='utf-8') as f:
+                f.write(new_content)
+                
+            self.logger.info(f"已手動修復臨時模型文件中的 base_score 格式: {temp_model_path}")
+            
+            # 5. 載入這個修復後的文件到一個**新的純淨 Booster** 實例中
+            clean_booster = xgb.Booster()
+            clean_booster.load_model(temp_model_path)
+            
+            # 將修復後的 Booster 設定為用於 SHAP 的最終模型
+            final_model_for_shap = clean_booster 
+            self.logger.info("已成功載入修復後的 Booster。")
+
+        except Exception as e:
+            self.logger.error(f"嘗試物理修復模型文件失敗: {e}。將嘗試使用原始模型（預計會失敗）。")
+            
+        finally:
+            # 清理臨時文件
+            if os.path.exists(temp_model_path):
+                os.remove(temp_model_path)
+                
         # 創建 SHAP Explainer
-        # 使用 TreeExplainer 適合樹模型 (如 XGBoost)
-        explainer = shap.TreeExplainer(self.model)
+        # ⭐ 將修復後或原始的 final_model_for_shap (XGBClassifier 或 xgb.Booster) 傳入 ⭐
+        explainer = shap.TreeExplainer(final_model_for_shap)
+        self.logger.info("SHAP Explainer 初始化成功！開始計算 SHAP 值...")
 
         # 計算 SHAP 值
-        # 根據 XGBoost 的版本，可能需要指定 check_additivity=False
         shap_values = explainer.shap_values(X_sample)
 
         # 生成摘要圖
         shap.summary_plot(shap_values, X_sample, show=False)
         
-        # 保存圖片
         output_file = os.path.join(self.model_dir, 'shap_summary_plot.png')
         plt.tight_layout()
         plt.savefig(output_file)
-        plt.close() # 關閉圖形，釋放記憶體
+        plt.close() 
         
         self.logger.info(f"SHAP 摘要圖已保存至: {output_file}")
 
@@ -153,10 +190,9 @@ def main_shap(train_file: str):
         logger.error("無法加載所有必要的模型工件，SHAP 分析中止。")
         return
 
-    # 數據加載 - 使用訓練集作為背景數據
+    # 數據加載
     try:
         df_train = pd.read_csv(train_file)
-        # 移除目標變量，因為 SHAP 輸入只需要特徵
         if Config.TARGET_COL in df_train.columns:
             df_train.drop(columns=[Config.TARGET_COL], inplace=True, errors='ignore')
             
@@ -169,7 +205,7 @@ def main_shap(train_file: str):
         logger.error(f"數據加載時發生錯誤: {e}")
         return
 
-    # 數據預處理和對齊
+    # 數據預處理
     X_aligned = analyzer.process_data(df_train)
     
     if X_aligned.empty:
@@ -177,20 +213,18 @@ def main_shap(train_file: str):
         return
 
     # 運行 SHAP 分析
-    analyzer.run_shap_analysis(X_aligned, n_samples=2000) # 增加採樣數量以獲得更好的視覺化效果
+    analyzer.run_shap_analysis(X_aligned, n_samples=2000)
 
 
 # --- 腳本入口點 ---
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="銀行客戶流失預測 - SHAP 分析腳本")
     
-    # 預設路徑 (應與訓練腳本一致)
     default_root = os.path.dirname(os.path.abspath(__file__))
-    default_train_path = os.path.join(default_root, "train.csv") 
+    default_train_path = os.path.join(default_root, "churn_bank_train.csv") 
 
-    parser.add_argument("--train_file", type=str, default=default_train_path, help="訓練數據文件路徑 (用於背景數據)")
+    parser.add_argument("--train_file", type=str, default=default_train_path, help="訓練數據文件路徑")
     
     args = parser.parse_args()
     
-    # 執行主函數
     main_shap(args.train_file)

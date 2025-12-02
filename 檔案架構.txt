@@ -3,80 +3,7 @@ Web_Learning_Model 專案目錄結構說明
 在PowerShell輸入
 tree "C:\Users\user\Desktop\Web_Model_Prediction" /F
 
-Web_Model_Prediction/  <-- 專案根目錄，包含 Web 服務所需的一切。
-│
-│ # --------------------------- 根目錄核心檔案 ---------------------------
-│ app.py                             # 應用程式進入點：Web 服務主檔案（通常是 Flask 或 FastAPI 啟動點），負責初始化和運行伺服器。
-│ config.py                          # 配置檔案：存放應用程式的各種設定，如資料庫連線、API 金鑰、模型路徑等。
-│ requirements.txt                   # 依賴套件清單：列出運行此專案所需的所有 Python 函式庫及其版本，供環境建置使用 (pip install -r)。
-│ 檔案操作手冊.txt                    # 專案文檔：關於如何操作、部署或維護此專案的手冊或說明。
-│ 檔案架構.txt                        # 專案文檔：記錄了當前的檔案和資料夾結構。
-│
-├─api                                # 應用程式介面 (API) 定義目錄，用於定義 URL 結構。
-│  └─churn_bank                      # 針對 'Churn_Bank' 模型的 API 模組。
-│          predict                   # 【空資料夾或檔案】通常代表 API 的最終端點路徑，例如 /api/churn_bank/predict，用於執行預測。
-│
-├─data                               # 資料資源目錄，用於存放模型訓練和部署所需的資料。
-│  ├─datasets                        # 資料集子目錄。
-│  │      placeholder.txt            # 【可刪除】佔位檔案，用於確保版本控制系統 (如 Git) 追蹤到這個空資料夾。
-│  │      test.csv                   # 測試數據集：用於評估模型性能的數據。
-│  │      train.csv                  # 訓練數據集：用於訓練 XGBoost 模型的原始數據。
-│  │
-│  └─models                          # 模型儲存目錄。
-│          placeholder.txt           # 【可刪除】佔位檔案。
-│          XGBoost_Final_Tuned_run_v2_preprocessing.joblib # 【核心資產】訓練好的 XGBoost 模型檔案，Web 服務用來載入並執行預測。
-│
-├─projects                           # 模型開發和實驗目錄。
-│  ├─Churn_Bank_code                 # 銀行客戶流失模型 (Churn Bank) 的開發代碼。
-│  │      Churn_Bank.ipynb           # Jupyter Notebook：記錄了數據探索、特徵工程和模型訓練過程的筆記本。
-│  │      churn_bank_train.py        # 模型訓練腳本：用於重新執行或自動化訓練模型的 Python 腳本。
-│  │
-│  └─Churn_Telco_code                # 電信客戶流失模型 (Churn Telco) 的開發代碼。
-│          Churn_Telco.ipynb         # Jupyter Notebook：記錄了 Churn Telco 模型的開發筆記。
-│
-├─routes                             # 路由層目錄：負責處理 Web 請求的模組。
-│  │  churn_bank_routes.py           # 路由定義：將 /api/churn_bank/ 相關的 URL 請求導向到相對應的服務函式。
-│  │
-│  └─__pycache__                     # 【可刪除】Python 自動生成的位元碼快取資料夾 (.pyc 檔案)。
-│          churn_bank_routes.cpython-311.pyc
-│
-├─services                           # 服務層目錄：負責處理業務邏輯的模組。
-│  │  churn_bank_service.py          # 業務邏輯：包含載入 XGBoost 模型、數據預處理和執行預測的核心函式。
-│  │  gemini_service.py              # 業務邏輯：包含呼叫 Gemini AI 模型進行互動或額外處理的函式。
-│  │
-│  └─__pycache__                     # 【可刪除】Python 自動生成的位元碼快取資料夾 (.pyc 檔案)。
-│          churn_bank_service.cpython-313.pyc
-│          gemini_service.cpython-313.pyc
-│
-├─static                             # 靜態資源目錄：存放前端網頁所需的檔案。
-│  ├─css                             # 樣式表檔案 (Cascading Style Sheets)。
-│  │      base_churn.css             # 基礎或共用的 CSS 樣式。
-│  │      Churn_Bank.css             # Churn Bank 頁面專屬的 CSS 樣式。
-│  │      Churn_Telco.css            # Churn Telco 頁面專屬的 CSS 樣式。
-│  │      Color_BG_Control.css       # 控制背景顏色的樣式。
-│  │      index.css                  # 首頁專屬的 CSS 樣式。
-│  │
-│  ├─img                             # 圖片檔案。
-│  │      Churn_Bank.jpg             # Churn Bank 相關圖片。
-│  │      Churn_Telco.jpg            # Churn Telco 相關圖片。
-│  │      doro.gif                   # 可能是某個動畫或圖標。
-│  │      logo.png                   # 應用程式的標誌圖片。
-│  │
-│  └─js                              # JavaScript 檔案 (用於前端互動邏輯)。
-│          base_churn.js             # 基礎或共用的 JavaScript 腳本。
-│          Churn_Bank.js             # Churn Bank 頁面專屬的 JavaScript 腳本。
-│          Churn_Telco.js            # Churn Telco 頁面專屬的 JavaScript 腳本。
-│          Color_BG_Control.js       # 控制背景或顏色的 JavaScript 邏輯。
-│
-├─templates                          # 模板目錄：存放 Web 服務回傳給瀏覽器的 HTML 檔案。
-│      base_Churn.html               # 基礎/父級模板：其他 HTML 頁面可能會繼承的骨架模板。
-│      Churn_Bank.html               # Churn Bank 模型的結果或輸入頁面。
-│      Churn_Telco.html              # Churn Telco 模型的結果或輸入頁面。
-│      index.html                    # 網站的首頁。
-│
-└─__pycache__                        # 【可刪除】根目錄下 Python 自動生成的位元碼快取資料夾。
-        config.cpython-311.pyc
-
+C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  app.py
 │  config.py
 │  requirements.txt
@@ -87,21 +14,21 @@ Web_Model_Prediction/  <-- 專案根目錄，包含 Web 服務所需的一切。
 │  └─churn_bank
 │          predict
 │
-├─data
-│  ├─datasets
-│  │      placeholder.txt
-│  │      test.csv
-│  │      train.csv
-│  │
-│  └─models
-│          placeholder.txt
-│          XGBoost_Final_Tuned_run_v2_preprocessing.joblib
-│
 ├─projects
 │  ├─Churn_Bank_code
-│  │      Churn_Bank.ipynb
-│  │      churn_bank_train.py
-│  │
+│  │  │  churn_bank_model.joblib
+│  │  │  churn_bank_shap.py
+│  │  │  churn_bank_train.py
+│  │  │  feature_columns.joblib
+│  │  │  fe_pipeline_name.txt
+│  │  │  params_XGBoost_Final_Tuned_run_v2_preprocessing.joblib
+│  │  │  shap_summary_plot.png
+│  │  │  submission.csv
+│  │  │  test.csv
+│  │  │  train.csv
+│  │  │  XGBoost_Final_Tuned_run_v2_preprocessing.joblib
+│  │  │
+│  │  └─__pycache__
 │  └─Churn_Telco_code
 │          Churn_Telco.ipynb
 │
@@ -116,9 +43,6 @@ Web_Model_Prediction/  <-- 專案根目錄，包含 Web 服務所需的一切。
 │  │  gemini_service.py
 │  │
 │  └─__pycache__
-│          churn_bank_service.cpython-313.pyc
-│          gemini_service.cpython-313.pyc
-│
 ├─static
 │  ├─css
 │  │      base_churn.css

@@ -26,6 +26,6 @@ python app.py
 服務將預設在 https://www.google.com/search?q=http://127.0.0.1:5000/ 運行。
 
 如果模型首次放入 需要訓練拿到權重
-python churn_bank_train.py --train_file "C:\Users\user\Desktop\Web_Model_Prediction\data\datasets\train.csv" --test_file "C:\Users\user\Desktop\Web_Model_Prediction\data\datasets\test.csv"
-
-
+cd C:\Users\user\Desktop\Web_Model_Prediction\projects\Churn_Bank_code
+python churn_bank_train.py
+python churn_bank_shap.py
