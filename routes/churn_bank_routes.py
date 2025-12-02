@@ -11,9 +11,18 @@ from typing import Any, Dict, List, Tuple, Callable
 import matplotlib
 # 設置 Matplotlib 為非互動式後端，以確保在伺服器環境中運行
 matplotlib.use('Agg') 
-import matplotlib.pyplot as plt
+
 import io
 import base64
+
+import matplotlib.pyplot as plt
+import matplotlib.font_manager as fm
+
+# =======================================================================
+# 📌 修正：全局設定 Matplotlib 使用 Dockerfile 中安裝的字體
+# =======================================================================
+plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'sans-serif'] # 確保使用新安裝的字體
+plt.rcParams['axes.unicode_minus'] = False # 解決負號亂碼問題
 
 # --- 路徑配置與服務導入 ---
 # 設定專案路徑，導入 config.py
@@ -110,9 +119,12 @@ def generate_local_shap_chart(shap_data: Dict[str, float], title: str) -> str:
         
         # 繪圖
         plt.style.use('seaborn-v0_8-whitegrid')
-        # 確保中文字體顯示 (假設系統有這些字體)
-        plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS'] 
-        plt.rcParams['axes.unicode_minus'] = False # 正常顯示負號
+        
+        # =======================================================================
+        # 📌 修正：移除這裡的字體設定，改用檔案開頭的全局設定 (WenQuanYi Zen Hei)
+        # =======================================================================
+        # plt.rcParams['font.sans-serif'] = ['Microsoft YaHei', 'SimHei', 'Arial Unicode MS'] 
+        # plt.rcParams['axes.unicode_minus'] = False # 正常顯示負號
         
         fig, ax = plt.subplots(figsize=(10, len(features) * 0.7 + 1)) 
         
@@ -181,7 +193,7 @@ def predict_churn():
             'IsActiveMember': float(data.get('IsActiveMember', 1)),
             'EstimatedSalary': float(data.get('EstimatedSalary', 100000)),
             'Geography': float(data.get('Geography', 0)), 
-            'Gender': float(data.get('Gender', 0)),       
+            'Gender': float(data.get('Gender', 0)),      
             'CustomerId': 0,
             'Surname': 'A',
             'RowNumber': 0

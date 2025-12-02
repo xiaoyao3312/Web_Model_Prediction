@@ -1,7 +1,19 @@
+# C:\Users\user\Desktop\Web_Model_Prediction\Dockerfile
 # Dockerfile 內容
 # 使用穩定的 Python 3.11 版本作為基礎映像檔
 FROM python:3.11-slim
 
+# --- 新增的字體安裝步驟 ---
+# 1. 更新套件列表
+RUN apt-get update && \
+# 2. 安裝字體相關套件 (fontconfig 是管理字體的基礎)
+    apt-get install -y fontconfig xfonts-base && \
+# 3. 安裝一個常見的中文字體包 (文泉驛等寬正黑體)
+    apt-get install -y ttf-wqy-zenhei && \
+# 4. 清理以減小映像檔大小
+    rm -rf /var/lib/apt/lists/*
+# -----------------------------
+    
 # 設置容器內的工作目錄
 WORKDIR /app
 
