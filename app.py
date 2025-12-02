@@ -15,11 +15,11 @@ def index():
 
 @app.route('/customer_churn_bank_model')
 def bank_churn_page():
-    return render_template('Churn_Bank.html')
+    return render_template('churn_bank.html')
 
 @app.route('/customer_churn_telco_model')
 def telco_churn_page():
-    return render_template('Churn_Telco.html')
+    return render_template('churn_telco.html')
 
 # --- 啟動服務 ---
 if __name__ == '__main__':

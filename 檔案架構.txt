@@ -56,8 +56,8 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  │      index.css
 │  │
 │  ├─img
-│  │      Churn_Bank.jpg
-│  │      Churn_Telco.jpg
+│  │      churn_bank.jpg
+│  │      churn_telco.jpg
 │  │      doro.gif
 │  │      logo.png
 │  │
