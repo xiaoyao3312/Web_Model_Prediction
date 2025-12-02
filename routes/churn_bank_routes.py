@@ -19,11 +19,47 @@ import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm
 import shap
 
+# --- 日誌設定 (移動到頂部) ---
+logger = logging.getLogger('ChurnBankRoute')
+logger.setLevel(logging.INFO)
+# -----------------------------
+
+
 # =======================================================================
-# 📌 修正：全局設定 Matplotlib 使用 Dockerfile 中安裝的字體
+# 📌 關鍵修正：強制清除 Matplotlib 字體快取
+# 修正 1：將 fm.get_cachedir 修正為 fm.get_cachedir()
+# 修正 2：'logger' 現在已被定義
+# =======================================================================
+try:
+    # 嘗試刪除 Matplotlib 的字體快取文件
+    # 使用 matplotlib.get_cachedir() 是官方推薦的獲取方法
+    cache_dir = matplotlib.get_cachedir()
+    
+    # 檢查目錄是否存在，以防Matplotlib尚未創建
+    if not os.path.exists(cache_dir):
+        logger.info(f"Matplotlib 快取目錄 {cache_dir} 尚未創建。")
+    else:
+        font_cache_files = [f for f in os.listdir(cache_dir) if f.startswith('fontlist-')]
+        
+        if font_cache_files:
+            logger.info(f"偵測到 Matplotlib 字體快取，正在清理...")
+            for filename in font_cache_files:
+                os.remove(os.path.join(cache_dir, filename))
+            
+            # 重建快取，這會強制 Matplotlib 重新掃描系統字體
+            fm.fontManager.findSystemFonts(cache_dir=cache_dir, force_load=True)
+            logger.info("Matplotlib 字體快取清理並重建完成。")
+        else:
+            logger.info("Matplotlib 字體快取文件未找到，無需清理。")
+            
+except Exception as e:
+    logger.warning(f"Matplotlib 字體快取處理失敗: {e}")
+
+# =======================================================================
+# 📌 全局設定 Matplotlib 使用 Dockerfile 中安裝的字體
 # =======================================================================
 # 確保使用在 Dockerfile 中安裝的文泉驛正黑字體 (WenQuanYi Zen Hei)
-# Matplotlib 會在首次繪圖時檢查此字體是否存在並載入
+# 由於快取已重建，Matplotlib 應能找到此字體
 plt.rcParams['font.sans-serif'] = ['WenQuanYi Zen Hei', 'sans-serif'] 
 plt.rcParams['axes.unicode_minus'] = False # 解決負號'-'顯示為方塊的問題
 # =======================================================================
@@ -38,10 +74,6 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 # 導入 Service
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 'services'))
 from services.churn_bank_service import ChurnBankService 
-
-# --- 日誌設定 ---
-logger = logging.getLogger('ChurnBankRoute')
-logger.setLevel(logging.INFO)
 
 # --- 模型與資源路徑定義 ---
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), 
