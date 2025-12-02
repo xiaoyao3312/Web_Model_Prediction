@@ -6,11 +6,11 @@ git add .                                 # 2️⃣ 暫存修改
 git commit -m "你的描述"                   # 3️⃣ Commit
 git push                                  # 4️⃣ 推送到 GitHub
 
-背景顏色調整小工具(Color_BG_Control) 使用方法（任意頁面）
+背景顏色調整小工具(color_bg_control) 使用方法（任意頁面）
 引入 CSS：
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/Color_BG_Control.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/color_bg_control.css') }}">
 引入 JS（放在 <body> 結尾）：
-    <script src="{{ url_for('static', filename='js/Color_BG_Control.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/color_bg_control.js') }}"></script>
 
 專案操作手冊 - Web 模型預測平台
 放在桌面的路徑

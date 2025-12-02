@@ -1,5 +1,5 @@
 // 全域腳本：主題切換/顏色控制 (目前為佔位符)
-console.log("Color/BG Control JS loaded.");(function(){
+console.log("color/bg control JS loaded.");(function(){
   const fabHTML=`
   <div id="colorFab">
     <div id="fabIcon">🎨</div>
