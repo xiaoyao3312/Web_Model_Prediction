@@ -71,7 +71,7 @@ body {
   bottom: calc(var(--fab-size) + 15px);
   left: 0; /* 預設從左側展開 (此屬性會被 JS 覆蓋) */
   width: 300px;
-  height: 460px;
+  height: 390px;
   padding: 20px;
   border-radius: 12px;
   

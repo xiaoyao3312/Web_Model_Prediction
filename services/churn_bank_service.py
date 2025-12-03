@@ -7,6 +7,7 @@ import pandas as pd
 from typing import Dict, Any, List, Callable
 import shap
 import logging
+
 # 🚨 為了讓服務能獨立運行，我們不直接從 train.py 導入 FeatureEngineer，而是假設
 # 外部會提供 FE 函數（例如 routes.py 中的 FeatureEngineerForAPI）
 
@@ -25,6 +26,7 @@ class ChurnBankService:
         # 僅當模型成功載入時才初始化 Explainer
         if self.model:
             try:
+                # 假設模型是 XGBoost，使用 TreeExplainer
                 self.explainer = shap.TreeExplainer(self.model)
                 logger.info("SHAP TreeExplainer 成功初始化。")
             except Exception as e:
@@ -39,8 +41,8 @@ class ChurnBankService:
         fe_name_path = os.path.join(model_dir, 'fe_pipeline_name.txt')
         
         if not os.path.exists(feature_cols_path) or not os.path.exists(fe_name_path):
-             logger.warning(f"模型工件 (feature_columns/fe_pipeline_name) 未找到於 {model_dir}")
-             return [], "" # 返回空列表和空字符串，以便後續使用模擬預測
+            logger.warning(f"模型工件 (feature_columns/fe_pipeline_name) 未找到於 {model_dir}")
+            return [], "" # 返回空列表和空字符串，以便後續使用模擬預測
 
         try:
             feature_cols = joblib.load(feature_cols_path)
@@ -80,7 +82,7 @@ class ChurnBankService:
         # 補齊訓練集缺少的欄位 (當前單一請求可能缺少某個 OHE 欄位)
         missing_cols = set(self.feature_cols) - set(X_oh.columns)
         for c in missing_cols:
-             X_oh[c] = 0.0
+            X_oh[c] = 0.0
         
         # 移除多餘的欄位，並確保順序一致
         # 這一步是關鍵：確保預測數據的欄位名稱和順序與訓練模型時完全相同
@@ -88,25 +90,38 @@ class ChurnBankService:
         X_predict = X_predict.astype(float)
 
         if X_predict.shape[1] != len(self.feature_cols):
-             raise ValueError(f"特徵數量不匹配。預期 {len(self.feature_cols)}，實際 {X_predict.shape[1]}")
+            # 只有當缺失的欄位不在 X_oh.columns 也不在 feature_cols 中時才會出錯，但為了健壯性保留
+            raise ValueError(f"特徵數量不匹配。預期 {len(self.feature_cols)}，實際 {X_predict.shape[1]}")
         
         return X_predict
 
     def get_local_shap(self, X_predict: pd.DataFrame) -> Dict[str, float]:
         """計算單一樣本的局部 SHAP 值，並轉換為可讀的字典。"""
         if not self.explainer:
-             return {} # Explainer 未初始化則返回空
+            return {} # Explainer 未初始化則返回空
 
         try:
             # 計算 SHAP 值
             # shap_values 可能是 (1, num_features) 的 numpy array
+            # 由於 X_predict 是一個單行 DataFrame，這裡的計算結果應該是單一樣本的
             shap_values = self.explainer.shap_values(X_predict, check_additivity=False)
             
             # 由於 XGBoost 是二分類，shap_values 是兩個陣列的列表 (list of arrays)，取類別 1 的值
-            # 確保 shap_values_row 是一個一維陣列
-            shap_values_row = shap_values[1][0] if isinstance(shap_values, list) else shap_values[0] 
+            # 確保 shap_values_row 是一個一維陣列 (對於單行輸入)
+            shap_values_row = shap_values[1][0] if isinstance(shap_values, list) and len(shap_values) == 2 else shap_values[0]
             
+            # 如果是單一樣本，確保是從二維陣列中取出一維數組
+            if len(shap_values_row.shape) > 1 and shap_values_row.shape[0] == 1:
+                shap_values_row = shap_values_row[0]
+
+
             feature_names = X_predict.columns
+            # 確保長度匹配
+            if len(feature_names) != len(shap_values_row):
+                 logger.error(f"SHAP 值數量 ({len(shap_values_row)}) 與特徵數量 ({len(feature_names)}) 不匹配。")
+                 return {}
+
+
             shap_dict = dict(zip(feature_names, shap_values_row))
             
             # 排序 (以 SHAP 值的絕對值降序排列)
@@ -123,7 +138,7 @@ class ChurnBankService:
 
     def preprocess_and_predict(self, input_df: pd.DataFrame, fe_pipeline_func: Callable) -> Dict[str, Any]:
         """
-        處理輸入數據，進行特徵工程，然後進行預測。
+        處理輸入數據，進行特徵工程，然後進行單一預測。
         
         Args:
             input_df: 已經包含原始特徵的 DataFrame (單行)。
@@ -149,6 +164,7 @@ class ChurnBankService:
         X_predict = self._align_features(processed_df)
 
         # 3. 進行預測
+        # predict_proba 返回的是 (n_samples, n_classes)，取第二個類別 (流失) 的機率
         probability_class_1 = self.model.predict_proba(X_predict)[:, 1][0]
         prediction = int(probability_class_1 >= 0.5)
 
@@ -163,7 +179,7 @@ class ChurnBankService:
                 sign = "推高流失機率 (+)" if shap_value > 0 else "推低流失機率 (-)"
                 feature_importance_text += f"- {feature}: {sign} (影響值: {abs(shap_value):.4f})\n"
         else:
-             feature_importance_text = "SHAP 分析工具未成功初始化或計算失敗。"
+            feature_importance_text = "SHAP 分析工具未成功初始化或計算失敗。"
 
         return {
             "prediction": prediction,
@@ -171,3 +187,49 @@ class ChurnBankService:
             "feature_importance": feature_importance_text,
             "local_shap_values": local_shap_values
         }
+    
+    def predict_batch_csv(self, input_df: pd.DataFrame, fe_pipeline_func: Callable) -> pd.DataFrame:
+        """
+        對批次 CSV 數據進行預測，並返回帶有預測結果的 DataFrame。
+        
+        Args:
+            input_df: 原始客戶數據的 DataFrame。
+            fe_pipeline_func: 來自 routes 層的特徵工程函數。
+            
+        Returns:
+            DataFrame: 包含原始數據和 'Exited_Prediction', 'Exited_Probability' 兩欄的結果。
+        """
+        logger.info(f"開始批次預測，共 {len(input_df)} 筆資料。")
+        
+        if self.model is None:
+            raise RuntimeError("模型服務未啟動，無法進行批次預測。")
+
+        # 1. 保存原始的 CustomerId (用於最終結果)
+        customer_ids = input_df['CustomerId'] if 'CustomerId' in input_df.columns else range(len(input_df))
+        
+        # 2. 特徵工程
+        processed_df = fe_pipeline_func(input_df.copy())
+        
+        # 3. OHE 和特徵對齊
+        X_predict = self._align_features(processed_df)
+        
+        logger.info(f"特徵對齊後，預測數據形狀: {X_predict.shape}")
+        # 4. 進行預測
+        probabilities = self.model.predict_proba(X_predict)[:, 1]
+        
+        predictions = (probabilities >= 0.5).astype(int)
+
+        # 5. 構建結果 DataFrame (保持原始數據，並添加結果)
+        result_df = pd.DataFrame({
+        'CustomerId': customer_ids, # 使用 CustomerId (大寫 D)
+        'Exited_Prediction': predictions,
+        'Exited_Probability': probabilities
+    })
+
+        
+        # 確保 Column 命名清晰
+        result_df['Exited_Probability'] = probabilities
+        result_df['Exited_Prediction'] = predictions 
+        
+        logger.info("批次預測完成。")
+        return result_df

@@ -1,4 +1,3 @@
-C:\Users\user\Desktop\Web_Model_Prediction\templates\churn_bank.html
 {% extends "base_churn.html" %}
 
 {% block title %}銀行客戶流失預測 - 客戶流失預測平台{% endblock %}
@@ -16,30 +15,132 @@ C:\Users\user\Desktop\Web_Model_Prediction\templates\churn_bank.html
         <div class="api-key-panel card">
             <h2 class="card-title">🔑 Gemini API 啟用</h2>
             <div class="api-key-container">
-                                <input type="password" id="apiKey" placeholder="請輸入 Gemini API Key..." class="theme-input-field" title="在此輸入您的 Gemini API Key">
+                <input type="password" id="apiKey" placeholder="請輸入 Gemini API Key..." class="theme-input-field" title="在此輸入您的 Gemini API Key">
                 <button id="saveApiKeyBtn" class="analyze-btn" title="啟用 Gemini AI 功能">
                     <i class="fas fa-check"></i>
-                                        <span class="key-status-text">尚未啟用</span>
+                    <span class="key-status-text">尚未啟用</span>
                 </button>
             </div>
-            <p id="apiStatusMsg" class="error-message" style="margin-top: 0.5rem; color: var(--primary-color);">請輸入 Key 以啟用 AI 解釋功能。</p>
+            <p id="apiStatusMsg" class="error-message">請輸入 Key 以啟用 AI 解釋功能。</p>
         </div>
 
         <div class="input-and-prompt-panel card">
             
+            <div class="batch-upload-container">
+                <h2 class="card-title">📝 批次 CSV 分析/客戶單筆輸入</h2>
+                <hr class="card-divider">
+                <div class="batch-upload-area">
+                    <h3 class="card-title" style="margin-bottom: 0.5rem;"><i class="fas fa-file-csv"></i> 批次 CSV 分析</h3>
+                    <p style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">上傳包含客戶資料的 CSV 檔案進行批次預測。</p>
+                    <div class="file-upload-controls">
+                        <input type="file" id="csvFileInput" accept=".csv" class="theme-input-field" style="max-width: unset;">
+                        <button id="uploadBatchBtn" class="analyze-btn analyze-predict-only btn-predict">
+                            <i class="fas fa-upload"></i>
+                            <span>上傳並批次預測</span>
+                        </button>
+                    </div>
+                </div>
+
+                <hr class="card-divider">
+                <div id="batch-result-panel" class="card hidden">
+                    <h2 class="card-title"><i class="fas fa-table"></i> 批次分析結果列表</h2>
+                    
+                    <div class="filter-controls">
+                        <div class="input-group">
+                            <label for="thresholdInput" style="align-self: center;">篩選流失機率大於：</label>
+                            <input type="number" id="thresholdInput" value="50" min="0" max="100" step="1" class="theme-input-field" style="width: 80px;">
+                            <span style="align-self: center;">%</span>
+                            <button id="filterDataBtn" class="analyze-btn analyze-predict-only" style="grid-column: span 3; margin-top: 10px;">
+                                <i class="fas fa-filter"></i> 執行篩選
+                            </button>
+                        </div>
+                        <div class="filter-stats" id="filterStats" style="margin-top: 1rem;">
+                        </div>
+                    </div>
+                        
+                    <div class="table-wrapper" style="margin-top: 1rem; overflow-x: auto;">
+                        <table class="fl-table">
+                            <thead> 
+                                <tr>
+                                    <th>Customer ID</th>
+                                    <th>流失機率</th>
+                                    <th>風險等級</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batchResultBody">
+                                <tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">請上傳 CSV 檔案進行批次分析</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
             <div class="input-section">
-                <h2 class="card-title">📈 客戶特徵輸入 (10 項)</h2>
+                <h2 class="card-title">📈 單筆客戶特徵輸入 (10 項)</h2>
                 <div id="inputForm" class="input-group">
-                    <div class="input-field-container"><label>1. 信用分數 (600-850)</label><input type="number" id="input_CreditScore" data-feature-name="CreditScore" value="711.0" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>2. 年齡 (歲)</label><input type="number" id="input_Age" data-feature-name="Age" value="37.0" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>3. 服務年限 (年)</label><input type="number" id="input_Tenure" data-feature-name="Tenure" value="8.0" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>4. 餘額 ($)</label><input type="number" id="input_Balance" data-feature-name="Balance" value="117565.03" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>5. 產品數量 (1-4)</label><input type="number" id="input_NumOfProducts" data-feature-name="NumOfProducts" value="2.0" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>6. 持有信用卡 (0/1)</label><input type="number" id="input_HasCrCard" data-feature-name="HasCrCard" value="1.0" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>7. 活躍會員 (0/1)</label><input type="number" id="input_IsActiveMember" data-feature-name="IsActiveMember" value="0.0" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>8. 估計薪資 ($)</label><input type="number" id="input_EstimatedSalary" data-feature-name="EstimatedSalary" value="51112.8" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>9. 國家/地區 (0:法 1:西 2:德)</label><input type="number" id="input_Geography" data-feature-name="Geography" value="2" class="theme-input-field"></div>
-                    <div class="input-field-container"><label>10. 性別 (0:男 1:女)</label><input type="number" id="input_Gender" data-feature-name="Gender" value="1" class="theme-input-field"></div>
+                    <div class="input-field-container">
+                        <label>1. 信用分數 ( 350 - 850 )</label>
+                        <input type="number" id="input_CreditScore" data-feature-name="CreditScore" value="700" step="1" class="theme-input-field">
+                    </div>
+                    <div class="input-field-container">
+                        <label>2. 年齡 ( 18 - 100 歲 )</label>
+                        <input type="number" id="input_Age" data-feature-name="Age" value="35" step="1" class="theme-input-field">
+                    </div>
+                    <div class="input-field-container">
+                        <label>3. 服務年限 ( 0 - 10 年 )</label>
+                        <input type="number" id="input_Tenure" data-feature-name="Tenure" value="8" step="1" class="theme-input-field">
+                    </div>
+                    <div class="input-field-container">
+                        <label>4. 餘額 ( 0-300000 $ )</label>
+                        <input type="number" id="input_Balance" data-feature-name="Balance" value="150000" class="theme-input-field">
+                    </div>
+                    <div class="input-field-container dropdown-container" data-dropdown-id="NumOfProducts">
+                        <label>5. 產品數量 ( 1 - 4 )</label>
+                        <input type="text" id="input_NumOfProducts" data-feature-name="NumOfProducts" data-value="2" value="2" readonly class="theme-input-field dropdown-input" placeholder="選擇產品數量">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="1">1</div>
+                            <div class="dropdown-item" data-value="2">2</div>
+                            <div class="dropdown-item" data-value="3">3</div>
+                            <div class="dropdown-item" data-value="4">4</div>
+                        </div>
+                    </div>
+                    <div class="input-field-container dropdown-container" data-dropdown-id="HasCrCard">
+                        <label>6. 持有信用卡 ( 0 : 否 / 1 : 是 )</label>
+                        <input type="text" id="input_HasCrCard" data-feature-name="HasCrCard" data-value="1" value="1 (是)" readonly class="theme-input-field dropdown-input" placeholder="選擇是否持有信用卡">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (否)</div>
+                            <div class="dropdown-item" data-value="1">1 (是)</div>
+                        </div>
+                    </div>
+                    <div class="input-field-container dropdown-container" data-dropdown-id="IsActiveMember">
+                        <label>7. 活躍會員 ( 0 : 否 / 1 : 是 )</label>
+                        <input type="text" id="input_IsActiveMember" data-feature-name="IsActiveMember" data-value="1" value="1 (是)" readonly class="theme-input-field dropdown-input" placeholder="選擇是否為活躍會員">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (否)</div>
+                            <div class="dropdown-item" data-value="1">1 (是)</div>
+                        </div>
+                    </div>
+                    <div class="input-field-container">
+                        <label>8. 估計薪資 ( 0 - 200000 $ )</label>
+                        <input type="number" id="input_EstimatedSalary" data-feature-name="EstimatedSalary" value="100000" class="theme-input-field">
+                    </div>
+                    <div class="input-field-container dropdown-container" data-dropdown-id="Geography">
+                        <label>9. 國家/地區 ( 0 : 法國 1 : 西班牙 2 : 德國 )</label>
+                        <input type="text" id="input_Geography" data-feature-name="Geography" data-value="2" value="2 (德國)" readonly class="theme-input-field dropdown-input" placeholder="選擇國家/地區">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (法國)</div>
+                            <div class="dropdown-item" data-value="1">1 (西班牙)</div>
+                            <div class="dropdown-item" data-value="2">2 (德國)</div>
+                        </div>
+                    </div>
+                    <div class="input-field-container dropdown-container" data-dropdown-id="Gender">
+                        <label>10. 性別 ( 0 : 男 / 1 : 女 )</label>
+                        <input type="text" id="input_Gender" data-feature-name="Gender" data-value="1" value="1 (女)" readonly class="theme-input-field dropdown-input" placeholder="選擇性別">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (男)</div>
+                            <div class="dropdown-item" data-value="1">1 (女)</div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -50,24 +151,24 @@ C:\Users\user\Desktop\Web_Model_Prediction\templates\churn_bank.html
                 <div class="input-field-container">
                     <label>請輸入您希望 AI 如何解釋預測結果：</label>
                     <textarea id="aiPrompt" 
-                              rows="5" 
-                              class="theme-input-field"
-                              placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">
+                                rows="5" 
+                                class="theme-input-field"
+                                placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">
 請作為一名資產管理顧問，根據客戶的流失機率和輸入特徵，提供一份專業的風險分析報告，包含：1. 風險評估等級。2. 主要風險點。3. 建議採取的客戶留存行動。請使用條列式呈現並且簡單扼要，約500個Tokens內。
 </textarea>
                 </div>
                 
-                                <div class="action-buttons-container">
-                                        <button id="analyzeBtn" class="analyze-btn analyze-full" disabled>
+                <div class="action-buttons-container">
+                    <button id="analyzeBtn" class="analyze-btn analyze-full" disabled>
                         <span>執行模型預測並取得 AI 解釋</span>
                     </button>
                     
-                                        <button id="predictOnlyBtn" class="analyze-btn analyze-predict-only">
+                    <button id="predictOnlyBtn" class="analyze-btn analyze-predict-only">
                         <i class="fas fa-chart-line"></i>
                         <span>僅執行模型預測</span>
                     </button>
                 </div>
-                <p id="errorMsg" class="error-message hidden"></p>
+                <p id="errorMsg" class="error-message hidden"></p> 
             </div>
         </div>
 
@@ -83,7 +184,6 @@ C:\Users\user\Desktop\Web_Model_Prediction\templates\churn_bank.html
             <div id="chartDisplay" class="chart-display">
                 <div class="chart-placeholder">圖表 1: **單一客戶局部 SHAP 影響力**</div>
                 <div class="chart-placeholder">圖表 2: **模型全局 SHAP 摘要圖**</div>
-                <div class="chart-placeholder">等待執行預測後顯示結果...</div>
             </div>
         </div>
     </div>

@@ -1,142 +1,161 @@
-C:\Users\user\Desktop\Web_Model_Prediction\static\css\Churn_Bank.css
-/* Churn_Bank.css - 銀行客戶流失預測頁面特定樣式 (垂直佈局) */
+/* Churn_Bank.css - 銀行客戶流失預測頁面特定樣式 */
 
 /* -------------------------------------- */
 /* --- 0. 響應式字體基線調整 --- */
 /* -------------------------------------- */
-
-/* 調整主體字體大小，使用 clamp 確保字體在 0.875rem (小) 到 1rem (大) 之間浮動 */
 body {
-    font-size: clamp(0.875rem, 0.8vw + 0.5rem, 1rem);
+    font-size: clamp(0.75rem, 2vw, 1.25rem);
 }
 
-
-/* 確保所有標題也使用這個高對比顏色 (強調色/主題色) */
+/* 標題顏色過渡 */
 h1, h2, h3, h4, h5, h6 {
-    color: var(--header-font-color); /* 設定標題文字顏色為主題定義的高對比色 */
-    transition: color 0.5s linear;    /* 設定顏色變化的過渡效果，以便在主題切換時平滑過渡 */
+    color: var(--header-font-color);
+    transition: color 0.5s linear;
 }
 
 /* -------------------------------------- */
-/* --- 1. 通用元件樣式 (從 base 提取/修改) --- */
+/* --- 1. 通用元件樣式 --- */
 /* -------------------------------------- */
-
 /* 通用卡片容器 */
 .card {
-    background-color: var(--panel-bg-color); 
-    color: var(--panel-font-color);           
-    padding: var(--spacing);                  
-    border-radius: 8px;                       
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
-    transition: background-color 0.5s linear, color 0.5s linear; 
-    margin-bottom: var(--spacing); /* 新增：卡片間距 */
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    background-color: var(--panel-bg-color);
+    color: var(--panel-font-color);
+    padding: var(--spacing);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.5s linear, color 0.5s linear;
+    margin-bottom: var(--spacing);
 }
 
 /* 頁面主要標題 */
 .page-title {
-    /* 使用 clamp 確保 H1 字體大小在 1.5rem (小) 到 2rem (大) 之間浮動 */
-    font-size: clamp(1.5rem, 2vw + 0.5rem, 2rem); 
-    font-weight: 700;    
-    margin-bottom: 1.5rem; 
-    color: var(--header-font-color) !important; 
+    font-size: clamp(1.25rem, 2.5vw, 2rem);
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    color: var(--header-font-color) !important;
 }
 
 /* 卡片內標題 */
 .card-title {
-    /* 使用 clamp 確保 H2 字體大小在 1rem (小) 到 1.25rem (大) 之間浮動 */
-    font-size: clamp(1rem, 1.5vw + 0.5rem, 1.25rem); 
-    font-weight: 600;   
-    margin-bottom: 1rem; 
-    color: var(--panel-font-color) !important; 
+    font-size: clamp(1.05rem, 2.2vw, 1.5rem);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    color: var(--panel-font-color) !important;
 }
 
 /* 輸入欄位群組 */
 .input-group {
+    font-size: clamp(0.75rem, 2vw, 1rem);
     display: grid;
-    grid-template-columns: repeat(2, 1fr); /* 調整為兩欄佈局 */
-    gap: 1rem; /* 增加間距 */
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.filter-controls .input-group {
+    grid-template-columns: auto auto 1fr;
 }
 
 .input-field-container {
+    font-size: clamp(0.75rem, 2vw, 1rem);
     display: flex;
     flex-direction: column;
     gap: 0.25rem;
+    position: relative;
 }
 
 /* 標籤樣式 */
 .input-field-container label {
-    font-size: 0.875rem; /* 保持這個相對較小的字體，但它會繼承 body 的基線變化 */
-    font-weight: 500;    
-    color: var(--global-font-color) !important; 
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: var(--global-font-color) !important;
 }
 
 /* 通用輸入框和文本區域 */
 .theme-input-field {
-    background-color: var(--panel-bg-color); 
-    color: var(--panel-font-color); 
-    border: 1px solid color-mix(in srgb, var(--panel-font-color) 30%, transparent); 
-    transition: background-color 0.5s linear, color 0.5s linear, border-color 0.3s; 
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    background-color: var(--panel-bg-color);
+    color: var(--panel-font-color);
+    border: 1px solid color-mix(in srgb, var(--panel-font-color) 30%, transparent);
+    transition: background-color 0.5s linear, color 0.5s linear, border-color 0.3s;
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    box-sizing: border-box;
+    resize: vertical;
+}
 
-    width: 100%; 
-    padding: 0.5rem; 
-    border-radius: 0.375rem; 
-    font-size: 0.875rem; /* 保持這個相對較小的字體，但它會繼承 body 的基線變化 */
-    box-sizing: border-box; 
-    /* 確保 textarea 尺寸不會亂跑 */
-    resize: vertical; 
+/* 移除 type="number" 的上/下箭頭 */
+.theme-input-field[type="number"] {
+    -moz-appearance: textfield; /* Firefox */
+    appearance: textfield;
+}
+.theme-input-field[type="number"]::-webkit-outer-spin-button,
+.theme-input-field[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none; /* Chrome, Safari, Edge */
+    margin: 0;
 }
 
 /* 輸入框 Focus (聚焦狀態) */
 .theme-input-field:focus {
-    border-color: var(--primary-color); 
-    outline: none; 
-    box-shadow: 0 0 0 1px var(--primary-color); 
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 1px var(--primary-color);
 }
 
-/* 分析按鈕 (用於 Analyze 和 Save API Key) */
+/* 分析按鈕 */
 .analyze-btn {
-    width: auto; /* 不強制滿寬 */
-    margin-top: 0; 
-    background-color: rgba(0, 0, 0, 1); 
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    width: auto;
+    margin-top: 0;
+    background-color: rgba(0, 0, 0, 1);
     color: rgba(0, 128, 128, 1);
-    font-weight: 600; 
-    padding: 0.625rem 1rem; 
-    border-radius: 0.5rem; 
-    transition: background-color 0.3s, opacity 0.3s; 
-    display: flex; 
-    align-items: center; 
-    justify-content: center; 
-    border: none; 
-    cursor: pointer; 
-    text-decoration: none; 
+    font-weight: 600;
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
+    transition: background-color 0.3s, opacity 0.3s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 /* 錯誤訊息 */
 .error-message {
-    color: var(--error-color, #ef4444); 
-    /* 調整字體大小，保持相對較小 */
-    font-size: clamp(0.75rem, 0.7vw + 0.5rem, 0.875rem); 
-    margin-top: 0.5rem; 
+    color: var(--error-color, #ef4444);
+    font-size: clamp(0.75rem, 2vw, 1rem);
+    margin-top: 0.5rem;
 }
 
-/* 預測結果樣式 */
+/* 預測結果樣式容器 */
 .prediction-result {
+    font-size: clamp(0.75rem, 2vw, 1rem);
     border-left: 5px solid var(--primary-color);
     padding-left: 10px;
     margin-bottom: 15px;
 }
+
+/* 預測值數值樣式 */
 .prob-value {
-    /* 調整重點數值字體大小 */
-    font-size: clamp(1.25rem, 2vw + 1rem, 1.5rem);
+    font-size: clamp(0.75rem, 2vw, 1rem);
     font-weight: 800;
 }
+
+/* 高風險顏色 */
 .high-risk {
     color: var(--error-color, #ef4444);
 }
+
+/* 低風險顏色 */
 .low-risk {
     color: var(--success-color, #10b981);
 }
 
+/* 卡片分隔線 */
 .card-divider {
     border: 0;
     height: 1px;
@@ -145,31 +164,100 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* -------------------------------------- */
-/* --- 2. 佈局調整 (響應式面板佈局) --- */
+/* --- 1.1 自訂下拉選單樣式 --- */
 /* -------------------------------------- */
-
-/* 大視窗佈局 (>= 1024px) */
-.main-panel-grid {
-    display: grid;
-    /* 🌟 新增：確保 Grid 容器有足夠的高度讓 1fr 生效 */
-    min-height: 85vh; 
-    /* 左邊欄位佔 1 份，右邊欄位佔 1 份，形成雙欄等寬佈局 */
-    grid-template-columns: 1fr 1fr; 
-    gap: var(--spacing); /* 欄位間距 */
-    /* 🌟 修改：前兩行 auto (由內容決定)，第三行 1fr (佔滿剩餘空間) */
-    grid-template-rows: auto auto 1fr; 
-    /* 定義 row 區塊 */
-    grid-template-areas: 
-        "api_key chart_panel"   /* 第一行: API Key (auto) */
-        "input_prompt chart_panel" /* 第二行: 輸入/指令 (auto) */
-        "explanation chart_panel"; /* 第三行: 解釋/建議 (1fr) + 圖表 (跨三行) */
+/* 輸入框，模擬下拉選單樣式 */
+.dropdown-input {
+    cursor: pointer;
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23888" d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 0.75rem 0.75rem;
+    padding-right: 2.25rem; /* 留給箭頭的空間 */
 }
 
-.api-key-panel    { grid-area: api_key; }
-.input-and-prompt-panel { grid-area: input_prompt; }
-.explanation-panel    { grid-area: explanation; }
-.chart-panel        { grid-area: chart_panel; }
+/* 下拉選單容器 */
+.dropdown-container {
+    position: relative;
+}
 
+/* 下拉選單列表 */
+.dropdown-list {
+    position: absolute;
+    top: 100%; /* 位於輸入框下方 */
+    left: 0;
+    right: 0;
+    z-index: 10;
+    background-color: var(--panel-bg-color);
+    border: 1px solid var(--primary-color);
+    border-top: none;
+    border-radius: 0 0 4px 4px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+/* 選項項目 */
+.dropdown-item {
+    padding: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+/* 選項項目懸停效果 */
+.dropdown-item:hover {
+    background-color: color-mix(in srgb, var(--primary-color) 20%, transparent);
+}
+
+/* 隱藏/顯示狀態 */
+.hidden {
+    display: none !important;
+}
+
+
+/* -------------------------------------- */
+/* --- 2. 佈局調整 (大視窗 Grid 佈局) --- */
+/* -------------------------------------- */
+
+/* 主面板 Grid 容器 */
+.main-panel-grid {
+    display: grid;
+    margin-bottom: 1rem;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--spacing);
+    grid-template-rows: auto auto 1fr;
+    grid-template-areas:
+        "api_key chart_panel"
+        "input_prompt chart_panel"
+        "explanation chart_panel";
+}
+
+/* API Key 面板區域 */
+.api-key-panel {
+    grid-area: api_key;
+    height: auto;
+    overflow: hidden;
+}
+
+/* 輸入和提示面板區域 */
+.input-and-prompt-panel {
+    grid-area: input_prompt;
+    height: auto;
+    overflow-y: auto;
+}
+
+/* AI 解釋面板區域 */
+.explanation-panel {
+    grid-area: explanation;
+    overflow-y: auto;
+}
+
+/* 圖表面板區域 */
+.chart-panel {
+    grid-area: chart_panel;
+    grid-row-end: span 3;
+    overflow-y: auto; /* 允許圖表區塊在必要時滾動 */
+}
 
 /* API Key 區塊調整 */
 .api-key-panel .api-key-container {
@@ -178,52 +266,46 @@ h1, h2, h3, h4, h5, h6 {
     align-items: center;
 }
 
+/* API Key 輸入欄位 */
 .api-key-panel .api-key-container .theme-input-field {
     flex-grow: 1;
     max-width: 400px;
 }
-/* 總輸入區塊，包含參數和 Prompt */
+
+/* 總輸入區塊 */
 .input-and-prompt-panel {
-    max-width: 100%; 
+    max-width: 100%;
 }
 
-/* AI 解釋區塊 */
+/* AI 解釋區塊 (避免內容貼底) */
 .explanation-panel {
-    /* 🌟 修改：移除 min-height，並設定 height: 100% 佔滿其 1fr 行空間 */
-    /* min-height: 250px; <- 已移除 */
-    height: 100%; /* 確保填滿 grid row 的 1fr 空間 */
-    /* 由於這是解釋區，內容可能很長，我們將其內容設為可滾動 */
-    /* ❌ 移除獨立的垂直滾動條 (拉桿) */
-    /* overflow-y: auto; */
+    padding-bottom: 1rem;
 }
 
-/* 圖表顯示區塊 */
+/* 圖表顯示區塊 (避免內容貼底) */
 .chart-panel {
-    /* 由於 chart_panel 佔用 grid-area: chart_panel (三行空間) */
-    /* 我們將其高度設為 100%，以確保它能填滿三行的總高度 */
-    height: 100%; 
-    /* 保持內容可以滾動，以便在內容超過視窗時查看 */
-    /* ❌ 移除獨立的垂直滾動條 (拉桿) */
-    /* overflow-y: auto; */
+    padding-bottom: 1rem;
 }
 
+/* 圖表容器 */
 .chart-display {
-    display: flex; 
-    flex-direction: column; 
-    gap: var(--spacing); 
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing);
 }
 
+/* 圖表佔位符 */
 .chart-placeholder {
-    height: 300px; 
-    background-color: color-mix(in srgb, var(--panel-bg-color) 80%, var(--global-theme-color)); 
-    border: 1px dashed var(--global-font-color); 
-    display: flex; 
+    height: 300px;
+    background-color: color-mix(in srgb, var(--panel-bg-color) 80%, var(--global-theme-color));
+    border: 1px dashed var(--global-font-color);
+    display: flex;
     flex-direction: column;
-    align-items: center; 
-    justify-content: center; 
-    color: var(--global-font-color); 
-    opacity: 0.7; 
-    border-radius: 4px; 
+    align-items: center;
+    justify-content: center;
+    color: var(--global-font-color);
+    opacity: 0.7;
+    border-radius: 4px;
     padding: 15px;
 }
 
@@ -231,30 +313,43 @@ h1, h2, h3, h4, h5, h6 {
 /* --- 3. 響應式設計 (小視窗單欄堆疊) --- */
 /* -------------------------------------- */
 
-/* 小於 1024px 時切換為單欄佈局 (全部垂直堆疊) */
 @media (max-width: 1024px) {
+    /* 主 Grid 容器 (切換為 Flex 垂直堆疊) */
     .main-panel-grid {
         display: flex;
         flex-direction: column;
         gap: var(--spacing);
-        /* 移除 grid-area 定義，讓所有元素按 HTML 順序堆疊 */
         grid-template-columns: 1fr;
-        grid-template-rows: unset; /* 取消 1fr 設置 */
+        grid-template-rows: unset;
         grid-template-areas: none;
-        min-height: unset; /* 取消大螢幕的最小高度限制 */
+        min-height: unset;
+        /* 確保底部間距存在 */
+        margin-bottom: 1rem;
     }
-    /* 小螢幕下，所有面板回歸內容驅動高度 */
+    
+    /* 確保在小螢幕上取消所有固定/滾動設定 */
+    .api-key-panel,
+    .input-and-prompt-panel,
+    .explanation-panel,
+    .chart-panel {
+        height: auto !important;
+        overflow-y: visible !important;
+    }
+    
+    /* 解釋和圖表面板 (高度自動且取消內部滾動) */
     .explanation-panel, .chart-panel {
         height: auto;
         overflow-y: visible;
+        padding-bottom: var(--spacing);
     }
 }
 
-/* 更小的視窗調整 (例如手機) */
 @media (max-width: 600px) {
+    /* 輸入群組 (切換為單欄) */
     .input-group {
-        grid-template-columns: 1fr; /* 小螢幕改為單欄 */
+        grid-template-columns: 1fr;
     }
+    /* API Key 容器 (切換為垂直堆疊) */
     .api-key-panel .api-key-container {
         flex-direction: column;
         align-items: stretch;
@@ -263,7 +358,7 @@ h1, h2, h3, h4, h5, h6 {
         max-width: unset;
     }
     
-    /* 🌟 手機佈局下，按鈕堆疊 */
+    /* 按鈕容器 (切換為垂直堆疊) */
     .action-buttons-container {
         flex-direction: column;
     }
@@ -273,21 +368,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* -------------------------------------- */
-/* --- 4. 針對新增的按鈕容器佈局調整 (大螢幕) --- */
+/* --- 4. 按鈕容器佈局調整 --- */
 /* -------------------------------------- */
+/* 按鈕容器 */
 .action-buttons-container {
     display: flex;
-    gap: 10px; /* 按鈕間的間距 */
-    margin-top: 1rem; /* 與上方 Prompt 區塊的間距 */
+    gap: 10px;
+    margin-top: 1rem;
 }
 
-/* 確保全部分析按鈕佔滿較多空間，單純預測按鈕較小 */
+/* 主要分析按鈕 */
 .analyze-full {
     flex-grow: 1;
 }
 
+/* 單純預測按鈕 */
 .analyze-predict-only {
-    /* 讓這個按鈕的顏色稍微不同，表示不同的操作等級 */
     background-color: color-mix(in srgb, var(--FIXED-PRIMARY-COLOR) 80%, black) !important;
     color: white !important;
     flex-shrink: 0;

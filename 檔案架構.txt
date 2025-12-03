@@ -6,6 +6,7 @@ tree "C:\Users\user\Desktop\Web_Model_Prediction" /F
 C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  app.py
 │  config.py
+│  css_tool.txt
 │  Dockerfile
 │  Procfile
 │  requirements.txt
@@ -32,7 +33,7 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  │          churn_bank_train.cpython-311.pyc
 │  │
 │  └─Churn_Telco_code
-│          Churn_Telco.ipynb
+│          churn_telco.ipynb
 │
 ├─routes
 │  │  churn_bank_routes.py

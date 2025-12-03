@@ -23,8 +23,7 @@ console.log("color/bg control JS loaded.");(function(){
       <div class="themes">
         <button class="theme-btn" data-color="rgba(170,170,170,1)">淺色</button>
         <button class="theme-btn" data-color="rgba(255,255,255,1)">白色</button>
-        <button id="randomBtn" class="theme-btn">隨機</button> <!-- 新增的隨機按鈕 -->
-      </div>
+        <button id="randomBtn" class="theme-btn">隨機</button>       </div>
     </div>
   </div>`;
   if (!document.getElementById("colorFab")) {
@@ -299,10 +298,12 @@ console.log("color/bg control JS loaded.");(function(){
     content.style.display = "none";
     
     if(!s) {
+        // --- 修正處：首次啟用時設定在右上方 ---
       fab.style.left = "auto";
-      fab.style.top = "auto";
+      fab.style.bottom = "auto"; // 移除 bottom 設定
       fab.style.right = EDGE_MARGIN + "px";
-      fab.style.bottom = EDGE_MARGIN + "px";
+      fab.style.top = EDGE_MARGIN + "px"; // 設定為 TOP
+        // ----------------------------------------
     } else {
       fab.style.left = s.left;
       fab.style.right = s.right;
