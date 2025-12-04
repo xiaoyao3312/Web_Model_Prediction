@@ -1,12 +1,12 @@
 # services/churn_bank_service.py
-
-import joblib
-import numpy as np
-import os
 import pandas as pd
-from typing import Dict, Any, List, Callable
-import shap
+import numpy as np
 import logging
+import joblib
+import shap
+import os
+
+from typing import Dict, Any, List, Callable
 
 # 🚨 為了讓服務能獨立運行，我們不直接從 train.py 導入 FeatureEngineer，而是假設
 # 外部會提供 FE 函數（例如 routes.py 中的 FeatureEngineerForAPI）
@@ -231,5 +231,5 @@ class ChurnBankService:
         result_df['Exited_Probability'] = probabilities
         result_df['Exited_Prediction'] = predictions 
         
-        logger.info("批次預測完成。")
+        logger.info(f"Service: 批次預測完成，返回筆數: {len(result_df)}")
         return result_df

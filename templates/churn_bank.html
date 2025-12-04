@@ -41,38 +41,7 @@
                     </div>
                 </div>
 
-                <hr class="card-divider">
-                <div id="batch-result-panel" class="card hidden">
-                    <h2 class="card-title"><i class="fas fa-table"></i> 批次分析結果列表</h2>
-                    
-                    <div class="filter-controls">
-                        <div class="input-group">
-                            <label for="thresholdInput" style="align-self: center;">篩選流失機率大於：</label>
-                            <input type="number" id="thresholdInput" value="50" min="0" max="100" step="1" class="theme-input-field" style="width: 80px;">
-                            <span style="align-self: center;">%</span>
-                            <button id="filterDataBtn" class="analyze-btn analyze-predict-only" style="grid-column: span 3; margin-top: 10px;">
-                                <i class="fas fa-filter"></i> 執行篩選
-                            </button>
-                        </div>
-                        <div class="filter-stats" id="filterStats" style="margin-top: 1rem;">
-                        </div>
-                    </div>
-                        
-                    <div class="table-wrapper" style="margin-top: 1rem; overflow-x: auto;">
-                        <table class="fl-table">
-                            <thead> 
-                                <tr>
-                                    <th>Customer ID</th>
-                                    <th>流失機率</th>
-                                    <th>風險等級</th>
-                                </tr>
-                            </thead>
-                            <tbody id="batchResultBody">
-                                <tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">請上傳 CSV 檔案進行批次分析</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+                
             </div>
 
             <div class="input-section">
@@ -187,6 +156,39 @@
             </div>
         </div>
     </div>
+
+    <hr class="card-divider">
+        <div id="batch-result-panel" class="card hidden">
+            <h2 class="card-title"><i class="fas fa-table"></i> 批次分析結果列表</h2>
+            
+            <div class="filter-controls">
+                <div class="input-group">
+                    <label for="thresholdInput" style="align-self: center;">篩選流失機率大於：</label>
+                    <input type="number" id="thresholdInput" value="50" min="0" max="100" step="1" class="theme-input-field" style="width: 80px;">
+                    <span style="align-self: center;">%</span>
+                    <button id="filterDataBtn" class="analyze-btn analyze-predict-only" style="grid-column: span 3; margin-top: 10px;">
+                        <i class="fas fa-filter"></i> 執行篩選
+                    </button>
+                </div>
+                <div class="filter-stats" id="filterStats" style="margin-top: 1rem;">
+                </div>
+            </div>
+                
+            <div class="table-wrapper" style="margin-top: 1rem; overflow-x: auto;">
+                <table class="fl-table">
+                    <thead> 
+                        <tr>
+                            <th>ID</th>
+                            <th>流失機率</th>
+                            <th>風險等級</th>
+                        </tr>
+                    </thead>
+                    <tbody id="batchResultBody">
+                        <tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">請上傳 CSV 檔案進行批次分析</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 </div>
 {% endblock %}
 

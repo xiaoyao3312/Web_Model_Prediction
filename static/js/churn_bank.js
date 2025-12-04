@@ -410,7 +410,7 @@ async function uploadAndPredictBatch() {
 }
 
 /**
- * 批次結果篩選與渲染邏輯
+ * 批次結果篩選與渲染邏輯 (已修正為使用 row.id)
  */
 function filterAndRenderBatchResults() {
     const thresholdInput = document.getElementById('thresholdInput');
@@ -470,9 +470,9 @@ function filterAndRenderBatchResults() {
         const riskClass = isHighRisk ? 'high-risk-tag' : 'low-risk-tag';
         const riskLabel = isHighRisk ? '高風險' : '低風險';
 
-        // 這裡將 Customer ID 和 Probability 放在不同的欄位
+        // 修正點：將 row.customerId 改為 row.id
         tr.innerHTML = `
-            <td style="padding: 12px; text-align: center;">${row.customerId || 'N/A'}</td>
+            <td style="padding: 12px; text-align: center;">${row.id || 'N/A'}</td> 
             <td style="padding: 12px; font-weight: bold; text-align: center;">
                 <span class="${isHighRisk ? 'high-risk' : 'low-risk'}">${probPercent}</span>
             </td>
@@ -483,7 +483,6 @@ function filterAndRenderBatchResults() {
         tbody.appendChild(tr);
     });
 }
-
 
 // =========================================================================
 // 執行模型預測（不含 AI 解釋）

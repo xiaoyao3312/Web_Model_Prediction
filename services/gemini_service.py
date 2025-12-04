@@ -1,5 +1,4 @@
 # services/gemini_service.py
-
 import os
 from google import genai
 from google.genai.errors import APIError
