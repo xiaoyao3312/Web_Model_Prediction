@@ -48,3 +48,4 @@ Werkzeug==2.2.3
 
 幫我更改 給我完整程式碼
 
+id CreditScore	Geography	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary

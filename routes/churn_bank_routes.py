@@ -41,66 +41,58 @@ MODEL_PATH_FULL = os.path.join(PROJECT_ROOT, MODEL_PATH_RELATIVE)
 # 全局 SHAP 摘要圖路徑，用於載入預先計算的全局特徵重要性圖
 GLOBAL_SHAP_FILE = os.path.join(MODEL_DIR, "shap_summary_plot.png")
 
-# --- 預期原始特徵列表 ---
-REQUIRED_RAW_FEATURES = [
+# --- 預期核心預測特徵列表 (必須存在且數據無缺失) ---
+REQUIRED_PREDICT_COLUMNS = [
     'CreditScore', 'Age', 'Tenure', 'Balance', 'NumOfProducts',
     'HasCrCard', 'IsActiveMember', 'EstimatedSalary',
-    'Geography', 'Gender', 'CustomerId', 'Surname', 'RowNumber', 'id'
+    'Geography', 'Gender'
 ]
 
-# --- 輔助函式：補齊缺失欄位 (已清理 Unicode) ---
+# --- 必須存在的欄位 (ID + 核心預測欄位) ---
+CRITICAL_COLUMNS = ['id'] + REQUIRED_PREDICT_COLUMNS
+
+
+# --- 預期原始特徵列表 (包含所有可選和必須的欄位) ---
+REQUIRED_RAW_FEATURES = CRITICAL_COLUMNS + [
+    'CustomerId', 'Surname', 'RowNumber'
+]
+
+# --- 輔助函式：補齊缺失欄位 ---
 def ensure_required_columns(df: pd.DataFrame, required_cols: List[str]) -> pd.DataFrame:
     """
-    檢查並補齊 DataFrame 中缺失的必需欄位。
+    檢查並補齊 DataFrame 中缺失的輔助欄位 ('CustomerId', 'Surname', 'RowNumber')。
     
-    【關鍵變更】
-    - 🚨 確保 'id' 欄位存在且有效。如果缺失，拋出 ValueError。
-    - 'CustomerId', 'RowNumber' 缺失時，將根據行號從 1 開始遞增填入。
-    - 'Surname' 缺失時，填入空字串 ''。
-    - 其他數值欄位填入 0.0。
+    【注意】: 核心欄位 ('id' 和 REQUIRED_PREDICT_COLUMNS) 的缺失性檢查已在 predict_batch 中完成，
+             一旦發現缺失會立即拋出錯誤，不會進入這裡。
     """
     df_copy = df.copy()
-    missing_cols = set(required_cols) - set(df_copy.columns)
     
-    # 🚨 檢查 id 是否缺失，如果是則立即報錯 (新邏輯)
-    if 'id' in missing_cols:
-        error_msg = "'id' 欄位缺失。此欄位為批次預測結果輸出的**唯一識別碼**，請檢查您的 CSV 檔案。"
-        logger.error(error_msg)
-        # 拋出 ValueError，由 predict_batch 處理
-        raise ValueError(error_msg) 
+    # 這裡只專注於處理非核心但可能需要的欄位 (CustomerId, RowNumber, Surname)
+    auxiliary_cols = [col for col in required_cols if col not in CRITICAL_COLUMNS]
+    missing_auxiliary_cols = set(auxiliary_cols) - set(df_copy.columns)
     
-    # 從 missing_cols 中移除 'id'
-    missing_cols.discard('id') 
+    # 處理 'id' 欄位（雖然在路由層已檢查，這裡為保險起見再確保處理類型）
+    # 確保 'id' 已經存在且類型正確 (此時不應有 NaN)
+    if 'id' in df_copy.columns:
+        df_copy['id'] = pd.to_numeric(df_copy['id'], errors='coerce').fillna(0).astype(int)
     
-    if missing_cols:
-        logger.warning(f"CSV 檔案中缺少 {len(missing_cols)} 個欄位，已自動補齊: {missing_cols}")
+    if missing_auxiliary_cols:
+        logger.warning(f"CSV 檔案中缺少 {len(missing_auxiliary_cols)} 個輔助欄位，已自動補齊: {missing_auxiliary_cols}")
         
-        # 準備遞增 ID 序列 (從 1 開始)
         sequential_id = df_copy.index.to_series() + 1
         
-        for col in missing_cols:
+        for col in missing_auxiliary_cols:
             
-            # --- 處理可自動補齊的 ID 欄位 (CustomerId, RowNumber) ---
             if col in ['CustomerId', 'RowNumber']:
-                # 缺失時，使用遞增 ID 進行填補
                 df_copy[col] = sequential_id
                 
-            # --- 處理非數值欄位 (Surname) ---
             elif col == 'Surname':
-                # 'Surname' 缺失時，填入空字串
                 df_copy[col] = ''
                 
-            # --- 處理其他數值欄位 ---
-            else:
-                # 其他數值欄位（如 CreditScore, Age 等），填入 0.0
-                df_copy[col] = 0.0
-                
-    # 確保所有 ID 欄位為整數類型 
-    # id 欄位現在是必須的，需要確保其類型正確
-    for id_col in ['id', 'CustomerId', 'RowNumber']:
-        if id_col in df_copy.columns:
-            # 轉換為整數，將無法轉換的 (例如 NaN) 填入 0
-            df_copy[id_col] = pd.to_numeric(df_copy[id_col], errors='coerce').fillna(0).astype(int)
+        # 確保這些輔助 ID 欄位也是整數
+        for id_col in ['CustomerId', 'RowNumber']:
+            if id_col in df_copy.columns:
+                df_copy[id_col] = pd.to_numeric(df_copy[id_col], errors='coerce').fillna(0).astype(int)
 
     return df_copy
 
@@ -115,6 +107,7 @@ class FeatureEngineerForAPI:
         if int_cols:
             for col in int_cols:
                 if col in df_copy.columns:
+                    # 這裡假設輸入數據已經過 NaN 檢查，所以 fillna(0) 處理的是強制轉換引起的錯誤
                     df_copy[col] = pd.to_numeric(df_copy[col], errors='coerce').fillna(0).astype(int)
         if cat_cols:
             for col in cat_cols:
@@ -157,8 +150,6 @@ class FeatureEngineerForAPI:
         df_copy = FeatureEngineerForAPI.cast_columns(df_copy, int_cols=int_cols, cat_cols=cat_cols)
 
         # 移除不必要的欄位
-        # 注意：這裡 CustomerId, RowNumber, Surname 雖然可能在 ensure_required_columns 中被補齊，
-        # 但它們不是模型特徵，因此在預處理結束時會被移除
         cols_to_drop = ['CustomerId', 'Tenure', 'Surname', 'RowNumber']
         df_copy.drop(columns=[col for col in cols_to_drop if col in df_copy.columns], inplace=True, errors='ignore')
 
@@ -342,6 +333,19 @@ def predict_churn():
                 "charts": final_charts
             })
 
+        # 模擬結果的返回
+        readable_data = {
+            '信用分數': data.get('CreditScore', 0),
+            # ... (其他可讀性數據)
+        }
+        return jsonify({
+            "status": "warning",
+            "prediction": 0.5,
+            "readable_features": readable_data, 
+            "explanation_prompt": "模型未初始化，使用模擬預測，無法提供 AI 解釋。", 
+            "charts": []
+        })
+
     except BadRequest as e:
         logger.error(f"API 請求錯誤: {e}")
         return jsonify({"error": str(e)}), 400
@@ -352,12 +356,13 @@ def predict_churn():
         logger.error(f"預測過程發生錯誤: {e}", exc_info=True)
         return jsonify({"error": f"伺服器內部錯誤: {e}"}), 500
 
-## 💾 批次客戶流失預測 API (已清理 Unicode)
+## 💾 批次客戶流失預測 API
 @churn_bank_bp.route('/predict_batch', methods=['POST'])
 def predict_batch():
     """
     接收 CSV 檔案上傳，進行批次流失預測，並返回結果 JSON 數據。
-    結果使用 CSV 檔案中提供的 'id' 欄位作為識別碼。
+    - 嚴格檢查 CRITICAL_COLUMNS (id + 10核心特徵) 是否存在且數據無任何缺失。
+    - 只要有任何缺失，即拒絕整個 CSV 檔案導入。
     """
     logger.info("接收到批次預測請求。")
     if CHURN_BANK_SERVICE is None or CHURN_BANK_SERVICE.model is None:
@@ -378,49 +383,66 @@ def predict_batch():
 
     try:
         # 2. 讀取 CSV 檔案至 DataFrame
+        # keep_default_na=True 確保標準缺失值被讀取為 NaN
         data_io = io.StringIO(file.read().decode('utf-8'))
-        input_df_original = pd.read_csv(data_io)
+        input_df_original = pd.read_csv(data_io, keep_default_na=True, na_values=['', 'NA', 'N/A'])
         
         if input_df_original.empty:
             raise ValueError("CSV 檔案為空。")
-
-        # 🚨 2.5. 補齊所有必需欄位。如果 id 缺失，ensure_required_columns 會拋出 ValueError
-        # 這裡使用 ensure_required_columns 進行數據清洗和缺失值補齊
-        input_df_processed = ensure_required_columns(input_df_original, REQUIRED_RAW_FEATURES)
-        logger.info(f"批次預測 - 數據補齊完成。數據筆數: {len(input_df_processed)}")
+            
+        # ------------------------------------------------------------------
+        # ★★★ 結構性檢查：檢查核心欄位是否存在 (Fail Fast) ★★★
+        # ------------------------------------------------------------------
+        missing_cols = [col for col in CRITICAL_COLUMNS if col not in input_df_original.columns]
+        if missing_cols:
+            error_msg = f"CSV 檔案中缺少關鍵欄位，無法導入。缺失欄位: {', '.join(missing_cols)}"
+            logger.error(f"結構性檢查失敗: {error_msg}")
+            return jsonify({"error": error_msg}), 400
         
-        # 3. 呼叫服務層進行批次預測
+        # --------------------------------------------------------------
+        # ★★★ 數據檢查：檢查關鍵欄位中是否存在任何 NaN 值 (Fail Fast) ★★★
+        # --------------------------------------------------------------
+        # 篩選出關鍵欄位的子集
+        df_critical = input_df_original[CRITICAL_COLUMNS]
+        
+        # 檢查是否有任何 NaN 值
+        if df_critical.isnull().values.any():
+            # 定位缺失值所在的欄位
+            missing_data_cols = df_critical.columns[df_critical.isnull().any()].tolist()
+            
+            error_msg = f"CSV 檔案在關鍵欄位中發現缺失值，無法導入。包含缺失值的欄位: {', '.join(missing_data_cols)}"
+            logger.error(f"數據缺失檢查失敗: {error_msg}")
+            return jsonify({"error": error_msg}), 400
+        
+        logger.info("結構和數據缺失性檢查通過。")
+        
+        # 3. 補齊非核心欄位 ('CustomerId', 'RowNumber', 'Surname')
+        input_df_processed = ensure_required_columns(input_df_original, REQUIRED_RAW_FEATURES)
+        
+        logger.info(f"批次預測 - 輔助數據補齊完成。數據筆數: {len(input_df_processed)}")
+        
+        # 4. 呼叫服務層進行批次預測
         result_df = CHURN_BANK_SERVICE.predict_batch_csv(
             input_df=input_df_processed, 
             fe_pipeline_func=FeatureEngineerForAPI.run_v2_preprocessing
         )
         
-        # 4. 準備 JSON 回應 - 關鍵變更：使用 'id' 作為唯一識別碼
+        # 5. 準備 JSON 回應
         
-        # 確保 'id' 欄位存在並為整數（由 ensure_required_columns 保證）
-        
-        # 將預測結果與 id 欄位合在一起 (假設 result_df 的索引與 input_df_processed 對齊)
-        if 'id' in result_df.columns:
-            # 如果 Service 返回的 DataFrame 中包含 id
-            result_df_cleaned = result_df[['id', 'Exited_Probability']].copy()
-        else:
-            # 如果 Service 返回的 DataFrame 不包含 id，則手動從 processed input 合併
-            result_df_cleaned = pd.DataFrame({
-                'id': input_df_processed['id'], 
-                'Exited_Probability': result_df['Exited_Probability']
-            })
+        # 這裡只需要 'id' 和 'probability'
+        result_df_cleaned = pd.DataFrame({
+            'id': input_df_processed['id'], 
+            'probability': result_df['Exited_Probability'],
+        })
         
         # 關鍵：處理 NaN 值，避免 JSON 序列化錯誤
         result_df_cleaned['id'] = result_df_cleaned['id'].fillna(0).astype(int)
-        result_df_cleaned['Exited_Probability'] = result_df_cleaned['Exited_Probability'].fillna(0.0).astype(float)
+        result_df_cleaned['probability'] = result_df_cleaned['probability'].fillna(0.0).astype(float)
         
-        # 轉換為前端所需的 JSON 列表格式，使用 'id' 作為識別碼
-        result_list = result_df_cleaned.rename(columns={
-            'id': 'id', # 輸出欄位名稱為 'id'
-            'Exited_Probability': 'probability'
-        }).to_dict('records')
+        # 轉換為前端所需的 JSON 列表格式
+        result_list = result_df_cleaned.to_dict('records')
         
-        # 5. 返回結果
+        # 6. 返回結果
         return jsonify({
             "status": "success",
             "message": f"成功預測 {len(result_list)} 筆資料。",
@@ -431,7 +453,7 @@ def predict_batch():
         logger.error(f"批次 API 請求錯誤: {e}")
         return jsonify({"error": str(e)}), 400
     except ValueError as e:
-        # 捕獲 ensure_required_columns 拋出的 id 缺失錯誤
+        # 捕獲 ensure_required_columns 拋出的 id 缺失錯誤 或 CSV 為空錯誤
         logger.error(f"批次數據處理錯誤 (CSV 內容): {e}")
         return jsonify({"error": f"CSV 內容格式錯誤: {e}"}), 400
     except RuntimeError as e:
