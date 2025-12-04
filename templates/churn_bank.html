@@ -6,9 +6,8 @@
 <!-- 載入 Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
 <!-- 載入 Font Awesome Icons -->
- <link rel="stylesheet" href="{{ url_for('static', filename='css/churn_bank.css') }}">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/churn_bank.css') }}"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/churn_bank.css') }}">
 {% endblock %}
 
 {% block content %}
@@ -182,7 +181,7 @@
 
     <!-- Batch Result Panel -->
     <hr class="card-divider mt-8">
-    <div id="batch-result-panel" class="card mt-6" style="display: none;">
+    <div id="batch-result-panel" class="card mt-6">
         <h2 class="card-title"><i class="fas fa-table mr-2"></i> 批次分析結果列表</h2>
         
         <div class="filter-controls">

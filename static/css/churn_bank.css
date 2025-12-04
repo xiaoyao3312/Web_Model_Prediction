@@ -9,14 +9,26 @@
     --success-color: #10b981;
     --error-color: #ef4444;
     --warning-color: #f59e0b;
-    --global-font-color: #374151; /* Gray-700 */
-    --header-font-color: #111827; /* Gray-900 */
-    --panel-bg-color: #ffffff;
-    --panel-font-color: #1f2937; /* Gray-800 */
     --card-border-color: #e5e7eb; /* Gray-200 */
-    --global-theme-color: #f3f4f6; /* Gray-100 */
     --spacing: 1.5rem;
+    /* 全域主題色：設定 body 的背景色 */
+    --global-theme-color: rgba(128,128,128,1);
+    /* 全域文字顏色：設定 body 的文字顏色 */
+    --global-font-color: #000;
+    
+    /* 面板背景色：用於 FAB 內容面板等浮動元素背景 */
+    --panel-bg-color: #f8f8f8;
+    /* 面板文字顏色：用於 FAB 內容面板等浮動元素的文字 */
+    --panel-font-color: #000;
+    /* 標題文字顏色：用於頂部導航或高對比區塊的文字 */
+    --header-font-color: #000; 
+    
+    /* 浮動按鈕 (FAB) 尺寸 */
+    --fab-size: 40px;
+    /* 浮動按鈕陰影 */
+    --fab-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
+
 
 /* -------------------------------------- */
 /* --- 0. 響應式字體基線調整 --- */
@@ -61,7 +73,7 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--header-font-color) !important;
 }
 
-/* 卡片內標題 (.card-title) */
+/* 卡片內標題 (.card-title) - 整合了新的樣式 */
 .card-title {
     font-size: clamp(1.05rem, 2.2vw, 1.5rem);
     font-weight: 600;
@@ -69,6 +81,12 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--panel-font-color) !important;
     display: flex;
     align-items: center;
+    
+    /* 新增樣式 */
+    font-size: 1.25rem; /* text-xl */
+    color: #1f2937; /* 深灰色 */
+    border-bottom: 2px solid var(--secondary-color); /* 使用變量或直接顏色 #3b82f6 */
+    padding-bottom: 0.5rem;
 }
 .card-title .fas { /* .mr-2, .mr-1 */
     margin-right: 0.5rem;
@@ -193,39 +211,52 @@ h1, h2, h3, h4, h5, h6 {
 }
 #errorMsg { margin-top: 0.75rem; }
 
-/* 預測結果樣式容器 - 在解釋面板中使用 */
+/* 預測結果樣式容器 - 在解釋面板中使用 (.explanation-panel .prediction-result) */
 .explanation-panel .prediction-result {
     font-size: clamp(0.75rem, 2vw, 1rem);
-    border-left: 5px solid var(--primary-color);
-    padding-left: 10px;
     margin-bottom: 15px;
+    transition: all 0.3s ease;
+    
+    /* 移除舊樣式，整合新樣式 */
     background-color: var(--global-theme-color);
-    padding: 1rem;
-    border-radius: 0.25rem;
+    border: 1px solid #e5e7eb; /* 淺灰色邊框 */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); /* 輕微陰影 */
+    padding: 1.5rem; /* 增加內邊距 */
+    border-radius: 0.75rem; /* 更大的圓角 */
+    /* 新增樣式：將內部的文字內容向右對齊 */
+    text-align: left;
 }
 
-/* 預測值數值樣式 */
-.prob-value {
-    font-size: clamp(0.9rem, 2vw, 1.25rem);
-    font-weight: 800;
-}
-
-/* 高風險顏色 */
+/* 高風險顏色 (.high-risk) - 整合新樣式 */
 .high-risk {
     color: var(--error-color);
+    
+    /* 新增樣式 */
+    background-color: #fee2e2; /* 淺紅色背景 */
+    color: #dc2626; /* 深紅色字體 */
+    border: 1px solid #f87171;
+    transform: scale(1.05); /* 輕微放大以強調 */
 }
 
-/* 低風險顏色 */
+/* 低風險顏色 (.low-risk) - 整合新樣式 */
 .low-risk {
     color: var(--success-color);
+
+    /* 新增樣式 */
+    background-color: #d1fae5; /* 淺綠色背景 */
+    color: #059669; /* 深綠色字體 */
+    border: 1px solid #34d399;
 }
 
-/* 卡片分隔線 (.card-divider) */
+/* 卡片分隔線 (.card-divider) - 整合新樣式 */
 .card-divider { /* hr mt-8 / mb-4 */
     border: 0;
     height: 1px;
     background-color: var(--card-border-color);
     margin: 1.5rem 0;
+    
+    /* 新增樣式 */
+    border-top: 1px solid #e5e7eb;
 }
 hr.mt-8 { margin-top: 2rem; }
 hr.mb-4 { margin-bottom: 1rem; }
@@ -245,6 +276,32 @@ hr.mb-4 { margin-bottom: 1rem; }
     border-radius: 0.25rem;
     text-align: center;
 }
+
+/* 載入訊息 - 新增樣式 */
+.loading-message {
+    color: #6b7280;
+    font-style: italic;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: clamp(0.75rem, 2vw, 1rem);
+}
+
+/* 簡單的載入動畫 */
+.loading-message::before {
+    content: '...';
+    animation: pulse-dots 1.5s infinite ease-in-out;
+    color: var(--secondary-color); /* 使用次要顏色，通常是藍色 */
+    font-size: 1.5em;
+    line-height: 0;
+}
+
+@keyframes pulse-dots {
+    0%, 100% { opacity: 0.2; }
+    50% { opacity: 1; }
+}
+/* --- 載入訊息結束 --- */
+
 
 /* 批次上傳區塊的調整 */
 .batch-upload-container {
