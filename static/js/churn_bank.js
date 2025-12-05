@@ -18,13 +18,19 @@ const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.locatio
 const API_PREDICT_ENDPOINT = '/api/churn_bank/predict';
 const API_BATCH_ENDPOINT = '/api/churn_bank/predict_batch';
 
-// ★★★ 全域變數用來儲存批次資料和排序狀態 (修改和新增) ★★★
-let globalBatchData = [];       // 儲存當前篩選和排序後的數據 (用於渲染)
-let originalBatchData = [];     // 儲存最原始的順序數據 (用於重設排序)
+// ★★★ 全域變數用來儲存批次資料和排序狀態 (已移除 missing_count) ★★★
+let globalBatchData = [];       // 儲存當前篩選和排序後的數據 (用於渲染分頁)
+let originalBatchData = [];     // 儲存最原始的順序數據 (用於重設排序)
 let currentSort = {
-    key: 'none',                // 排序鍵: 'id', 'probability', 'risk', 'missing_count', 'none'
-    order: 'none'               // 排序順序: 'asc', 'desc', 'none'
+    key: 'none',                // 排序鍵: 'id', 'probability', 'risk', 'none'
+    order: 'none'               // 排序順序: 'asc', 'desc', 'none'
 };
+
+// ★★★ 分頁相關全域變數和常量 (保留) ★★★
+const ITEMS_PER_PAGE = 10;
+let currentPage = 1;
+let totalPages = 0;
+let currentFilteredData = []; // 儲存當前篩選後、未分頁的數據 (用於計算分頁)
 
 
 // =========================================================================
@@ -38,6 +44,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const initialMessage = document.getElementById('initialMessage');
     const uploadBatchBtn = document.getElementById('uploadBatchBtn');
     const filterDataBtn = document.getElementById('filterDataBtn');
+    
+    // ★★★ 新增分頁和搜索 DOM 元素 (保留) ★★★
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
+    const pageInput = document.getElementById('pageInput');
+    const idSearchInput = document.getElementById('idSearchInput');
 
     initializeDropdowns();
 
@@ -74,10 +86,27 @@ document.addEventListener('DOMContentLoaded', () => {
     if (uploadBatchBtn) uploadBatchBtn.addEventListener('click', uploadAndPredictBatch);
     if (filterDataBtn) filterDataBtn.addEventListener('click', filterAndRenderBatchResults);
     
-    // ★★★ 排序事件綁定 ★★★
+    // ★★★ 排序事件綁定 (保留) ★★★
     document.querySelectorAll('.fl-table th[data-sort-key]').forEach(header => {
         header.addEventListener('click', handleSort);
     });
+
+    // ★★★ 分頁事件綁定 (保留) ★★★
+    if (prevPageBtn) prevPageBtn.addEventListener('click', () => handlePagination(-1));
+    if (nextPageBtn) nextPageBtn.addEventListener('click', () => handlePagination(1));
+    if (pageInput) {
+        // 允許按 Enter 鍵或失去焦點時觸發跳頁
+        pageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                handlePageInput();
+            }
+        });
+        pageInput.addEventListener('blur', handlePageInput);
+    }
+
+    // ★★★ ID 搜索事件綁定 (保留) ★★★
+    // 綁定到 input 事件，確保輸入時即時篩選
+    if (idSearchInput) idSearchInput.addEventListener('input', filterAndRenderBatchResults);
 
 
     // -----------------------------------------------------------------
@@ -121,7 +150,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /**
- * 驗證規則定義
+ * 驗證規則定義 (保留不變)
  */
 const VALIDATION_RULES = {
     'CreditScore': { min: 350, max: 850, integer: true, msg: "信用分數必須介於 350 到 850 之間的整數。" },
@@ -137,7 +166,7 @@ const VALIDATION_RULES = {
 };
 
 /**
- * 收集單筆表單輸入數據
+ * 收集單筆表單輸入數據 (保留不變)
  */
 function collectInputData() {
     const inputFields = document.querySelectorAll('#inputForm input[data-feature-name]');
@@ -184,7 +213,7 @@ function collectInputData() {
 }
 
 // =========================================================================
-// 下拉選單邏輯
+// 下拉選單邏輯 (保留不變)
 // =========================================================================
 function initializeDropdowns() {
     document.querySelectorAll('.dropdown-container').forEach(container => {
@@ -215,7 +244,7 @@ function initializeDropdowns() {
 }
 
 // =========================================================================
-// 執行模型預測並取得 AI 解釋
+// 執行模型預測並取得 AI 解釋 (保留不變)
 // =========================================================================
 async function runPredictionAndExplain() {
     if (!isApiKeyActive || !geminiApiKey) {
@@ -309,7 +338,7 @@ async function runPredictionAndExplain() {
 
 
 // =========================================================================
-// 批次 CSV 預測（強化錯誤處理和 JSON 穩定性）
+// 批次 CSV 預測（已更新 colspan）
 // =========================================================================
 async function uploadAndPredictBatch() {
     const csvFileInput = document.getElementById('csvFileInput');
@@ -334,11 +363,9 @@ async function uploadAndPredictBatch() {
     document.getElementById('explanationOutput').innerHTML = '<p class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</p>';
     document.getElementById('chartDisplay').innerHTML = '<p class="chart-footer-message">批次預測結果圖表不在此區塊顯示。</p>';
     
-    // 面板已預設顯示，無需操作 hidden class
-    
     filterStats.innerHTML = '';
-    // 將 colspan 改為 4
-    document.getElementById('batchResultBody').innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color: #94a3b8;"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
+    // 將 colspan 改為 3
+    document.getElementById('batchResultBody').innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
 
 
     try {
@@ -370,7 +397,6 @@ async function uploadAndPredictBatch() {
                 // 4. 強化檢查：確保 result.data 是一個非空陣列
                 const batchData = result.data;
                 
-                // ★★★ 後端需確保：欄位驗證失敗時，返回 400 狀態碼或在 result.error 中說明欄位缺失 ★★★
                 if (result.error && result.error.includes('Missing required columns')) {
                     throw new Error(result.error);
                 }
@@ -388,7 +414,11 @@ async function uploadAndPredictBatch() {
                         header.setAttribute('data-sort-order', 'none');
                     });
                     
-                    // 渲染表格 (會套用預設的 'none' 排序)
+                    // 重設分頁
+                    currentPage = 1;
+                    document.getElementById('idSearchInput').value = ''; // 清空搜索欄
+                    
+                    // 渲染表格 (會套用預設的 'none' 排序、預設的 50% 篩選 和 第 1 頁分頁)
                     filterAndRenderBatchResults(); 
                     alert(`批次分析成功！共處理 ${originalBatchData.length} 筆客戶資料。`);
                 } else {
@@ -422,9 +452,9 @@ async function uploadAndPredictBatch() {
         
         console.error("批次預測失敗:", error);
         
-        // 將 colspan 改為 4
+        // 將 colspan 改為 3
         document.getElementById('batchResultBody').innerHTML = 
-            `<tr><td colspan="4" class="error-message" style="text-align:center; padding:20px;">
+            `<tr><td colspan="3" class="error-message" style="text-align:center; padding:20px;">
                 ❌ 批次預測失敗:<br> ${error.message.replace(/\n/g, '<br>')}
             </td></tr>`;
         
@@ -438,7 +468,7 @@ async function uploadAndPredictBatch() {
 }
 
 // =========================================================================
-// 排序邏輯
+// 排序邏輯 (已移除 missing_count 相關)
 // =========================================================================
 
 /**
@@ -469,6 +499,9 @@ function handleSort() {
         key: sortKey,
         order: nextOrder
     };
+    
+    // 重設為第 1 頁
+    currentPage = 1;
 
     // 重新渲染結果
     filterAndRenderBatchResults();
@@ -483,6 +516,7 @@ function sortBatchData(data) {
     const { key, order } = currentSort;
     
     if (order === 'none') {
+        // 如果是 'none' 排序，則按照原始數據的順序重新排
         const filteredIds = new Set(data.map(d => d.id));
         return originalBatchData.filter(row => filteredIds.has(row.id));
     }
@@ -503,9 +537,6 @@ function sortBatchData(data) {
         } else if (key === 'probability') {
             valA = a.probability;
             valB = b.probability;
-        } else if (key === 'missing_count') { // ★★★ 新增缺失值排序邏輯 ★★★
-            valA = a.missing_count;
-            valB = b.missing_count;
         } else {
             return 0; // 不支援的 key
         }
@@ -516,7 +547,12 @@ function sortBatchData(data) {
         if (valA > valB) {
             return order === 'asc' ? 1 : -1;
         }
-        return 0; // 值相等
+        // 如果值相等，則退回以 ID 排序 (確保穩定性)
+        if (order === 'asc') {
+            return a.id - b.id;
+        } else {
+            return b.id - a.id;
+        }
     });
 
     return sortedData;
@@ -524,22 +560,32 @@ function sortBatchData(data) {
 
 
 // =========================================================================
-// 批次結果篩選與渲染邏輯 (已修正為使用 row.id 和排序)
+// 批次結果篩選、搜索與渲染邏輯 (已更新 colspan, 移除 missing_count)
 // =========================================================================
 function filterAndRenderBatchResults() {
     const thresholdInput = document.getElementById('thresholdInput');
+    const idSearchInput = document.getElementById('idSearchInput');
     const tbody = document.getElementById('batchResultBody');
     const statsDiv = document.getElementById('filterStats');
-    // 注意：表格有 4 欄 (ID, 機率, 風險, 缺失值)，所以 colspan=4
+    const pageInput = document.getElementById('pageInput');
+    const pageInfo = document.getElementById('pageInfo');
+    const prevPageBtn = document.getElementById('prevPageBtn');
+    const nextPageBtn = document.getElementById('nextPageBtn');
 
     if (originalBatchData.length === 0) { // 使用 originalBatchData 檢查是否有數據
         statsDiv.innerHTML = '請先上傳 CSV 檔案進行批次分析。';
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color: #94a3b8;">請上傳 CSV 檔案進行批次分析</td></tr>';
+        // Colspan changed to 3
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">請上傳 CSV 檔案進行批次分析</td></tr>';
+        pageInput.value = 1;
+        pageInfo.textContent = ' / 1';
+        prevPageBtn.disabled = true;
+        nextPageBtn.disabled = true;
         return;
     }
 
-    // 取得使用者輸入的百分比 (例如 50)，轉為小數 (0.5)
+    // 1. 取得使用者輸入
     let thresholdPercent = parseFloat(thresholdInput.value);
+    const idSearchTerm = idSearchInput.value.trim().toLowerCase();
     
     // 防呆機制
     if (isNaN(thresholdPercent) || thresholdPercent < 0 || thresholdPercent > 100) {
@@ -548,34 +594,65 @@ function filterAndRenderBatchResults() {
     }
     const thresholdDecimal = thresholdPercent / 100;
 
-    // 進行篩選：找出機率 >= 門檻值的客戶
-    const filteredData = originalBatchData.filter(row => row.probability >= thresholdDecimal);
+    // 2. 進行篩選：找出 機率 >= 門檻值 **AND** ID 包含搜索詞 的客戶
+    let filteredData = originalBatchData.filter(row => {
+        const probFilter = row.probability >= thresholdDecimal;
+        // ID 搜索邏輯 (已修復)
+        const idSearch = row.id != null ? String(row.id).toLowerCase().includes(idSearchTerm) : false;
+        return probFilter && idSearch;
+    });
     
-    // 將篩選後的結果存回 globalBatchData
-    globalBatchData = filteredData;
+    // 3. 應用當前排序狀態
+    currentFilteredData = sortBatchData(filteredData); // 儲存排序後的完整列表
     
-    // 應用當前排序狀態
-    const finalData = sortBatchData(globalBatchData);
-
+    // 4. 計算分頁
+    totalPages = Math.ceil(currentFilteredData.length / ITEMS_PER_PAGE);
+    
+    // 確保當前頁碼在有效範圍內
+    if (currentPage > totalPages && totalPages > 0) {
+        currentPage = totalPages;
+    } else if (currentPage < 1 && totalPages > 0) {
+        currentPage = 1;
+    } else if (totalPages === 0) {
+        currentPage = 1;
+    }
+    
+    // 5. 根據分頁切割數據
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const finalData = currentFilteredData.slice(startIndex, endIndex);
 
     // 清空表格
     tbody.innerHTML = ''; 
 
-    // 更新統計文字
+    // 6. 更新統計文字
     statsDiv.innerHTML = `
         <strong>總筆數</strong>: ${originalBatchData.length} &nbsp; | &nbsp; 
-        <strong>流失機率 > ${thresholdPercent}% 客戶數</strong>: 
-        <span class="prob-value high-risk">${filteredData.length}</span> 位
+        <strong>篩選後符合條件客戶數</strong>: 
+        <span class="prob-value high-risk">${currentFilteredData.length}</span> 位
+        (機率 > ${thresholdPercent}%)
     `;
     statsDiv.style.fontWeight = '500';
+    
+    // 7. 更新分頁控制元件狀態
+    const totalCount = currentFilteredData.length;
+    pageInput.value = currentPage;
+    pageInfo.textContent = ` / ${totalPages}`;
+    prevPageBtn.disabled = currentPage <= 1 || totalCount === 0;
+    nextPageBtn.disabled = currentPage >= totalPages || totalCount === 0;
 
-    // 如果篩選後沒資料
+
+    // 8. 渲染數據
     if (finalData.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center; padding:20px; color: #94a3b8;">沒有符合條件的客戶</td></tr>';
+        let message = totalCount === 0 
+            ? '沒有符合篩選條件 (機率/ID) 的客戶' 
+            : '找不到當前頁面數據 (可能是分頁錯誤)';
+        
+        // Colspan changed to 3
+        tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">${message}</td></tr>`;
         return;
     }
-
-    // 渲染篩選和排序後的資料
+    
     finalData.forEach(row => {
         const tr = document.createElement('tr');
         
@@ -590,7 +667,7 @@ function filterAndRenderBatchResults() {
         const riskClass = isHighRisk ? 'high-risk-tag' : 'low-risk-tag';
         const riskLabel = isHighRisk ? '高風險' : '低風險';
 
-        // 使用 row.id 
+        // 渲染 3 個欄位 (ID, 流失機率, 風險等級)
         tr.innerHTML = `
             <td style="padding: 12px; text-align: center;">${row.id ?? 'N/A'}</td> 
             <td style="padding: 12px; font-weight: bold; text-align: center;">
@@ -599,17 +676,53 @@ function filterAndRenderBatchResults() {
             <td style="padding: 12px; text-align: center;">
                 <span class="risk-tag ${riskClass}">${riskLabel}</span>
             </td>
-            <td style="padding: 12px; text-align: center;">
-                ${row.missing_count ?? 0}
-            </td>
             `;
         tbody.appendChild(tr);
     });
 }
 
 // =========================================================================
-// 執行模型預測（不含 AI 解釋）
-// ... (此函式內容未變更)
+// 分頁控制邏輯 (保留)
+// =========================================================================
+
+/**
+ * 處理分頁按鈕 (上一頁/下一頁) 點擊事件
+ * @param {number} delta - 頁碼變動量 (-1 或 1)
+ */
+function handlePagination(delta) {
+    const newPage = currentPage + delta;
+    if (newPage >= 1 && newPage <= totalPages) {
+        currentPage = newPage;
+        filterAndRenderBatchResults();
+    }
+}
+
+/**
+ * 處理頁碼輸入框事件
+ */
+function handlePageInput() {
+    const pageInput = document.getElementById('pageInput');
+    let page = parseInt(pageInput.value);
+    
+    if (isNaN(page) || page < 1) {
+        page = 1;
+    } else if (page > totalPages) {
+        page = totalPages > 0 ? totalPages : 1;
+    }
+    
+    // 只有在頁碼有實際變動時才重新渲染
+    if (page !== currentPage) {
+        currentPage = page;
+        filterAndRenderBatchResults();
+    } else {
+        // 確保輸入框的值是正確的
+        pageInput.value = currentPage; 
+    }
+}
+
+
+// =========================================================================
+// 執行模型預測（不含 AI 解釋） (保留不變)
 // =========================================================================
 async function runPredictionOnly() {
     const analyzeBtn = document.getElementById('analyzeBtn');
@@ -671,8 +784,7 @@ async function runPredictionOnly() {
 }
 
 // =========================================================================
-// Gemini API 呼叫
-// ... (此函式內容未變更)
+// Gemini API 呼叫 (保留不變)
 // =========================================================================
 async function getAiExplanation(prompt, apiKey) {
     const GEMINI_API_URL =
@@ -712,8 +824,7 @@ async function getAiExplanation(prompt, apiKey) {
 }
 
 // =========================================================================
-// 渲染後端傳來的 Base64 圖表
-// ... (此函式內容未變更)
+// 渲染後端傳來的 Base64 圖表 (保留不變)
 // =========================================================================
 function renderChartsFromBase64(charts) {
     const chartContainer = document.getElementById('chartDisplay');

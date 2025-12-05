@@ -3,9 +3,7 @@
 {% block title %}銀行客戶流失預測 - 客戶流失預測平台{% endblock %}
 
 {% block extra_css %}
-<!-- 載入 Tailwind CSS CDN -->
 <script src="https://cdn.tailwindcss.com"></script>
-<!-- 載入 Font Awesome Icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/churn_bank.css') }}">
 {% endblock %}
@@ -16,7 +14,6 @@
     
     <div class="main-panel-grid">
         
-        <!-- API Key Panel -->
         <div class="api-key-panel card">
             <h2 class="card-title"><i class="fas fa-key mr-2"></i> Gemini API 啟用</h2>
             <div class="api-key-container">
@@ -29,10 +26,8 @@
             <p id="apiStatusMsg" class="text-sm mt-2 text-red-500">請輸入 Key 以啟用 AI 解釋功能。</p>
         </div>
 
-        <!-- Input and Prompt Panel (Now spans across the grid on large screens) -->
         <div class="input-and-prompt-panel card">
             
-            <!-- Batch Upload -->
             <div class="batch-upload-container">
                 <h2 class="card-title"><i class="fas fa-upload mr-2"></i> 批次 CSV 分析/客戶單筆輸入</h2>
                 <hr class="card-divider">
@@ -51,10 +46,8 @@
 
             <hr class="card-divider">
 
-            <!-- Single Customer Input -->
             <div class="input-section">
                 <h2 class="card-title"><i class="fas fa-user-edit mr-2"></i> 單筆客戶特徵輸入 (10 項)</h2>
-                <!-- === Improvement: Use a responsive grid for input fields === -->
                 <div id="inputForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                     <div class="input-field-container">
                         <label>1. 信用分數 ( 350 - 850 )</label>
@@ -73,7 +66,6 @@
                         <input type="number" id="input_Balance" data-feature-name="Balance" value="150000" class="theme-input-field">
                     </div>
                     
-                    <!-- Dropdown for NumOfProducts -->
                     <div class="input-field-container dropdown-container" data-dropdown-id="NumOfProducts">
                         <label>5. 產品數量 ( 1 - 4 )</label>
                         <input type="text" id="input_NumOfProducts" data-feature-name="NumOfProducts" data-value="2" value="2" readonly class="theme-input-field dropdown-input" placeholder="選擇產品數量">
@@ -85,7 +77,6 @@
                         </div>
                     </div>
                     
-                    <!-- Dropdown for HasCrCard -->
                     <div class="input-field-container dropdown-container" data-dropdown-id="HasCrCard">
                         <label>6. 持有信用卡 ( 0 : 否 / 1 : 是 )</label>
                         <input type="text" id="input_HasCrCard" data-feature-name="HasCrCard" data-value="1" value="1 (是)" readonly class="theme-input-field dropdown-input" placeholder="選擇是否持有信用卡">
@@ -95,7 +86,6 @@
                         </div>
                     </div>
                     
-                    <!-- Dropdown for IsActiveMember -->
                     <div class="input-field-container dropdown-container" data-dropdown-id="IsActiveMember">
                         <label>7. 活躍會員 ( 0 : 否 / 1 : 是 )</label>
                         <input type="text" id="input_IsActiveMember" data-feature-name="IsActiveMember" data-value="1" value="1 (是)" readonly class="theme-input-field dropdown-input" placeholder="選擇是否為活躍會員">
@@ -110,7 +100,6 @@
                         <input type="number" id="input_EstimatedSalary" data-feature-name="EstimatedSalary" value="100000" class="theme-input-field">
                     </div>
 
-                    <!-- Dropdown for Geography -->
                     <div class="input-field-container dropdown-container" data-dropdown-id="Geography">
                         <label>9. 國家/地區 ( 0 : 法國 1 : 西班牙 2 : 德國 )</label>
                         <input type="text" id="input_Geography" data-feature-name="Geography" data-value="2" value="2 (德國)" readonly class="theme-input-field dropdown-input" placeholder="選擇國家/地區">
@@ -121,7 +110,6 @@
                         </div>
                     </div>
                     
-                    <!-- Dropdown for Gender -->
                     <div class="input-field-container dropdown-container" data-dropdown-id="Gender">
                         <label>10. 性別 ( 0 : 男 / 1 : 女 )</label>
                         <input type="text" id="input_Gender" data-feature-name="Gender" data-value="1" value="1 (女)" readonly class="theme-input-field dropdown-input" placeholder="選擇性別">
@@ -135,7 +123,6 @@
 
             <hr class="card-divider">
 
-            <!-- AI Prompt Section -->
             <div class="prompt-section">
                 <h2 class="card-title"><i class="fas fa-comment-dots mr-2"></i> AI 解釋/行動建議 指令</h2>
                 <div class="input-field-container">
@@ -161,7 +148,6 @@
             </div>
         </div>
 
-        <!-- AI Explanation Panel -->
         <div class="explanation-panel card">
             <h2 class="card-title"><i class="fas fa-lightbulb mr-2"></i> AI 解釋與行動建議</h2>
             <div id="explanationOutput" class="output-content">
@@ -169,7 +155,6 @@
             </div>
         </div>
 
-        <!-- Chart Panel -->
         <div class="chart-panel card">
             <h2 class="card-title"><i class="fas fa-chart-area mr-2"></i> 模型內建輸出圖表顯示區</h2>
             <div id="chartDisplay" class="chart-display grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -179,20 +164,17 @@
         </div>
     </div>
 
-    <!-- Batch Result Panel -->
     <hr class="card-divider mt-8">
     <div id="batch-result-panel" class="card mt-6">
         <h2 class="card-title"><i class="fas fa-table mr-2"></i> 批次分析結果列表</h2>
         
         <div class="filter-controls">
             
-            <!-- ID Search -->
             <div class="flex items-center gap-2">
                 <label for="idSearchInput" class="font-bold whitespace-nowrap text-gray-700">ID 搜索:</label>
                 <input type="text" id="idSearchInput" placeholder="輸入 ID 快速搜索..." class="theme-input-field w-32">
             </div>
             
-            <!-- Probability Filter -->
             <div class="flex items-center gap-2">
                 <label for="thresholdInput" class="whitespace-nowrap text-gray-700">篩選流失機率大於：</label>
                 <input type="number" id="thresholdInput" value="50" min="0" max="100" step="1" class="theme-input-field text-center" style="width: 70px;">
@@ -203,8 +185,7 @@
             </div>
             
             <div class="filter-stats text-sm text-gray-600" id="filterStats">
-                <!-- Filter stats will be injected here -->
-            </div>
+                </div>
         </div>
         
         <div class="table-wrapper mt-4 overflow-x-auto">
@@ -220,8 +201,7 @@
                         <th id="sortRisk" data-sort-key="risk" data-sort-order="none">
                             風險等級 <span class="sort-icon"><i class="fas fa-sort"></i></span>
                         </th>
-                        <!-- Add other relevant data columns here if needed, e.g., Age, Balance, etc. -->
-                    </tr>
+                        </tr>
                 </thead>
                 <tbody id="batchResultBody">
                     <tr><td colspan="3" class="text-center p-5 text-gray-400">請上傳 CSV 檔案進行批次分析</td></tr>
@@ -229,7 +209,6 @@
             </table>
         </div>
 
-        <!-- Pagination Controls -->
         <div class="pagination-controls" id="paginationControls" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 1rem;">
             <button id="prevPageBtn" class="analyze-btn analyze-predict-only text-sm"><i class="fas fa-chevron-left"></i> 上一頁</button>
             <label for="pageInput" class="text-gray-700">前往:</label>
