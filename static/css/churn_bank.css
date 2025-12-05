@@ -2,6 +2,12 @@
 /* --- 0. CSS 變量與通用設定 --- */
 /* -------------------------------------- */
 :root {
+    /* --global-bg-color: rgba(128,128,128,1); */
+    /* --global-font-color: #000; */
+    /* --panel-bg-color: rgba(128,128,128,1); */
+    /* --fab-size: 40px; */
+    /* --btn-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5); */
+    /* --btn-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5); */
     /* 假設從 base.html 繼承的變數 */
     --primary-color: #008080; /* Teal/水鴨綠 */
     --fixed-primary-color: #008080;
@@ -11,22 +17,6 @@
     --warning-color: #f59e0b;
     --card-border-color: #e5e7eb; /* Gray-200 */
     --spacing: 1.5rem;
-    /* 全域主題色：設定 body 的背景色 */
-    --global-theme-color: rgba(128,128,128,1);
-    /* 全域文字顏色：設定 body 的文字顏色 */
-    --global-font-color: #000;
-    
-    /* 面板背景色：用於 FAB 內容面板等浮動元素背景 */
-    --panel-bg-color: #f8f8f8;
-    /* 面板文字顏色：用於 FAB 內容面板等浮動元素的文字 */
-    --panel-font-color: #000;
-    /* 標題文字顏色：用於頂部導航或高對比區塊的文字 */
-    --header-font-color: #000; 
-    
-    /* 浮動按鈕 (FAB) 尺寸 */
-    --fab-size: 40px;
-    /* 浮動按鈕陰影 */
-    --fab-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
 }
 
 
@@ -35,7 +25,7 @@
 /* -------------------------------------- */
 body {
     font-family: 'Inter', sans-serif;
-    background-color: var(--global-theme-color);
+    background-color: var(--global-bg-color);
     color: var(--global-font-color);
     line-height: 1.5;
     padding: var(--spacing);
@@ -56,7 +46,7 @@ h1, h2, h3, h4, h5, h6 {
 .card {
     font-size: clamp(0.75rem, 2vw, 1rem);
     background-color: var(--panel-bg-color);
-    color: var(--panel-font-color);
+    color: var(--global-font-color);
     padding: var(--spacing, 1.5rem); 
     border-radius: 0.5rem; /* rounded-lg */
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
@@ -78,7 +68,7 @@ h1, h2, h3, h4, h5, h6 {
     font-size: clamp(1.05rem, 2.2vw, 1.5rem);
     font-weight: 600;
     margin-bottom: 1rem;
-    color: var(--panel-font-color) !important;
+    color: var(--global-font-color) !important;
     display: flex;
     align-items: center;
     
@@ -139,7 +129,7 @@ h1, h2, h3, h4, h5, h6 {
 .theme-input-field {
     font-size: clamp(0.75rem, 2vw, 1rem);
     background-color: var(--panel-bg-color);
-    color: var(--panel-font-color);
+    color: var(--global-font-color);
     border: 1px solid var(--card-border-color); /* border-gray-300 */
     transition: background-color 0.5s linear, color 0.5s linear, border-color 0.3s;
     width: 100%;
@@ -218,7 +208,7 @@ h1, h2, h3, h4, h5, h6 {
     transition: all 0.3s ease;
     
     /* 移除舊樣式，整合新樣式 */
-    background-color: var(--global-theme-color);
+    background-color: var(--global-bg-color);
     border: 1px solid #e5e7eb; /* 淺灰色邊框 */
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06); /* 輕微陰影 */
     padding: 1.5rem; /* 增加內邊距 */
@@ -452,7 +442,7 @@ hr.mb-4 { margin-bottom: 1rem; }
 /* 圖表佔位符 */
 .chart-placeholder {
     height: 300px;
-    background-color: color-mix(in srgb, var(--panel-bg-color) 80%, var(--global-theme-color));
+    background-color: color-mix(in srgb, var(--panel-bg-color) 80%, var(--global-bg-color));
     border: 1px dashed var(--global-font-color);
     display: flex;
     flex-direction: column;

@@ -1,11 +1,11 @@
 // 全域腳本：主題切換/顏色控制 (目前為佔位符)
 console.log("color/bg control JS loaded.");(function(){
   const fabHTML=`
-  <div id="colorFab">
-    <div id="fabIcon">🎨</div>
-    <div id="fabContent">
-      <div class="panel-title">背景顏色調整</div>
-      <div class="sliders">
+  <div id="fab-color">
+    <div id="fab-Icon">🎨</div>
+    <div id="fab-Content">
+      <div class="fab-panel_title">背景顏色調整</div>
+      <div class="fab-sliders">
         <label>R: <span id="valR">128</span></label>
         <input type="range" id="rangeR" min="0" max="255" value="128">
         <label>G: <span id="valG">128</span></label>
@@ -15,24 +15,24 @@ console.log("color/bg control JS loaded.");(function(){
         <label>A: <span id="valA">1</span></label>
         <input type="range" id="rangeA" min="0" max="1" step="0.01" value="1">
       </div>
-      <div class="themes">
-        <button class="theme-btn" data-color="rgba(0,0,0,1)">黑色</button>
-        <button class="theme-btn" data-color="rgba(85,85,85,1)">深色</button>
-        <button class="theme-btn" data-color="rgba(128,128,128,1)">灰色</button>
+      <div class="fab-themes">
+        <button class="fab-theme-btn" data-color="rgba(0,0,0,1)">黑色</button>
+        <button class="fab-theme-btn" data-color="rgba(85,85,85,1)">深色</button>
+        <button class="fab-theme-btn" data-color="rgba(128,128,128,1)">灰色</button>
       </div>
-      <div class="themes">
-        <button class="theme-btn" data-color="rgba(170,170,170,1)">淺色</button>
-        <button class="theme-btn" data-color="rgba(255,255,255,1)">白色</button>
-        <button id="randomBtn" class="theme-btn">隨機</button>       </div>
+      <div class="fab-themes">
+        <button class="fab-theme-btn" data-color="rgba(170,170,170,1)">淺色</button>
+        <button class="fab-theme-btn" data-color="rgba(255,255,255,1)">白色</button>
+        <button id="randomBtn" class="fab-theme-btn">隨機</button>       </div>
     </div>
   </div>`;
-  if (!document.getElementById("colorFab")) {
+  if (!document.getElementById("fab-color")) {
     document.body.insertAdjacentHTML("beforeend",fabHTML);
   }
 
-  const fab=document.getElementById("colorFab");
-  const icon=document.getElementById("fabIcon");
-  const content=document.getElementById("fabContent");
+  const fab=document.getElementById("fab-color");
+  const icon=document.getElementById("fab-Icon");
+  const content=document.getElementById("fab-Content");
   const randomBtn = document.getElementById("randomBtn"); // 選取新的隨機按鈕
   const EDGE_MARGIN = 5; 
 
@@ -50,7 +50,7 @@ console.log("color/bg control JS loaded.");(function(){
     a: document.getElementById("valA")
   };
 
-  const themeBtns=document.querySelectorAll(".theme-btn");
+  const themeBtns=document.querySelectorAll(".fab-theme-btn");
 
   function applyColor(){
     const r = +sliders.r.value;
@@ -90,19 +90,17 @@ console.log("color/bg control JS loaded.");(function(){
     const headerFontColor = avg > 128 ? "#000" : "#fff";
 
     // 設定全域主題顏色
-    document.documentElement.style.setProperty("--global-theme-color",color);
-    document.documentElement.style.setProperty("--global-font-color", globalFontColor); 
-    document.documentElement.style.setProperty("--header-font-color", headerFontColor);
+    document.documentElement.style.setProperty("--global-bg-color",color);
 
     // 面板背景和文字色 (此部分保持硬切換，以確保 FAB 面板始終有良好對比)
     if (avg > 128) {
         // 主背景為淺色 -> 面板使用微淺灰，文字黑色
-        document.documentElement.style.setProperty("--panel-bg-color", "rgba(230, 230, 230, 0.9)");
-        document.documentElement.style.setProperty("--panel-font-color", "#000"); 
+        document.documentElement.style.setProperty("--panel-bg-color", "rgba(230, 230, 230, 0.97)");
+        document.documentElement.style.setProperty("--global-font-color", "#000"); 
     } else {
         // 主背景為深色 -> 面板使用微深灰，文字白色
-        document.documentElement.style.setProperty("--panel-bg-color", "rgba(50, 50, 50, 0.9)");
-        document.documentElement.style.setProperty("--panel-font-color", "#fff"); 
+        document.documentElement.style.setProperty("--panel-bg-color", "rgba(50, 50, 50, 0.97)");
+        document.documentElement.style.setProperty("--global-font-color", "#fff"); 
     }
 
     saveSettings();

@@ -1,6 +1,12 @@
 /* base_Churn.css - 單層 TopBar 結構 (通用骨架，不含內容佈局) */
 
 :root {
+    /* --global-bg-color: rgba(128,128,128,1); */
+    /* --global-font-color: #000; */
+    /* --panel-bg-color: rgba(128,128,128,1); */
+    /* --fab-size: 40px; */
+    /* --btn-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5); */
+    /* --btn-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5); */
     /* --- 導航欄固定參數 (僅保留 Primary TopBar) --- */
     --topbar-primary-height: 50px;                                              /* 主導航欄的固定高度 */
     
@@ -10,11 +16,6 @@
     
     --spacing: 15px; /* 通用間距變數 */
 
-    /* --- Color_BG_Control.js 預期提供的動態顏色備用值 (僅用於頁面內容和卡片) --- */
-    --global-theme-color: #f4f7f9; /* 頁面背景色 (由 JS 控制，用於 body) */
-    --global-font-color: #333333;  /* 頁面文字色 (由 JS 控制，用於 body) */
-    --panel-bg-color: #ffffff;     /* 卡片背景色 (由 JS 控制) */
-    --panel-font-color: rgba(0, 0, 0, 1);  /* 卡片文字色 (由 JS 控制) */
     
     /* --- 固定 TopBar 顏色定義 (不隨主題動態變更) --- */
     --FIXED-PRIMARY-COLOR: rgba(85, 85, 85, 1);      /* 固定強調色/品牌色 (藍紫) */
@@ -22,12 +23,6 @@
     --FIXED-TOPBAR-FONT: rgba(0, 128, 128, 1);       /* 固定導航欄文字/Icon 預設色 (深黑) */
     /* 已移除：--FIXED-SECONDARY-BG, --FIXED-INPUT-COLOR 等 API 相關變數 */
 
-    /* --- 舊的動態變數 (僅保留名稱，將其指向固定值或用於頁面內容) --- */
-    --header-font-color: var(--FIXED-PRIMARY-COLOR);                       /* 頁面標題色使用固定強調色 */
-    --primary-color: var(--header-font-color);                             /* 主色使用標題色 (即固定強調色) */
-    --text-color: var(--FIXED-TOPBAR-FONT);                                /* 預設文字色 */
-    --active-bg-color: var(--header-font-color);                           /* 活躍背景色使用強調色 */
-    --topbar-primary-bg: var(--FIXED-TOPBAR-BG);                           /* 主導航欄背景使用固定值 */
 }
 
 /* --- 全域設置 (配合 Color_BG_Control.js) --- */
@@ -39,7 +34,7 @@ body {
     box-sizing: border-box;                                                /* 邊框模型設定為 border-box */
     
     /* 關鍵：從 JS 獲取背景和文字顏色 (這部分仍響應主題) */
-    background-color: var(--global-theme-color);                           /* 頁面背景色使用動態主題色 */
+    background-color: var(--global-bg-color);                           /* 頁面背景色使用動態主題色 */
     color: var(--global-font-color);                                       /* 頁面文字色使用動態主題色 */
     
     /* 確保主題切換時平滑過渡 */

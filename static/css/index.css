@@ -2,9 +2,12 @@
 
 /* --- 全局變數定義 (保留您的顏色，但多數動態顏色將由 Color_BG_Control.js 提供) --- */
 :root {
-    --header-font-color-static: #1f2937; /* 靜態備用色 */
-    --panel-bg-color-static: #ffffff;    /* 靜態備用色 */
-    --panel-font-color-static: #374151;  /* 靜態備用色 */
+    /* --global-bg-color: rgba(128,128,128,1); */
+    /* --global-font-color: #000; */
+    /* --panel-bg-color: rgba(128,128,128,1); */
+    /* --fab-size: 40px; */
+    /* --btn-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5); */
+    /* --btn-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5); */
     --color-blue-800: #1e40af;
     --color-blue-600: #2563eb;
     --color-blue-50: #eff6ff;
@@ -16,20 +19,13 @@
     --color-gray-800: #1f2937;
     --color-gray-700: #374151;
     --color-gray-600: #4b5563;
-
-    /* 新增動態顏色變數的備用值，確保在未載入 FAB 時也有基礎樣式 */
-    --global-theme-color: #f0f0f0; 
-    --global-font-color: #000;
-    --panel-bg-color: var(--panel-bg-color-static);
-    --panel-font-color: var(--panel-font-color-static);
-    --header-font-color: var(--header-font-color-static);
 }
 
 /* --- 核心響應式字體設定 (應用全域動態顏色) --- */
 
 body {
     /* Color_BG_Control.js 會在 body 標籤上設置 background-color 和 color */
-    background-color: var(--global-theme-color);
+    background-color: var(--global-bg-color);
     color: var(--global-font-color);
     
     /* 設定網頁預設字體：最小 10px, 彈性 2vw, 最大 20px */
@@ -105,7 +101,7 @@ body a {
     transition: color 0.5s linear;
 }
 
-/* 模型面板容器 (使用動態 --panel-bg-color 和 --panel-font-color) */
+/* 模型面板容器 (使用動態 --panel-bg-color 和 --global-font-color) */
 .model-panel {
     /* *** 關鍵修改：使用 FAB 工具設定的面板背景色 *** */
     background-color: var(--panel-bg-color, var(--panel-bg-color-static));
@@ -115,7 +111,7 @@ body a {
     margin-top: 32px;
     
     /* 確保面板內容文字顏色使用動態面板字體色 */
-    color: var(--panel-font-color, var(--panel-font-color-static));
+    color: var(--global-font-color, var(--global-font-color-static));
     transition: background-color 0.5s linear, color 0.5s linear; 
 }
 
@@ -126,9 +122,9 @@ body a {
     font-weight: 600;
     margin-bottom: 20px;
     /* 顏色已由 h1, h2... 統一處理，這裡用作邊框顏色參考 */
-    color: var(--panel-font-color, var(--color-gray-700));
+    color: var(--global-font-color, var(--color-gray-700));
     /* 分隔線顏色也隨著面板主題變化 */
-    border-bottom: 1px solid color-mix(in srgb, var(--panel-font-color, var(--color-gray-700)) 15%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--global-font-color, var(--color-gray-700)) 15%, transparent);
     padding-bottom: 12px;
     transition: color 0.5s linear, border-color 0.5s linear;
 }
@@ -138,7 +134,7 @@ body a {
 .card {
     /* 使用面板變數來設置卡片的背景和文字顏色 */
     background-color: var(--panel-bg-color, #ffffff); /* 預設為白色 */
-    color: var(--panel-font-color, #000000);       /* 預設為黑色 */
+    color: var(--global-font-color, #000000);       /* 預設為黑色 */
     
     /* 確保主題切換時平滑 */
     transition: background-color 0.5s linear, color 0.5s linear, box-shadow 0.2s;
@@ -157,7 +153,7 @@ body a {
     /* 最小 20px, 彈性 3vw, 最大 30px */
     font-size: clamp(20px, 3vw, 30px); 
     /* *** 關鍵修正：確保卡片內的 H5 使用面板字體色 *** */
-    color: var(--panel-font-color, #000000) !important;
+    color: var(--global-font-color, #000000) !important;
     transition: color 0.5s linear;
 }
 
@@ -166,7 +162,7 @@ body a {
     /* 最小 14px, 彈性 2.5vw, 最大 24px */
     font-size: clamp(14px, 2.5vw, 24px); 
     /* *** 關鍵修正：確保卡片內的 P 使用面板字體色 *** */
-    color: var(--panel-font-color, #000000) !important;
+    color: var(--global-font-color, #000000) !important;
     transition: color 0.5s linear;
 }
 
@@ -189,7 +185,7 @@ body a {
     
     /* 使用動態面板背景色和文字色 (與 .card 邏輯相同) */
     background-color: var(--panel-bg-color, var(--panel-bg-color-static));
-    color: var(--panel-font-color, var(--panel-font-color-static)); 
+    color: var(--global-font-color, var(--global-font-color-static)); 
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
     text-decoration: none; 
 
@@ -245,7 +241,7 @@ body a {
     font-weight: 700;
     text-align: center;
     /* *** 關鍵修改：使用 FAB 工具設定的面板字體色 *** */
-    color: var(--panel-font-color, var(--panel-font-color-static)) !important; 
+    color: var(--global-font-color, var(--global-font-color-static)) !important; 
     transition: color 0.5s linear;
 }
 
@@ -262,7 +258,7 @@ body a {
     /* 最小 14px, 彈性 2.5vw, 最大 24px (與 P 的尺寸一致) */
     font-size: clamp(14px, 2.5vw, 24px); 
     /* 讓內文顏色比標題淡一些 */
-    color: color-mix(in srgb, var(--panel-font-color, var(--panel-font-color-static)) 80%, transparent); 
+    color: color-mix(in srgb, var(--global-font-color, var(--global-font-color-static)) 80%, transparent); 
     transition: color 0.5s linear;
 }
 
