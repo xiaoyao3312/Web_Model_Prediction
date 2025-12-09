@@ -1,53 +1,81 @@
-{% extends "base_churn.html" %}
-
-{% block title %}AI 模型儀表板 - 客戶流失預測平台{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
-{% endblock %}
-
-{% block content %}
-
-<div id="dashboard">
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 模型儀表板 - 客戶流失預測平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-    <h1 class="dashboard-title">歡迎使用 AI 模型儀表板</h1>
 
-    <div class="model-panel">
-        <h2 class="model-panel-header">選擇分析模型</h2>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar_menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/color_bg_control.css') }}">
+</head>
+<body>
+
+    <div class="topbar-menu" id="topbarMenu"> 
         
-        <div class="model-grid">
-            
-            <a href="{{ url_for('bank_churn_page') }}" class="model-card model-card-bank">
-                <div class="model-card-content">
-                    <div class="model-icon">🏦</div> 
-                    <h3 class="model-card-title model-card-title-bank">銀行客戶流失預測</h3>
-                </div>
-                <div class="model-card-description">
-                    <p class="model-card-text">利用交易數據和客戶行為模式，精準預測潛在流失的客戶。</p>
-                </div>
-                <div class="model-card-footer model-card-footer-bank">
-                    <span class="model-footer-text">進入分析</span>
-                    <span class="model-footer-icon">→</span>
-                </div>
-            </a>
+        <button class="topbar-toggle-btn" id="topbarToggleBtn" title="切換導航欄顯示模式">
+            <i class="fas fa-chevron-right"></i>
+        </button>
 
-            <a href="{{ url_for('telco_churn_page') }}" class="model-card model-card-telco">
-                <div class="model-card-content">
-                    <div class="model-icon">📱</div> 
-                    <h3 class="model-card-title model-card-title-telco">電信服務續約模型</h3>
-                </div>
-                <div class="model-card-description">
-                    <p class="model-card-text">基於通話和數據使用量，識別高風險用戶並制定保留策略。</p>
-                </div>
-                <div class="model-card-footer model-card-footer-telco">
-                    <span class="model-footer-text">進入分析</span>
-                    <span class="model-footer-icon">→</span>
-                </div>
+        <div class="topbar-brand">
+            <span class="fas fa-brain"></span> <span class="brand-text">模型預測網站</span>
+        </div>
+
+        <div class="topbar-nav-links">
+            
+            <a href="{{ url_for('index') }}" class="topbar-menu-item {% if request.path == '/' %}active{% endif %}" id="menu-dashboard">
+                <button class="menu-button">
+                    <i class="fas fa-home"></i> 
+                    <span class="menu-text">儀表板</span>
+                </button>
             </a>
             
-            </div>
+            <a href="/customer_churn_bank_model" class="topbar-menu-item" id="menu-bank">
+                <button class="menu-button">
+                    <i class="fas fa-university"></i> 
+                    <span class="menu-text">客戶流失_銀行</span>
+                </button>
+            </a>
+        </div>
+        
     </div>
 
-</div>
+    <div class="main-content" id="mainContent">
+        <div id="index-dashboard">
+            
+            <h1 class="h1">歡迎使用 AI 模型儀表板</h1>
 
-{% endblock %}
+            <div class="panel">
+                <h2 class="h2">選擇分析模型</h2>
+                
+                <div class="grid">
+                    
+                    <a href="{{ url_for('bank_churn_page') }}" class="card bank">
+                        <div class="content">
+                            <div class="icon">🏦</div> 
+                            <h3 class="title title-bank">銀行客戶流失預測</h3>
+                        </div>
+                        <div class="description">
+                            <p class="text">利用交易數據和客戶行為模式，精準預測潛在流失的客戶。</p>
+                        </div>
+                        <div class="footer footer-bank">
+                            <span class="footer-text">進入分析</span>
+                            <span class="footer-icon">→</span>
+                        </div>
+                    </a>
+                    
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    
+    <script src="{{ url_for('static', filename='js/topbar_menu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/color_bg_control.js') }}"></script>
+
+</body>
+</html>

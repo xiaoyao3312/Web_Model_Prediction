@@ -2,13 +2,32 @@
 /* --- 0. CSS 變量與通用設定 --- */
 /* -------------------------------------- */
 :root {
-    /* --global-bg-color: rgba(128,128,128,1); */
-    /* --global-font-color: #000; */
-    /* --panel-bg-color: rgba(128,128,128,1); */
-    /* --fab-size: 40px; */
-    /* --btn-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5); */
-    /* --btn-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5); */
-    /* 假設從 base.html 繼承的變數 */
+    /* 
+    --fab-z-index: 99999;
+    --fab-global-transition: background-color 0.5s linear, color 0.5s linear;
+    --fab-global-font-color: #000;
+    --fab-global-bg-color: rgba(128,128,128,1);
+    --fab-panel-bg-color: rgba(128,128,128,1);
+    --fab-fab-size: 40px;
+    --fab-icon-size: 30px;
+    --fab-border-radius: 50%;
+    --fab-font-weight: 900;
+    --fab-font-size: 15px;
+    --fab-panel-title-font-size: 20px;
+    --fab-Content-border-radius: 10px;
+    --fab-Content-padding: 15px 20px;
+    --fab-Content-height: 340px;
+    --fab-Content-width: 200px;
+    --fab-Content-gap: 15px;
+    --fab-btn-padding: 10px 10px;
+    --fab-btn-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    --fab-btn-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+    --fab-sliders-input-width: 100%;
+    --fab-sliders-input-heigth: 5px;
+    --fab-sliders-margin-bottom: 12px;
+    --fab-slider-thumb-width: 20px;
+    --fab-slider-thumb-heigth: 20px; 
+    */
     --primary-color: #008080; /* Teal/水鴨綠 */
     --fixed-primary-color: #008080;
     --secondary-color: #3b82f6;

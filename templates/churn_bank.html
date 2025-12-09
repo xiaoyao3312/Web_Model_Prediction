@@ -1,14 +1,47 @@
-{% extends "base_churn.html" %}
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>銀行客戶流失預測 - 客戶流失預測平台</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/churn_bank.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar_menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/color_bg_control.css') }}">
+</head>
+<body>
 
-{% block title %}銀行客戶流失預測 - 客戶流失預測平台{% endblock %}
+    <div class="topbar-menu" id="topbarMenu"> 
+        
+        <button class="topbar-toggle-btn" id="topbarToggleBtn" title="切換導航欄顯示模式">
+            <i class="fas fa-chevron-right"></i>
+        </button>
 
-{% block extra_css %}
-<script src="https://cdn.tailwindcss.com"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/churn_bank.css') }}">
-{% endblock %}
+        <div class="topbar-brand">
+            <span class="fas fa-brain"></span> <span class="brand-text">模型預測網站</span>
+        </div>
 
-{% block content %}
+        <div class="topbar-nav-links">
+            
+            <a href="{{ url_for('index') }}" class="topbar-menu-item {% if request.path == '/' %}active{% endif %}" id="menu-dashboard">
+                <button class="menu-button">
+                    <i class="fas fa-home"></i> 
+                    <span class="menu-text">儀表板</span>
+                </button>
+            </a>
+            
+            <a href="/customer_churn_bank_model" class="topbar-menu-item" id="menu-bank">
+                <button class="menu-button">
+                    <i class="fas fa-university"></i> 
+                    <span class="menu-text">客戶流失_銀行</span>
+                </button>
+            </a>
+        </div>
+        
+    </div>
+
+    <div class="main-content" id="main-content">
 <div id="churn_bank" class="page-content">
     <h1 class="page-title">客戶流失_銀行MODEL - 預測分析 (含 AI 解釋)</h1>
     
@@ -219,8 +252,12 @@
         
     </div>
 </div>
-{% endblock %}
+    </div>
+    
+    
+    <script src="{{ url_for('static', filename='js/topbar_menu.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/churn_bank.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/color_bg_control.js') }}"></script>
 
-{% block extra_js %}
-<script src="{{ url_for('static', filename='js/churn_bank.js') }}"></script>
-{% endblock %}
+</body>
+</html>

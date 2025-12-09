@@ -1,3 +1,4 @@
+// static\js\color_bg_control.js
 // 全域腳本：主題切換/顏色控制 (目前為佔位符)
 console.log("color/bg control JS loaded."); // 在控制台輸出訊息，確認腳本載入
 
@@ -5,7 +6,7 @@ console.log("color/bg control JS loaded."); // 在控制台輸出訊息，確認
   const fabHTML=` 
   <div id="fab-color"> 
     <div id="fab-Icon">🎨</div> 
-    <div id="fab-Content"> 
+    <div id="fab-content"> 
       <div class="fab-panel-title">背景顏色調整</div> 
       <div class="fab-sliders"> 
         <label>R: <span id="valR">128</span></label> 
@@ -35,7 +36,7 @@ console.log("color/bg control JS loaded."); // 在控制台輸出訊息，確認
 
   const fab=document.getElementById("fab-color"); // 獲取 FAB 容器元素
   const icon=document.getElementById("fab-Icon"); // 獲取 FAB 圖標 (用於點擊/拖曳)
-  const content=document.getElementById("fab-Content"); // 獲取 FAB 內容面板
+  const content=document.getElementById("fab-content"); // 獲取 FAB 內容面板
   const randomBtn = document.getElementById("randomBtn"); // 選取新的隨機按鈕
   const EDGE_MARGIN = 5; // 定義 FAB 吸附邊緣時的邊距 (像素)
 
@@ -93,20 +94,20 @@ console.log("color/bg control JS loaded."); // 在控制台輸出訊息，確認
     const headerFontColor = avg > 128 ? "#000" : "#fff";
 
     // 設定全域主題背景顏色
-    document.documentElement.style.setProperty("--global-bg-color",color);
+    document.documentElement.style.setProperty("--fab-global-bg-color",color);
 
-    // 這裡缺少將 globalFontColor 應用到 --global-font-color 的邏輯
-    // 目前的邏輯是硬切換 --global-font-color，導致平滑過渡的計算被覆蓋 (參照上一次討論的修正)
+    // 這裡缺少將 globalFontColor 應用到 --fab-global-font-color 的邏輯
+    // 目前的邏輯是硬切換 --fab-global-font-color，導致平滑過渡的計算被覆蓋 (參照上一次討論的修正)
 
     // 面板背景和文字色 (此部分保持硬切換，以確保 FAB 面板始終有良好對比)
     if (avg > 128) {
         // 主背景為淺色 -> 面板使用微淺灰，面板文字硬切為黑色
-        document.documentElement.style.setProperty("--panel-bg-color", "rgba(230, 230, 230, 0.97)");
-        document.documentElement.style.setProperty("--global-font-color", "#000"); // ⚠️ 這裡將全域字體顏色硬切為黑色
+        document.documentElement.style.setProperty("--fab-panel-bg-color", "rgba(230, 230, 230, 0.97)");
+        document.documentElement.style.setProperty("--fab-global-font-color", "#000"); // ⚠️ 這裡將全域字體顏色硬切為黑色
     } else {
         // 主背景為深色 -> 面板使用微深灰，面板文字硬切為白色
-        document.documentElement.style.setProperty("--panel-bg-color", "rgba(50, 50, 50, 0.97)");
-        document.documentElement.style.setProperty("--global-font-color", "#fff"); // ⚠️ 這裡將全域字體顏色硬切為白色
+        document.documentElement.style.setProperty("--fab-panel-bg-color", "rgba(50, 50, 50, 0.97)");
+        document.documentElement.style.setProperty("--fab-global-font-color", "#fff"); // ⚠️ 這裡將全域字體顏色硬切為白色
     }
 
     saveSettings(); // 儲存當前設定

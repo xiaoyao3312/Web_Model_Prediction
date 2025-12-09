@@ -19,10 +19,6 @@ def index():
 def bank_churn_page():
     return render_template('churn_bank.html')
 
-@app.route('/customer_churn_telco_model')
-def telco_churn_page():
-    return render_template('churn_telco.html')
-
 # --- 啟動服務 ---
 if __name__ == '__main__':
     print("服務器啟動...")

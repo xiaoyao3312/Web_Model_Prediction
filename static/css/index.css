@@ -2,338 +2,115 @@
 
 /* --- 全局變數定義 (保留您的顏色，但多數動態顏色將由 Color_BG_Control.js 提供) --- */
 :root {
-    /* --global-bg-color: rgba(128,128,128,1); */
-    /* --global-font-color: #000; */
-    /* --panel-bg-color: rgba(128,128,128,1); */
-    /* --fab-size: 40px; */
-    /* --btn-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5); */
-    /* --btn-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5); */
-    --color-blue-800: #1e40af;
-    --color-blue-600: #2563eb;
-    --color-blue-50: #eff6ff;
-    --color-blue-100: #dbeafe;
-    --color-green-800: #065f46;
-    --color-green-600: #059669;
-    --color-green-50: #ecfdf5;
-    --color-green-100: #d1fae5;
-    --color-gray-800: #1f2937;
-    --color-gray-700: #374151;
-    --color-gray-600: #4b5563;
-}
+    --index-dashboard-transition: var(--fab-global-transition);
+    --index-dashboard-global-font-color: var(--fab-global-font-color);
+    --index-dashboard-global-bg-color: var(--fab-global-bg-color);
+    --index-dashboard-panel-bg-color: var(--fab-panel-bg-color);
 
-/* --- 核心響應式字體設定 (應用全域動態顏色) --- */
+    --index-dashboard-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    --index-dashboard-box-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
 
-body {
-    /* Color_BG_Control.js 會在 body 標籤上設置 background-color 和 color */
-    background-color: var(--global-bg-color);
-    color: var(--global-font-color);
-    
-    /* 設定網頁預設字體：最小 10px, 彈性 2vw, 最大 20px */
-    font-size: clamp(10px, 2vw, 20px);
-    line-height: 1.6;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* 假設您使用無襯線字體 */
-    transition: background-color 0.5s linear, color 0.5s linear;
+    --index-dashboard-border-radius: 10px;
+    --index-dashboard-padding-20px: 20px;
+    --index-dashboard-padding-1px: 1px;
+    --index-dashboard-width: 80%;
+    --index-dashboard-heigth: 80%;
+    --index-dashboard-gap: 15px;
 }
-
-/* --- 完整標題響應式階層 (使用動態 --header-font-color) --- */
-h1, h2, h3, h4, h5, h6 {
-    /* 確保所有標題也使用這個高對比顏色 */
-    color: var(--header-font-color);
-    transition: color 0.5s linear;
-}
-
-h1 {
-    /* 專門針對 h1 標題：最小 32px, 彈性 5vw, 最大 48px */
-    font-size: clamp(32px, 5vw, 48px); 
-}
-h2 {
-    /* 專門針對 h2 標題：最小 28px, 4.5vw, 最大 42px */
-    font-size: clamp(28px, 4.5vw, 42px); 
-}
-h3 {
-    /* 專門針對 h3 標題：最小 24px, 4vw, 最大 36px */
-    font-size: clamp(24px, 4vw, 36px); 
-}
-h4 {
-    /* 專門針對 h4 標題：最小 22px, 彈性 3.5vw, 最大 32px */
-    font-size: clamp(22px, 3.5vw, 32px); 
-}
-h5 {
-    /* 專門針對 h5 標題：最小 18px, 彈性 3vw, 最大 28px */
-    font-size: clamp(18px, 3vw, 28px); 
-}
-h6 {
-    /* 專門針對 h6 標題：最小 14px, 彈性 2.5vw, 最大 24px */
-    font-size: clamp(14px, 2.5vw, 24px); 
-}
-
-li {
-    /* 專門針對 li 列表項目：最小 10px, 彈性 2vw, 最大 20px */
-    font-size: clamp(10px, 2vw, 20px); 
-    color: inherit; /* 繼承 body 或其容器的顏色 */
-}
-
-/* 修正 a 標籤無效問題：使用 !important 確保覆蓋類別樣式 (如 .btn) */
-body a {
-    /* 專門針對 a 連結：最小 10px, 彈性 2vw, 最大 20px */
-    font-size: clamp(10px, 2vw, 20px) !important; 
-}
-
 
 /* --- 儀表板主要結構樣式 --- */
+#index-dashboard {
+    background-color: var(--index-dashboard-panel-bg-color);
+    color: var(--index-dashboard-global-font-color);
+    border-radius: var(--index-dashboard-border-radius);
+    border: 1px solid var(--index-dashboard-global-font-color);
+    box-shadow: var(--index-dashboard-box-shadow);
+    
 
-#dashboard {
-    padding: 24px;
-    max-width: 1200px;
+    padding-top: var(--index-dashboard-padding-1px);
+    padding-bottom: var(--index-dashboard-padding-20px);
+    padding-left: var(--index-dashboard-padding-20px);
+    padding-right: var(--index-dashboard-padding-20px);
+
+    width: var(--index-dashboard-width);
+    height: var(--index-dashboard-heigth);
+    
+    margin-left: auto;
+    margin-right: auto;
+    transition: var(--index-dashboard-transition);
+}
+
+#index-dashboard .h1 {
+    /* 確保標題在有寬度設定時居中 */
     margin-left: auto;
     margin-right: auto;
 }
 
-/* 儀表板主標題 H1 (使用動態 --header-font-color) */
-/* **注意：這裡的樣式與通用 h1 有部分重疊，但用於儀表板結構時優先** */
-.dashboard-title {
-    /* 最小 30px, 彈性 5vw, 最大 50px (這會覆蓋上面的 h1:clamp(32px...)，如果它在 .container 中) */
-    font-size: clamp(30px, 5vw, 50px);
-    font-weight: 700;
-    margin-bottom: 24px;
-    /* 顏色已由 h1, h2... 統一處理，這裡作為備用 */
-    color: var(--header-font-color, var(--color-gray-800)); 
-    transition: color 0.5s linear;
+#index-dashboard .icon {
+    font-size: 64px;
+    margin-bottom: 12px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-/* 模型面板容器 (使用動態 --panel-bg-color 和 --global-font-color) */
-.model-panel {
-    /* *** 關鍵修改：使用 FAB 工具設定的面板背景色 *** */
-    background-color: var(--panel-bg-color, var(--panel-bg-color-static));
-    border-radius: 0.75rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    padding: 24px;
-    margin-top: 32px;
-    
-    /* 確保面板內容文字顏色使用動態面板字體色 */
-    color: var(--global-font-color, var(--global-font-color-static));
-    transition: background-color 0.5s linear, color 0.5s linear; 
+#index-dashboard .footer-icon {
+    font-size: 20px;
+    margin-left: 5px;
 }
 
-/* 模型面板標題 H2 (繼承面板字體色) */
-.model-panel-header {
-    /* 這裡的字體大小被上面的 h2:clamp(28px...) 覆蓋，但這裡用作參考 */
-    font-size: clamp(1.125rem, 3vw, 1.5rem); 
-    font-weight: 600;
-    margin-bottom: 20px;
-    /* 顏色已由 h1, h2... 統一處理，這裡用作邊框顏色參考 */
-    color: var(--global-font-color, var(--color-gray-700));
-    /* 分隔線顏色也隨著面板主題變化 */
-    border-bottom: 1px solid color-mix(in srgb, var(--global-font-color, var(--color-gray-700)) 15%, transparent);
-    padding-bottom: 12px;
-    transition: color 0.5s linear, border-color 0.5s linear;
+#index-dashboard .panel {
+    background-color: var(--index-dashboard-global-bg-color);
+    color: var(--index-dashboard-global-font-color);
+    border-radius: var(--index-dashboard-border-radius);
+    border: 1px solid var(--index-dashboard-global-font-color);
+    box-shadow: var(--index-dashboard-box-shadow);
+
+    padding-top: var(--index-dashboard-padding-1px);
+    padding-bottom: var(--index-dashboard-padding-20px);
+    padding-left: var(--index-dashboard-padding-20px);
+    padding-right: var(--index-dashboard-padding-20px);
+    transition: var(--index-dashboard-transition);
 }
 
-/* --- Bootstrap 樣式卡片 (Card) 兼容性樣式 (從 index_html.css 整合) --- */
-
-.card {
-    /* 使用面板變數來設置卡片的背景和文字顏色 */
-    background-color: var(--panel-bg-color, #ffffff); /* 預設為白色 */
+#index-dashboard .card {
+    background-color: var(--index-dashboard-panel-bg-color); 
     color: var(--global-font-color, #000000);       /* 預設為黑色 */
-    
+    box-shadow: var(--index-dashboard-box-shadow);
+    border-radius: var(--index-dashboard-border-radius);  
+    border: 1px solid var(--index-dashboard-global-font-color);
+
+    padding-top: var(--index-dashboard-padding-1px);
+    padding-bottom: var(--index-dashboard-padding-20px);
+    padding-left: var(--index-dashboard-padding-20px);
+    padding-right: var(--index-dashboard-padding-20px);
+
     /* 確保主題切換時平滑 */
-    transition: background-color 0.5s linear, color 0.5s linear, box-shadow 0.2s;
+    transition: var(--index-dashboard-transition);
 }
 
-/* 主頁大標題 H1 (如果 H1 在 .container 內) */
-.container h1 {
-    /* 最小 28px, 彈性 5vw, 最大 50px (這與 .dashboard-title 類似) */
-    font-size: clamp(28px, 5vw, 50px);
-    /* 顏色由通用的 h1 處理，這裡不再重複 */
-    /* color: var(--header-font-color); */
+#index-dashboard .card:hover {
+    box-shadow: var(--index-dashboard-box-shadow-hover);
+    transform: translateY(-4px); 
 }
 
-/* 卡片主標題 H5 */
-.card-body h5 {
-    /* 最小 20px, 彈性 3vw, 最大 30px */
-    font-size: clamp(20px, 3vw, 30px); 
-    /* *** 關鍵修正：確保卡片內的 H5 使用面板字體色 *** */
-    color: var(--global-font-color, #000000) !important;
-    transition: color 0.5s linear;
-}
-
-/* 卡片內文 P */
-.card-body p {
-    /* 最小 14px, 彈性 2.5vw, 最大 24px */
-    font-size: clamp(14px, 2.5vw, 24px); 
-    /* *** 關鍵修正：確保卡片內的 P 使用面板字體色 *** */
-    color: var(--global-font-color, #000000) !important;
-    transition: color 0.5s linear;
-}
-
-
-/* --- 模型卡片網格佈局 (Model Grid) --- */
-
-.model-grid {
+/* --- 模型卡片網格佈局 (index-dashboard Grid) --- */
+#index-dashboard .grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 24px;
-}
-
-/* 預設樣式 (小螢幕及以下) */
-.model-card {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    min-height: 250px; 
-    border-radius: 0.75rem; 
-    
-    /* 使用動態面板背景色和文字色 (與 .card 邏輯相同) */
-    background-color: var(--panel-bg-color, var(--panel-bg-color-static));
-    color: var(--global-font-color, var(--global-font-color-static)); 
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
-    text-decoration: none; 
-
-    /* 結合主題切換過渡 */
-    transition: background-color 0.5s linear, color 0.5s linear, box-shadow 0.2s, all 0.3s ease-in-out; 
-
-    border: 2px solid transparent; 
+    gap: var(--index-dashboard-gap);
 }
 
 /* --- 響應式佈局 (Media Queries) --- */
-
 /* sm:grid-cols-2 (576px 及以上) */
 @media (min-width: 576px) {
-    .model-card {
-        width: calc(50% - 12px);
+    #index-dashboard .card {
+        width: calc(50% - (var(--index-dashboard-gap) / 2));
     }
 }
 
 /* lg:grid-cols-3 (1024px 及以上) */
 @media (min-width: 1024px) {
-    .model-card {
-        width: calc(33.3333% - 16px);
+    #index-dashboard .card {
+        width: calc(33.3333% - (2 * var(--index-dashboard-gap) / 3));
     }
-}
-
-
-/* --- 模型卡片內部樣式 --- */
-
-/* 鼠標懸停效果 (model-card:hover) */
-.model-card:hover {
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    transform: translateY(-4px); 
-}
-
-.model-card-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px;
-}
-
-.model-icon {
-    width: 64px;
-    height: 64px;
-    object-fit: contain;
-    margin-bottom: 12px;
-}
-
-/* 卡片主標題 H3 (使用動態面板字體色) */
-.model-card-title {
-    /* 最小 20px, 彈性 3vw, 最大 30px (與 H5 的尺寸一致) */
-    font-size: clamp(20px, 3vw, 30px); 
-    font-weight: 700;
-    text-align: center;
-    /* *** 關鍵修改：使用 FAB 工具設定的面板字體色 *** */
-    color: var(--global-font-color, var(--global-font-color-static)) !important; 
-    transition: color 0.5s linear;
-}
-
-/* 卡片描述區 */
-.model-card-description {
-    padding: 16px;
-    padding-top: 0;
-    text-align: center;
-    flex-grow: 1;
-}
-
-/* 卡片內文 P (使用動態面板字體色，透過透明度調整次要顏色) */
-.model-card-text {
-    /* 最小 14px, 彈性 2.5vw, 最大 24px (與 P 的尺寸一致) */
-    font-size: clamp(14px, 2.5vw, 24px); 
-    /* 讓內文顏色比標題淡一些 */
-    color: color-mix(in srgb, var(--global-font-color, var(--global-font-color-static)) 80%, transparent); 
-    transition: color 0.5s linear;
-}
-
-/* 卡片底部區 (保持不變) */
-.model-card-footer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding-top: 12px;
-    padding-bottom: 12px;
-    border-top-width: 1px;
-    transition: all 0.3s ease;
-}
-
-.model-footer-text {
-    font-size: clamp(0.8rem, 1.5vw, 0.875rem); 
-    font-weight: 600;
-}
-
-.model-footer-icon {
-    margin-left: 8px;
-    transition: transform 0.3s;
-}
-
-/* 懸停時箭頭移動 (group-hover:translate-x-1) */
-.model-card:hover .model-footer-icon {
-    transform: translateX(4px); 
-}
-
-
-/* --- 特定模型樣式 (銀行: 藍色) --- (保持不變) */
-
-.model-card-bank:hover {
-    border-color: var(--color-blue-600);
-}
-
-.model-card-title-bank {
-    color: var(--color-blue-800);
-}
-
-.model-card-footer-bank {
-    background-color: var(--color-blue-50);
-    border-color: var(--color-blue-100);
-}
-
-.model-card-bank:hover .model-card-footer-bank {
-    background-color: var(--color-blue-100);
-}
-
-.model-card-footer-bank .model-footer-text, 
-.model-card-footer-bank .model-footer-icon {
-    color: var(--color-blue-600);
-}
-
-
-/* --- 特定模型樣式 (電信: 綠色) --- (保持不變) */
-
-.model-card-telco:hover {
-    border-color: var(--color-green-600);
-}
-
-.model-card-title-telco {
-    color: var(--color-green-800);
-}
-
-.model-card-footer-telco {
-    background-color: var(--color-green-50);
-    border-color: var(--color-green-100);
-}
-
-.model-card-telco:hover .model-card-footer-telco {
-    background-color: var(--color-green-100);
-}
-
-.model-card-footer-telco .model-footer-text, 
-.model-card-footer-telco .model-footer-icon {
-    color: var(--color-green-600);
 }
