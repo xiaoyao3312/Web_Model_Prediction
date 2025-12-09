@@ -1,3 +1,4 @@
+/* static\css\color_bg_control.css */
 /* --- 根變數 (Root Variables) --- */
 :root {
   --global-bg-color: rgba(128,128,128,1);
@@ -8,15 +9,17 @@
   --btn-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
 }
 
-/* --- Body 基礎樣式 --- */
+/* --- Body 基礎樣式 (影響全域頁面，保持不變) --- */
 body {
   /* 顏色與背景 */
   background-color: var(--global-bg-color);
   color: var(--global-font-color);
   
   /* 排版 */
-  font-family: Georgia, 'Times New Roman', Times, serif;
-  
+  /* font-family: Georgia, 'Times New Roman', Times, serif; */
+  /* font-family: Calibri, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif; */
+  /* font-family: Verdana, Geneva, sans-serif; */
+  font-family: Cambria, Palatino, 'Palatino Linotype', 'Book Antiqua', serif;
   /* 動畫 */
   transition: background-color 0.5s linear, color 0.5s linear;
 }
@@ -24,8 +27,8 @@ body {
 /* --- FAB 浮動按鈕外觀 (#fab-color) --- */
 #fab-color {
   /* 佈局與定位 */
+  z-index: 99999; /* 最高層級 */
   position: fixed;
-  z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -50,27 +53,22 @@ body {
   box-shadow: var(--btn-shadow-hover);
 }
 
-#fab-Icon {
+#fab-color #fab-Icon {
   /* 外觀 */
-  font-size: 1.8rem;
+  font-size: 1.8rem !important; /* 強化：確保字體大小隔離 */
   user-select: none;
-  
-  /* 層級 */
-  z-index: 1000;
 }
 
 /* --- FAB 內容面板外觀 (#fab-Content) --- */
-#fab-Content {
+#fab-color #fab-Content {
   /* 佈局與定位 */
   position: absolute;
-  bottom: calc(var(--fab-size) + 15px);
-  left: 0;
   display: none;
   flex-direction: column;
   gap: 15px;
   
   /* 尺寸與模型 */
-  height: 370px;
+  height: 360px;
   width: 200px;
   padding: 20px;
   
@@ -87,18 +85,15 @@ body {
   word-wrap: break-word;
   overflow-wrap: break-word;
   
-  /* 層級 */
-  z-index: 9998;
-  
   /* 動畫 */
   transition: background 0.5s linear, color 0.5s linear;
 }
 
 /* 面板標題樣式 */
-.fab-panel_title {
+#fab-color .fab-panel-title {
   /* 排版與對齊 */
-  font-size: 20px;
-  font-weight: 1000;
+  font-size: 20px !important; /* 強化：確保字體大小隔離 */
+  font-weight: 900;
   text-align: center;
   
   /* 顏色與邊框 */
@@ -112,20 +107,20 @@ body {
 }
 
 /* 滑塊標籤容器 (.fab-sliders 裡面的 label) */
-.fab-sliders label {
+#fab-color .fab-sliders label {
   /* 佈局與對齊 */
   display: flex;
   justify-content: space-between;
   
   /* 尺寸與間距 */
-  font-size: 15px;
+  font-size: 15px !important; /* 強化：確保字體大小隔離 */
   
   /* 顏色 */
   color: var(--global-font-color);
 }
 
 /* --- 滑塊軌道美化 (Custom Range Slider) --- */
-.fab-sliders input[type="range"] {
+#fab-color .fab-sliders input[type="range"] {
   /* 外觀覆蓋 */
   -webkit-appearance: none;
   appearance: none;
@@ -140,7 +135,7 @@ body {
 }
 
 /* 滑塊頭 (Thumb) - 針對 Webkit 瀏覽器 */
-.fab-sliders input[type="range"]::-webkit-slider-thumb {
+#fab-color .fab-sliders input[type="range"]::-webkit-slider-thumb {
   /* 外觀覆蓋 */
   -webkit-appearance: none;
   appearance: none;
@@ -157,13 +152,14 @@ body {
   cursor: pointer;
 }
 
-.fab-sliders input[type="range"]::-webkit-slider-thumb:hover {
+/* 修正：為滑塊頭懸停狀態加上特異性前綴 */
+#fab-color .fab-sliders input[type="range"]::-webkit-slider-thumb:hover {
   background: var(--global-bg-color);
   box-shadow: var(--btn-shadow-hover);
 }
 
 /* --- 主題按鈕美化 --- */
-.fab-themes {
+#fab-color .fab-themes {
   /* 佈局與對齊 */
   display: flex;
   justify-content: space-around;
@@ -172,11 +168,11 @@ body {
   margin-top: 5px;
 }
 
-.fab-theme-btn {
+#fab-color .fab-theme-btn {
   /* 尺寸與間距 */
   padding: 10px 10px;
-  font-size: 15px;
-  
+  font-size: 15px !important; /* 強化：確保字體大小隔離 */
+  font-weight: 900;
   
   /* 外觀 */
   background: var(--global-bg-color);
@@ -190,6 +186,6 @@ body {
   transition: background 0.2s, box-shadow 0.2s;
 }
 
-.fab-theme-btn:hover {
+#fab-color .fab-theme-btn:hover {
   box-shadow: var(--btn-shadow-hover);
 }
