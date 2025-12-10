@@ -12,7 +12,7 @@
 </head>
 <body>
 
-    <header id="topbar-menu">
+    <header id="topbarMenu">
         
         <button class="toggle-btn" id="toggle-btn">
             <i class="fas fa-chevron-right"></i>
@@ -24,14 +24,14 @@
 
         <div class="topbar-nav-links">
             
-            <a href="{{ url_for('index') }}" class="topbar-menu-item {% if request.path == '/' %}active{% endif %}" id="menu-dashboard">
+            <a href="{{ url_for('index') }}" class="topbarMenu-item {% if request.path == '/' %}active{% endif %}" id="menu-dashboard">
                 <button class="menu-button">
                     <i class="fas fa-home"></i> 
                     <span class="menu-text">儀表板</span>
                 </button>
             </a>
             
-            <a href="/customer_churn_bank_model" class="topbar-menu-item" id="menu-bank">
+            <a href="/customer_churn_bank_model" class="topbarMenu-item" id="menu-bank">
                 <button class="menu-button">
                     <i class="fas fa-university"></i> 
                     <span class="menu-text">客戶流失_銀行</span>

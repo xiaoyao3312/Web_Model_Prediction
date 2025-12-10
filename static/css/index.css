@@ -55,34 +55,46 @@
 /* --- 3. 元素置中與排版 (H1, H2, Icon) --- */
 /* -------------------------------------- */
 /* 調整 H1 標題置中 */
-#indexDashboard .h1 {
+#indexDashboard .index-h1 {
     text-align:   center; /* 置中文字內容 */
     margin-left:  auto;
     margin-right: auto;
 }
 
 /* 新增 H2 標題置中 */
-#indexDashboard .panel .h2 {
+#indexDashboard .index-panel .index-h2 {
     text-align:   center; /* 置中文字內容 */
     margin-left:  auto;
     margin-right: auto;
 }
 
-#indexDashboard .content .h3, h5, h6 {
+#indexDashboard .index-content .index-h3 {
+    text-align:   center; /* 置中文字內容 */
+    margin-left:  auto;
+    margin-right: auto;
+}
+
+#indexDashboard .index-content .index-h5 {
+    text-align:   center; /* 置中文字內容 */
+    margin-left:  auto;
+    margin-right: auto;
+}
+
+#indexDashboard .index-content .index-h6 {
     text-align:   center; /* 置中文字內容 */
     margin-left:  auto;
     margin-right: auto;
 }
 
 /* 修正 Icon 樣式 */
-#indexDashboard .icon {
+#indexDashboard .index-bank-icon {
     font-size:    clamp(40px, 8vw, 80px);
     /* 依賴父層 .card 的 text-align 進行置中 */
     margin-left:  unset;
     margin-right: unset;
 }
 
-#indexDashboard .footer-icon {
+#indexDashboard .index-right-icon {
     font-size:   clamp(18px, 3vw, 22px);
     margin-left: clamp(10px, 2vw, 20px);
 }
@@ -90,7 +102,7 @@
 /* -------------------------------------- */
 /* --- 4. 面板與卡片結構 (Panel & Card) --- */
 /* -------------------------------------- */
-#indexDashboard .panel {
+#indexDashboard .index-panel {
     /* 顏色與背景 */
     background-color: var(--indexDashboard-global-bg-color);
     color:            var(--indexDashboard-global-font-color);
@@ -109,7 +121,7 @@
 }
 
 /* 讓 Card 內所有文字、標題、和 Icon 置中 */
-#indexDashboard .card {
+#indexDashboard .index-card {
     /* 佈局與置中 */
     text-align:       center; /* 設置文字水平置中 */
     
@@ -130,13 +142,13 @@
     transition:       var(--indexDashboard-transition);
 }
 
-#indexDashboard .card:hover {
+#indexDashboard .index-card:hover {
     box-shadow: var(--indexDashboard-box-shadow-hover);
     transform:  translateY(calc(-1 * var(--indexDashboard-10px)));
 }
 
 /* 卡片內容 (圖標+標題) 區塊 - 確保與描述區塊有間隔 */
-#indexDashboard .card .content {
+#indexDashboard .index-card .index-content {
     margin-top:    var(--indexDashboard-10px);
     margin-bottom: var(--indexDashboard-10px);
 }
@@ -144,7 +156,7 @@
 /* -------------------------------------- */
 /* --- 5. 模型卡片網格佈局 (Grid & Footer) --- */
 /* -------------------------------------- */
-#indexDashboard .grid {
+#indexDashboard .index-grid {
     display:         flex;
     flex-wrap:       wrap;
     gap:             var(--indexDashboard-15px);
@@ -157,14 +169,14 @@
 /* -------------------------------------- */
 /* sm:grid-cols-2 (576px 及以上) */
 @media (min-width: 576px) {
-    #indexDashboard .card {
+    #indexDashboard .index-card {
         width: calc(50% - (var(--indexDashboard-15px) / 2));
     }
 }
 
 /* lg:grid-cols-3 (1024px 及以上) */
 @media (min-width: 1024px) {
-    #indexDashboard .card {
+    #indexDashboard .index-card {
         width: calc(33.3333% - (2 * var(--indexDashboard-15px) / 3));
     }
 }
