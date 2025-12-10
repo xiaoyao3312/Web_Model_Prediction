@@ -1,116 +1,170 @@
-/* index.css - 整合通用的響應式字體、儀表板和卡片樣式，確保動態顏色變數生效 */
+/* static\css\index.css - 整合通用的響應式字體、儀表板和卡片樣式，確保動態顏色變數生效 */
 
-/* --- 全局變數定義 (保留您的顏色，但多數動態顏色將由 Color_BG_Control.js 提供) --- */
+/* -------------------------------------- */
+/* --- 1. 全局變數定義 (Root Variables) --- */
+/* -------------------------------------- */
 :root {
-    --index-dashboard-transition: var(--fab-global-transition);
-    --index-dashboard-global-font-color: var(--fab-global-font-color);
-    --index-dashboard-global-bg-color: var(--fab-global-bg-color);
-    --index-dashboard-panel-bg-color: var(--fab-panel-bg-color);
+    /* 顏色與效果 */
+    --index-dashboard-global-font-color: var(--fab-color-control-global-font-color);
+    --index-dashboard-global-bg-color:   var(--fab-color-control-global-bg-color);
+    --index-dashboard-panel-bg-color:    var(--fab-color-control-panel-bg-color);
+    --index-dashboard-box-shadow:        0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    --index-dashboard-box-shadow-hover:  0px 0px 10px 5px rgba(0, 0, 0, 0.5);
 
-    --index-dashboard-box-shadow: 0px 0px 5px 2px rgba(0, 0, 0, 0.5);
-    --index-dashboard-box-shadow-hover: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
-
-    --index-dashboard-border-radius: 10px;
-    --index-dashboard-padding-20px: 20px;
-    --index-dashboard-padding-1px: 1px;
-    --index-dashboard-width: 80%;
-    --index-dashboard-heigth: 80%;
-    --index-dashboard-gap: 15px;
+    /* 尺寸與間距 */
+    --index-dashboard-width:             80%;
+    --index-dashboard-heigth:            80%;
+    --index-dashboard-20px:              20px;
+    --index-dashboard-15px:              15px; /* 用於 gap */
+    --index-dashboard-10px:              10px; /* 用於 border-radius 和 lift amount */
+    --index-dashboard-1px:               1px;
+    --index-dashboard-font-weight:       900;
+    
+    /* 動畫 */
+    --index-dashboard-transition:        var(--fab-color-control-global-transition);
 }
 
-/* --- 儀表板主要結構樣式 --- */
+/* -------------------------------------- */
+/* --- 2. 儀表板主要結構樣式 --- */
+/* -------------------------------------- */
 #index-dashboard {
+    /* 尺寸與定位 */
+    width:            var(--index-dashboard-width);
+    height:           var(--index-dashboard-heigth);
+    margin-left:      auto;
+    margin-right:     auto;
+    
+    /* 顏色與背景 */
     background-color: var(--index-dashboard-panel-bg-color);
-    color: var(--index-dashboard-global-font-color);
-    border-radius: var(--index-dashboard-border-radius);
-    border: 1px solid var(--index-dashboard-global-font-color);
-    box-shadow: var(--index-dashboard-box-shadow);
+    color:            var(--index-dashboard-global-font-color);
     
-
-    padding-top: var(--index-dashboard-padding-1px);
-    padding-bottom: var(--index-dashboard-padding-20px);
-    padding-left: var(--index-dashboard-padding-20px);
-    padding-right: var(--index-dashboard-padding-20px);
-
-    width: var(--index-dashboard-width);
-    height: var(--index-dashboard-heigth);
+    /* 間距與邊框 */
+    padding-top:      var(--index-dashboard-1px);
+    padding-bottom:   var(--index-dashboard-20px);
+    padding-left:     var(--index-dashboard-20px);
+    padding-right:    var(--index-dashboard-20px);
+    border-radius:    var(--index-dashboard-10px);
+    border:           var(--index-dashboard-1px) solid var(--index-dashboard-global-font-color);
+    box-shadow:       var(--index-dashboard-box-shadow);
     
-    margin-left: auto;
-    margin-right: auto;
-    transition: var(--index-dashboard-transition);
+    /* 動畫 */
+    transition:       var(--index-dashboard-transition);
 }
 
+/* -------------------------------------- */
+/* --- 3. 元素置中與排版 (H1, H2, Icon) --- */
+/* -------------------------------------- */
+/* 調整 H1 標題置中 */
 #index-dashboard .h1 {
-    /* 確保標題在有寬度設定時居中 */
-    margin-left: auto;
+    text-align:   center; /* 置中文字內容 */
+    margin-left:  auto;
     margin-right: auto;
 }
 
-#index-dashboard .icon {
-    font-size: 64px;
-    margin-bottom: 12px;
-    margin-left: auto;
+/* 新增 H2 標題置中 */
+#index-dashboard .panel .h2 {
+    text-align:   center; /* 置中文字內容 */
+    margin-left:  auto;
     margin-right: auto;
+}
+
+#index-dashboard .content .h3, h5, h6 {
+    text-align:   center; /* 置中文字內容 */
+    margin-left:  auto;
+    margin-right: auto;
+}
+
+/* 修正 Icon 樣式 */
+#index-dashboard .icon {
+    font-size:    clamp(40px, 8vw, 80px);
+    /* 依賴父層 .card 的 text-align 進行置中 */
+    margin-left:  unset;
+    margin-right: unset;
 }
 
 #index-dashboard .footer-icon {
-    font-size: 20px;
-    margin-left: 5px;
+    font-size:   clamp(10px, 2vw, 20px);
+    margin-left: clamp(10px, 2vw, 20px);
 }
 
+/* -------------------------------------- */
+/* --- 4. 面板與卡片結構 (Panel & Card) --- */
+/* -------------------------------------- */
 #index-dashboard .panel {
+    /* 顏色與背景 */
     background-color: var(--index-dashboard-global-bg-color);
-    color: var(--index-dashboard-global-font-color);
-    border-radius: var(--index-dashboard-border-radius);
-    border: 1px solid var(--index-dashboard-global-font-color);
-    box-shadow: var(--index-dashboard-box-shadow);
+    color:            var(--index-dashboard-global-font-color);
+    
+    /* 間距與邊框 */
+    padding-top:      var(--index-dashboard-1px);
+    padding-bottom:   var(--index-dashboard-20px);
+    padding-left:     var(--index-dashboard-20px);
+    padding-right:    var(--index-dashboard-20px);
+    border-radius:    var(--index-dashboard-10px);
+    border:           var(--index-dashboard-1px) solid var(--index-dashboard-global-font-color);
+    box-shadow:       var(--index-dashboard-box-shadow);
 
-    padding-top: var(--index-dashboard-padding-1px);
-    padding-bottom: var(--index-dashboard-padding-20px);
-    padding-left: var(--index-dashboard-padding-20px);
-    padding-right: var(--index-dashboard-padding-20px);
-    transition: var(--index-dashboard-transition);
+    /* 動畫 */
+    transition:       var(--index-dashboard-transition);
 }
 
+/* 讓 Card 內所有文字、標題、和 Icon 置中 */
 #index-dashboard .card {
+    /* 佈局與置中 */
+    text-align:       center; /* 設置文字水平置中 */
+    
+    /* 顏色與背景 */
     background-color: var(--index-dashboard-panel-bg-color); 
-    color: var(--global-font-color, #000000);       /* 預設為黑色 */
-    box-shadow: var(--index-dashboard-box-shadow);
-    border-radius: var(--index-dashboard-border-radius);  
-    border: 1px solid var(--index-dashboard-global-font-color);
+    color:            var(--index-dashboard-global-font-color);
+    
+    /* 間距與邊框 */
+    padding-top:      var(--index-dashboard-1px);
+    padding-bottom:   var(--index-dashboard-20px);
+    padding-left:     var(--index-dashboard-20px);
+    padding-right:    var(--index-dashboard-20px);
+    border-radius:    var(--index-dashboard-10px);  
+    border:           var(--index-dashboard-1px) solid var(--index-dashboard-global-font-color);
+    box-shadow:       var(--index-dashboard-box-shadow);
 
-    padding-top: var(--index-dashboard-padding-1px);
-    padding-bottom: var(--index-dashboard-padding-20px);
-    padding-left: var(--index-dashboard-padding-20px);
-    padding-right: var(--index-dashboard-padding-20px);
-
-    /* 確保主題切換時平滑 */
-    transition: var(--index-dashboard-transition);
+    /* 動畫 */
+    transition:       var(--index-dashboard-transition);
 }
 
 #index-dashboard .card:hover {
     box-shadow: var(--index-dashboard-box-shadow-hover);
-    transform: translateY(-4px); 
+    transform:  translateY(calc(-1 * var(--index-dashboard-10px)));
 }
 
-/* --- 模型卡片網格佈局 (index-dashboard Grid) --- */
+/* 卡片內容 (圖標+標題) 區塊 - 確保與描述區塊有間隔 */
+#index-dashboard .card .content {
+    margin-top:    var(--index-dashboard-10px);
+    margin-bottom: var(--index-dashboard-10px);
+}
+
+/* -------------------------------------- */
+/* --- 5. 模型卡片網格佈局 (Grid & Footer) --- */
+/* -------------------------------------- */
 #index-dashboard .grid {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--index-dashboard-gap);
+    display:         flex;
+    flex-wrap:       wrap;
+    gap:             var(--index-dashboard-15px);
+    /* 讓 .grid 內的卡片群組 (當一行未滿時) 居中 */
+    justify-content: center;
 }
 
-/* --- 響應式佈局 (Media Queries) --- */
+/* -------------------------------------- */
+/* --- 6. 響應式佈局 (Media Queries) --- */
+/* -------------------------------------- */
 /* sm:grid-cols-2 (576px 及以上) */
 @media (min-width: 576px) {
     #index-dashboard .card {
-        width: calc(50% - (var(--index-dashboard-gap) / 2));
+        width: calc(50% - (var(--index-dashboard-15px) / 2));
     }
 }
 
 /* lg:grid-cols-3 (1024px 及以上) */
 @media (min-width: 1024px) {
     #index-dashboard .card {
-        width: calc(33.3333% - (2 * var(--index-dashboard-gap) / 3));
+        width: calc(33.3333% - (2 * var(--index-dashboard-15px) / 3));
     }
 }

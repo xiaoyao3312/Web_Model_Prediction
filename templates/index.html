@@ -6,15 +6,14 @@
     <title>AI 模型儀表板 - 客戶流失預測平台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     
-
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/color_bg_control.css') }}">
 </head>
 <body>
 
-    <div class="topbar-menu" id="topbarMenu"> 
+    <header class="topbar-menu" id="topbarMenu">
         
         <button class="topbar-toggle-btn" id="topbarToggleBtn" title="切換導航欄顯示模式">
             <i class="fas fa-chevron-right"></i>
@@ -41,38 +40,54 @@
             </a>
         </div>
         
-    </div>
 
-    <div class="main-content" id="mainContent">
-        <div id="index-dashboard">
-            
-            <h1 class="h1">歡迎使用 AI 模型儀表板</h1>
+    </header>
 
-            <div class="panel">
-                <h2 class="h2">選擇分析模型</h2>
-                
-                <div class="grid">
-                    
-                    <a href="{{ url_for('bank_churn_page') }}" class="card bank">
-                        <div class="content">
-                            <div class="icon">🏦</div> 
-                            <h3 class="title title-bank">銀行客戶流失預測</h3>
-                        </div>
-                        <div class="description">
-                            <p class="text">利用交易數據和客戶行為模式，精準預測潛在流失的客戶。</p>
-                        </div>
-                        <div class="footer footer-bank">
-                            <span class="footer-text">進入分析</span>
-                            <span class="footer-icon">→</span>
-                        </div>
-                    </a>
-                    
+    <div class="main-content" id="mainContent"></div>
+
+    <div id="index-dashboard">
+        <h1 class="h1">歡迎使用 AI 模型儀表板</h1>
+        <div class="panel">
+            <h2 class="h2">選擇分析模型</h2>
+            <div class="grid">
+                <a class="card" href="{{ url_for('bank_churn_page') }}">
+                <div class="content">
+                    <div class="icon">🏦</div> 
+                    <h3 class="h3">銀行客戶流失預測</h3>
+                    <h5 class="h5">利用交易數據和客戶行為模式，精準預測潛在流失的客戶。</h5>
+                    <h6 class="h6">進入分析<span class="footer-icon">→</span></h6>
                 </div>
+                </a>
             </div>
-
         </div>
     </div>
     
+    <div id="fab-color"> 
+        <div id="fab-icon">🎨</div> 
+        <div id="fab-content"> 
+            <div class="fab-panel-title">背景顏色調整</div> 
+            <div class="fab-sliders"> 
+                <label>R: <span id="valR">128</span></label> 
+                <input type="range" id="rangeR" min="0" max="255" value="128"> 
+                <label>G: <span id="valG">128</span></label> 
+                <input type="range" id="rangeG" min="0" max="255" value="128"> 
+                <label>B: <span id="valB">128</span></label> 
+                <input type="range" id="rangeB" min="0" max="255" value="128"> 
+                <label>A: <span id="valA">1</span></label> 
+                <input type="range" id="rangeA" min="0" max="1" step="0.01" value="1"> 
+            </div>
+            <div class="fab-themes"> 
+                <button class="fab-theme-btn" data-color="rgba(0,0,0,1)">黑色</button>
+                <button class="fab-theme-btn" data-color="rgba(85,85,85,1)">深色</button>
+                <button class="fab-theme-btn" data-color="rgba(128,128,128,1)">灰色</button>
+            </div>
+            <div class="fab-themes"> 
+                <button class="fab-theme-btn" data-color="rgba(170,170,170,1)">淺色</button>
+                <button class="fab-theme-btn" data-color="rgba(255,255,255,1)">白色</button>
+                <button id="randomBtn" class="fab-theme-btn">隨機</button>       
+            </div> 
+        </div>
+    </div>
     
     <script src="{{ url_for('static', filename='js/topbar_menu.js') }}"></script>
     <script src="{{ url_for('static', filename='js/color_bg_control.js') }}"></script>
