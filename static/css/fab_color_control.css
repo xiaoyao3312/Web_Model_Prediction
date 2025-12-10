@@ -1,0 +1,242 @@
+/* static\css\fab_color_control.css */
+
+/* -------------------------------------- */
+/* --- 1. 根變數 (Root Variables) --- */
+/* -------------------------------------- */
+:root {
+    /* Z-Index */
+    --fabColorControl-z-index:                 99999;
+
+    /* 顏色與背景 */
+    --fabColorControl-global-font-color:       #000;
+    --fabColorControl-global-bg-color:         rgba(128,128,128,1);
+    --fabColorControl-panel-bg-color:          rgba(128,128,128,1);
+    
+    /* 陰影 */
+    --fabColorControl-box-shadow:              0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    --fabColorControl-box-shadow-hover:        0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+
+    /* 尺寸與邊界 */
+    --fabColorControl-fab-size:                40px;
+    --fabColorControl-icon-size:               30px;
+    --fabColorControl-content-height:          340px;
+    --fabColorControl-content-width:           200px;
+    --fabColorControl-sliders-input-width:     100%;
+    --fabColorControl-sliders-input-heigth:    5px;
+    --fabColorControl-slider-thumb-width:      20px;
+    --fabColorControl-slider-thumb-heigth:     20px;
+    --fabColorControl-sliders-margin-bottom:   12px;
+    
+    /* 間距與圓角 */
+    --fabColorControl-content-gap:             15px;
+    --fabColorControl-border-radius:           50%;
+    --fabColorControl-content-border-radius:   10px;
+    --fabColorControl-content-padding:         15px 20px;
+    --fabColorControl-btn-padding:             10px 10px;
+    --fabColorControl-10px:                    10px;
+    --fabColorControl-5px:                     5px;
+    --fabColorControl-1px:                     1px;
+    --fabColorControl-0:                     0;
+    
+    /* 字體 */
+    --fabColorControl-font-weight:             900;
+    --fabColorControl-font-size:               15px;
+    --fabColorControl-panel-title-font-size:   20px;
+
+    /* 動畫 */
+    --fabColorControl-global-transition:       background-color 0.5s linear, color 0.5s linear;
+}
+
+/* -------------------------------------- */
+/* --- 2. Body 基礎樣式 (全域頁面) --- */
+/* -------------------------------------- */
+body {
+    /* 間距 (修正第一個問題: 貼齊螢幕邊緣) */
+    margin:           var(--fabColorControl-0); 
+    padding:          var(--fabColorControl-0);
+
+    /* 顏色與背景 */
+    background-color: var(--fabColorControl-global-bg-color);
+    color:            var(--fabColorControl-global-font-color);
+    
+    /* 字體 */
+    font-family:      Cambria, Palatino, 'Palatino Linotype', 'Book Antiqua', serif;
+    
+    /* 動畫 */
+    transition:       var(--fabColorControl-global-transition);
+}
+
+/* -------------------------------------- */
+/* --- 3. FAB 浮動按鈕外觀 (#fabColorControl) --- */
+/* -------------------------------------- */
+#fabColorControl {
+    /* 佈局與定位 */
+    position:        fixed;
+    z-index:         var(--fabColorControl-z-index);
+    display:         flex;
+    align-items:     center;
+    justify-content: center;
+    
+    /* 尺寸 */
+    height:          var(--fabColorControl-fab-size);
+    width:           var(--fabColorControl-fab-size);
+
+    /* 外觀 */
+    cursor:          grab;
+    border-radius:   var(--fabColorControl-border-radius);
+    backdrop-filter: blur(var(--fabColorControl-10px));
+    box-shadow:      var(--fabColorControl-box-shadow);
+}
+
+#fabColorControl:hover {
+    box-shadow: var(--fabColorControl-box-shadow-hover);
+}
+
+#fabColorControl #fabIcon {
+    /* 外觀 */
+    font-size:   var(--fabColorControl-icon-size);
+    user-select: none;
+}
+
+/* -------------------------------------- */
+/* --- 4. FAB 內容面板外觀 (#fabContent) --- */
+/* -------------------------------------- */
+#fabColorControl #fabContent {
+    /* 佈局與定位 */
+    position:         absolute;
+    display:          none;
+    flex-direction:   column;
+    
+    /* 尺寸 */
+    height:           var(--fabColorControl-content-height);
+    width:            var(--fabColorControl-content-width);
+    
+    /* 間距 */
+    gap:              var(--fabColorControl-content-gap);
+    padding:          var(--fabColorControl-content-padding);
+    
+    /* 顏色與背景 */
+    background-color: var(--fabColorControl-panel-bg-color);
+    color:            var(--fabColorControl-global-font-color);
+    
+    /* 邊框與陰影 */
+    cursor:           pointer;
+    user-select:      none;
+    border-radius:    var(--fabColorControl-content-border-radius);
+    border:           var(--fabColorControl-1px) solid var(--fabColorControl-global-font-color);
+    box-shadow:       var(--fabColorControl-box-shadow);
+    
+    /* 文本溢出 */
+    word-wrap:        break-word;
+    overflow-wrap:    break-word;
+    
+    /* 動畫 */
+    transition:       var(--fabColorControl-global-transition);
+}
+
+/* -------------------------------------- */
+/* --- 5. 面板標題樣式 (.fab-panel-title) --- */
+/* -------------------------------------- */
+#fabColorControl .fab-panel-title {
+    /* 字體 */
+    font-size:   var(--fabColorControl-panel-title-font-size);
+    font-weight: var(--fabColorControl-font-weight);
+    
+    /* 排版與對齊 */
+    text-align:  center;
+    
+    /* 邊框 */
+    border-bottom: var(--fabColorControl-1px) solid var(--fabColorControl-global-font-color);
+    
+    /* 溢出與選取 */
+    white-space: normal;
+    word-break:  break-word;
+    user-select: none;
+}
+
+/* -------------------------------------- */
+/* --- 6. 滑塊標籤容器 (.fab-sliders label) --- */
+/* -------------------------------------- */
+#fabColorControl .fab-sliders label {
+    /* 佈局與對齊 */
+    display:         flex;
+    justify-content: space-between;
+    
+    /* 字體與顏色 */
+    font-size:       var(--fabColorControl-font-size);
+    color:           var(--fabColorControl-global-font-color);
+}
+
+/* -------------------------------------- */
+/* --- 7. 滑塊軌道美化 (input[type="range"]) --- */
+/* -------------------------------------- */
+#fabColorControl .fab-sliders input[type="range"] {
+    /* 外觀覆蓋 */
+    -webkit-appearance: none;
+    appearance:         none;
+    
+    /* 尺寸與間距 */
+    width:              var(--fabColorControl-sliders-input-width);
+    height:             var(--fabColorControl-sliders-input-heigth);
+    margin-bottom:      var(--fabColorControl-sliders-margin-bottom);
+    
+    /* 軌道外觀 */
+    background-color:   var(--fabColorControl-global-font-color);
+    border-radius:      var(--fabColorControl-content-border-radius);
+}
+
+/* -------------------------------------- */
+/* --- 8. 滑塊頭 (Thumb) - Webkit --- */
+/* -------------------------------------- */
+#fabColorControl .fab-sliders input[type="range"]::-webkit-slider-thumb {
+    /* 外觀覆蓋 */
+    -webkit-appearance: none;
+    appearance:         none;
+    
+    /* 尺寸 */
+    width:              var(--fabColorControl-slider-thumb-width);
+    height:             var(--fabColorControl-slider-thumb-heigth);
+    
+    /* 外觀 */
+    cursor:             pointer;
+    background-color:   var(--fabColorControl-global-font-color);
+    border:             var(--fabColorControl-5px) solid var(--fabColorControl-global-bg-color);
+    border-radius:      var(--fabColorControl-border-radius);
+    box-shadow:         var(--fabColorControl-box-shadow);
+}
+
+/* 滑塊頭懸停狀態 */
+#fabColorControl .fab-sliders input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: var(--fabColorControl-global-bg-color);
+    box-shadow:       var(--fabColorControl-box-shadow-hover);
+}
+
+/* -------------------------------------- */
+/* --- 9. 主題按鈕群組與按鈕 (.fab-themes) --- */
+/* -------------------------------------- */
+#fabColorControl .fab-themes {
+    /* 佈局與對齊 */
+    display:         flex;
+    justify-content: space-around;
+}
+
+#fabColorControl .fab-theme-btn {
+    /* 尺寸與間距 */
+    padding:          var(--fabColorControl-btn-padding);
+    
+    /* 字體 */
+    font-size:        var(--fabColorControl-font-size);
+    font-weight:      var(--fabColorControl-font-weight);
+    
+    /* 外觀 */
+    cursor:           pointer;
+    background-color: var(--fabColorControl-global-bg-color);
+    color:            var(--fabColorControl-global-font-color);
+    border:           none;
+    border-radius:    var(--fabColorControl-content-border-radius);
+    box-shadow:       var(--fabColorControl-box-shadow);
+}
+
+#fabColorControl .fab-theme-btn:hover {
+    box-shadow: var(--fabColorControl-box-shadow-hover);
+}

@@ -9,13 +9,13 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar_menu.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/index.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/color_bg_control.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/fab_color_control.css') }}">
 </head>
 <body>
 
-    <header class="topbar-menu" id="topbarMenu">
+    <header id="topbar-menu">
         
-        <button class="topbar-toggle-btn" id="topbarToggleBtn" title="切換導航欄顯示模式">
+        <button class="toggle-btn" id="toggle-btn">
             <i class="fas fa-chevron-right"></i>
         </button>
 
@@ -39,13 +39,12 @@
                 </button>
             </a>
         </div>
-        
 
     </header>
 
     <div class="main-content" id="mainContent"></div>
 
-    <div id="index-dashboard">
+    <div id="indexDashboard">
         <h1 class="h1">歡迎使用 AI 模型儀表板</h1>
         <div class="panel">
             <h2 class="h2">選擇分析模型</h2>
@@ -62,9 +61,9 @@
         </div>
     </div>
     
-    <div id="fab-color"> 
-        <div id="fab-icon">🎨</div> 
-        <div id="fab-content"> 
+    <div id="fabColorControl"> 
+        <div id="fabIcon">🎨</div> 
+        <div id="fabContent"> 
             <div class="fab-panel-title">背景顏色調整</div> 
             <div class="fab-sliders"> 
                 <label>R: <span id="valR">128</span></label> 
@@ -90,7 +89,7 @@
     </div>
     
     <script src="{{ url_for('static', filename='js/topbar_menu.js') }}"></script>
-    <script src="{{ url_for('static', filename='js/color_bg_control.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/fab_color_control.js') }}"></script>
 
 </body>
 </html>

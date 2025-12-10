@@ -1,10 +1,10 @@
-// static\js\color_bg_control.js
+// static\js\fab_color_control.js
 // 全域腳本：主題切換/顏色控制 - 增強為命名空間模式
 
 /*
-<div id="fab-color"> 
-    <div id="fab-icon">🎨</div> 
-    <div id="fab-content"> 
+<div id="fabColorControl"> 
+    <div id="fabIcon">🎨</div> 
+    <div id="fabContent"> 
         <div class="fab-panel-title">背景顏色調整</div> 
         <div class="fab-sliders"> 
             <label>R: <span id="valR">128</span></label> 
@@ -30,7 +30,7 @@
 </div>
 */
 
-console.log("color_bg_control JS loaded.");
+console.log("fab_color_control JS loaded.");
 
 // 定義一個全域物件作為命名空間，用於暴露核心功能
 window.ThemeControl = (function() {
@@ -79,17 +79,17 @@ window.ThemeControl = (function() {
         fontVal = Math.round(Math.min(255, Math.max(0, fontVal)));
 
         // 設定全域主題背景顏色
-        document.documentElement.style.setProperty("--fab-color-control-global-bg-color", color);
+        document.documentElement.style.setProperty("--fabColorControl-global-bg-color", color);
 
         // 面板和文字色 (保持硬切換以確保對比)
         if (avg > 128) {
-            document.documentElement.style.setProperty("--fab-color-control-panel-bg-color", "rgba(230, 230, 230, 0.97)");
+            document.documentElement.style.setProperty("--fabColorControl-panel-bg-color", "rgba(230, 230, 230, 0.97)");
             // ⚠️ 這裡將全域字體顏色硬切為黑色
-            document.documentElement.style.setProperty("--fab-color-control-global-font-color", "#000"); 
+            document.documentElement.style.setProperty("--fabColorControl-global-font-color", "#000"); 
         } else {
-            document.documentElement.style.setProperty("--fab-color-control-panel-bg-color", "rgba(50, 50, 50, 0.97)");
+            document.documentElement.style.setProperty("--fabColorControl-panel-bg-color", "rgba(50, 50, 50, 0.97)");
             // ⚠️ 這裡將全域字體顏色硬切為白色
-            document.documentElement.style.setProperty("--fab-color-control-global-font-color", "#fff"); 
+            document.documentElement.style.setProperty("--fabColorControl-global-font-color", "#fff"); 
         }
 
         saveSettings();
@@ -335,13 +335,13 @@ window.ThemeControl = (function() {
      */
     function initialize() {
         // 1. 獲取所有 DOM 元素
-        fab = document.getElementById("fab-color");
+        fab = document.getElementById("fabColorControl");
         if (!fab) {
-            console.error("Error: FAB element (#fab-color) not found. Cannot initialize.");
+            console.error("Error: FAB element (#fabColorControl) not found. Cannot initialize.");
             return;
         }
-        icon = document.getElementById("fab-icon");
-        content = document.getElementById("fab-content");
+        icon = document.getElementById("fabIcon");
+        content = document.getElementById("fabContent");
         randomBtn = document.getElementById("randomBtn");
         
         sliders = {

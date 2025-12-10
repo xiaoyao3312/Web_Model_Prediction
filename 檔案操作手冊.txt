@@ -33,4 +33,6 @@ python churn_bank_shap.py
 這是 churn_bank 所需要的重要欄位
 id CreditScore	Geography	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary
 
-幫我更改 給我完整程式碼
+幫我更改 給我完整程式碼！
+
+幫我處理UNICODE字元的問題

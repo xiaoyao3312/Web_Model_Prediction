@@ -11,7 +11,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', updateHeaderPositions); 
     
     // 4. 監聽 Primary TopBar 的 class 或內容變動
-    const topbarMenu = document.getElementById('topbarMenu');
+    const topbarMenu = document.getElementById('topbar-menu');
     if (topbarMenu) {
         const observer = new MutationObserver(updateHeaderPositions);
         // 觀察 attributes (針對 class="collapsed" 變動，以及其他可能的變化)
@@ -28,8 +28,8 @@ document.addEventListener('DOMContentLoaded', () => {
  * 處理 TopBar 的收合/展開邏輯
  */
 function setupTopbarToggle() {
-    const topbarMenu = document.getElementById('topbarMenu');
-    const toggleBtn = document.getElementById('topbarToggleBtn');
+    const topbarMenu = document.getElementById('topbar-menu');
+    const toggleBtn = document.getElementById('toggle-btn');
     
     if (!topbarMenu || !toggleBtn) return;
 
@@ -59,7 +59,7 @@ function setupTopbarToggle() {
  * 動態計算 TopBar 實際高度，並調整 Main Content 的位置
  */
 function updateHeaderPositions() {
-    const topbarMenu = document.getElementById('topbarMenu');
+    const topbarMenu = document.getElementById('topbar-menu');
     const mainContent = document.getElementById('mainContent');
     const root = document.documentElement; // 獲取 :root 元素
 
