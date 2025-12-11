@@ -5,9 +5,9 @@
 /* -------------------------------------- */
 :root {
     /* 導航欄的配置 */
-    --topbarMenu-z-index:                 1000;
+    --topbarMenu-z-index:                 9999;
     --topbarMenu-height:                  50px;
-    --topbarMenu-padding:                 10px;
+    --topbarMenu-width:                   100%;
     
     /* 顏色配置 */
     --topbarMenu-brand-color:             rgba(0, 128, 128, 1);       /* 主調/品牌色 */
@@ -20,54 +20,59 @@
 
     /* 動態變數：用於 JS 調整 main-content 的 padding-top */
     --topbarMenu-dynamic-height:        var(--topbarMenu-height);
+
+    --topbarMenu-30px:                 30px;
+    --topbarMenu-20px:                 20px;
+    --topbarMenu-15px:                 15px;
+    --topbarMenu-10px:                 10px;
+    --topbarMenu-5px:                  5px;
+    --topbarMenu-1px:                  1px;
+    --topbarMenu-0:                  0;
 }
 
 /* -------------------------------------- */
 /* --- 1. 頂部導航欄 (主容器: #topbarMenu) --- */
 /* -------------------------------------- */
 #topbarMenu {
+    z-index:           var(--topbarMenu-z-index);
     /* 尺寸與定位 */
     height:            var(--topbarMenu-height);
+    width:             var(--topbarMenu-width);
     position:          fixed;
-    top:               0;
-    left:              0;
-    width:             100%;
-    z-index:           var(--topbarMenu-z-index);
+
+    
     
     /* 顏色與效果 */
     background-color:  var(--topbarMenu-bg-color);
-    color:             var(--topbarMenu-font-color);
     box-shadow:        var(--topbarMenu-box-shadow);
-    transition:        box-shadow 0.2s, height 0.25s;
     
     /* 佈局 */
     box-sizing:        border-box;
     display:           flex;
     align-items:       center;
-    padding:            var(--topbarMenu-padding);
     white-space:       nowrap; /* 確保內容不換行 */
-    flex-wrap:     nowrap; 
+    flex-wrap:         nowrap; 
 }
 
 /* 1.1 導航欄切換按鈕 */
-#topbarMenu .topbar-toggle-btn {
+#topbarMenu .topbar-toggle-button {
     /* 樣式 */
     background:        transparent; 
     border:            none;
     cursor:            pointer;
-    padding:           5px;
-    color: var(--topbarMenu-brand-color); 
     /* 佈局與動畫 */
     order:             unset;
     
-    margin-right: 10px;
-    flex-shrink:       0;
+    margin-right: var(--topbarMenu-5px);
+    flex-shrink:       var(--topbarMenu-0);
     transition:        transform 0.25s;
 }
 
-#topbarMenu .topbar-toggle-btn .topbar-icon {
-    width: 2rem;
-    height: 2rem;
+#topbarMenu .topbar-toggle-icon {
+    background:        transparent; 
+    width: var(--topbarMenu-30px);
+    height: var(--topbarMenu-30px);
+    color: var(--topbarMenu-brand-color);
 }
 
 
@@ -76,9 +81,8 @@
     /* 佈局與字體 */
     display:           flex;
     align-items:       center;
-    font-size:         1.5rem;
+    font-size:         var(--topbarMenu-30px);
     font-weight:       bold;
-    color: var(--topbarMenu-brand-color);
     
     /* 間距與動畫 */
     order:         unset;
@@ -88,8 +92,8 @@
     transition:        margin 0.25s;
 }
 
-#topbarMenu .topbar-brand .topbar-icon {
-    /* 1. 尺寸控制：對 SVG 使用 width 和 height */
+#topbarMenu .topbar-brand-icon {
+    color: var(--topbarMenu-brand-color);
     width: 2rem;
     height: 2rem;
 
@@ -97,8 +101,15 @@
     margin-right: 10px;
 }
 
+
+#topbarMenu .topbar-brand-text{
+    color: var(--topbarMenu-brand-color);
+}
+
 /* 1.3 導航連結區 */
 #topbarMenu .topbar-nav-links {
+    
+
     /* 佈局 */
     display:           flex;
     align-items:       center;
@@ -118,21 +129,48 @@
     flex-wrap:     nowrap;
 }
 
-/* 1.4 單個選單項目連結 */
-#topbarMenu .topbar-menu-item {
+#topbarMenu .topbar-nav-item {
     text-decoration: none;
     flex-shrink:       0;
 }
 
+/* ★ 新增：當前選中頁面的樣式 (.active) ★ */
+#topbarMenu .topbar-nav-item.active {
+    /* 讓活動項目看起來像被點擊或選中 */
+    background-color: var(--topbarMenu-brand-color); /* 使用品牌色作為背景 */
+    border-radius: 6px; 
+}
+
+/* 確保活動按鈕內的文字和圖標顏色是反轉色 (白色/頂部導航欄字體色) */
+#topbarMenu .topbar-nav-item.active .topbar-nav-text,
+#topbarMenu .topbar-nav-item.active .topbar-nav-icon {
+    color: var(--topbarMenu-font-color); /* 通常是白色 */
+}
+
+/* 覆蓋 Hover 樣式：活動狀態在 Hover 時應該保持選中色，但可以略微變深 */
+#topbarMenu .topbar-nav-item.active:hover {
+    /* 保持品牌色，但降低亮度 10% */
+    background-color: color-mix(in srgb, var(--topbarMenu-brand-color) 90%, black);
+    color: var(--topbarMenu-font-color); 
+}
+
+/* 預設的 Hover 樣式 (保持您原來的，針對非 Active 項目) */
+#topbarMenu .topbar-nav-item:hover {
+    /* 使用 color-mix 實現帶透明度的懸停效果 */
+    background-color: color-mix(in srgb, var(--topbarMenu-brand-color) 20%, transparent);
+    color: var(--topbarMenu-brand-color);
+}
+
 /* 1.5 選單按鈕 */
-#topbarMenu .topbar-menu-button {
+#topbarMenu .topbar-nav-button {
     /* 佈局 */
     display:           flex;
     align-items:       center;
     
     /* 尺寸與間距 */
-    height:            40px;
-    padding:           8px 12px;
+    width:             auto;
+    height:            auto;
+    padding:           10px 10px;
     
     /* 樣式 */
     background:        transparent; /* 預設為透明 */
@@ -144,38 +182,31 @@
     transition:        background-color 0.2s, color 0.2s;
 }
 
-#topbarMenu .topbar-menu-button i {
-    font-size:         1.1rem;
-    margin-right:      8px;
-    transition:        margin 0.25s;
+#topbarMenu .topbar-nav-icon {
+    color: var(--topbarMenu-brand-color);
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 3px;
 }
 
-/* 1.6 選單項目互動狀態 */
-#topbarMenu .topbar-menu-item:hover .topbar-menu-button {
-    /* 使用 color-mix 實現帶透明度的懸停效果 */
-    background-color: color-mix(in srgb, var(--topbarMenu-brand-color) 20%, transparent);
-    color:             var(--topbarMenu-brand-color);
+#topbarMenu .topbar-nav-text {
+    color: var(--topbarMenu-brand-color);
+    
 }
-
-/* 1.7 活躍狀態 */
-#topbarMenu .topbar-menu-item.active .topbar-menu-button {
-    background-color:  var(--topbarMenu-brand-color);
-    color:             var(--topbarMenu-bg-color); /* 活躍時文字色與背景色相反 */
-    font-weight:       bold;
-}
-
-#topbarMenu .topbar-menu-item.active:hover .topbar-menu-button {
-    /* 活躍狀態的懸停效果，讓顏色更深一點 */
-    background-color: color-mix(in srgb, var(--topbarMenu-brand-color) 90%, black);
-    color:             white;
-}
-
 
 /* -------------------------------------- */
-/* --- 2. 導航欄收合狀態 (.collapsed) 樣式 --- */
+/* --- 2. 主要內容區域 (容器) --- */
+/* -------------------------------------- */
+.topbar-content-gap {
+    /* padding-top 使用 JS 動態更新的 CSS 變數 */
+    padding-top: calc(var(--topbarMenu-dynamic-height) + 10px);
+}
+
+/* -------------------------------------- */
+/* --- 3. 導航欄收合狀態 (.collapsed) 樣式 --- */
 /* -------------------------------------- */
 
-#topbarMenu.collapsed .topbar-toggle-btn {
+#topbarMenu.collapsed .topbar-toggle-button {
     /* 確保過渡效果存在 */
     transition: transform 0.25s;
     
@@ -184,7 +215,7 @@
 }
 
 #topbarMenu.collapsed .topbar-brand-text,
-#topbarMenu.collapsed .topbar-menu-text {
+#topbarMenu.collapsed .topbar-nav-text {
     /* 收合時隱藏文字 */
     display: none;
 }
@@ -193,23 +224,17 @@
     margin-right: 5px;
 }
 
-#topbarMenu.collapsed .topbar-menu-button {
+#topbarMenu.collapsed .topbar-nav-button {
     /* 收合時調整按鈕內邊距，只保留圖標空間 */
     padding: 8px 10px;
 }
 
-#topbarMenu.collapsed .topbar-menu-button i {
+#topbarMenu.collapsed .topbar-nav-button i {
     /* 收合時移除圖標右側邊距 */
     margin-right: 0;
 }
 
-/* -------------------------------------- */
-/* --- 3. 主要內容區域 (容器) --- */
-/* -------------------------------------- */
-.topbar-main-content {
-    /* padding-top 使用 JS 動態更新的 CSS 變數 */
-    padding-top: calc(var(--topbarMenu-dynamic-height) + 10px);
-}
+
 
 
 /* -------------------------------------- */
@@ -221,16 +246,16 @@
     /* 當螢幕較小時，預設收合文字，只保留圖標模式，但導航欄本身不加上 .collapsed class */
     /* 這裡使用 ID 選擇器可以確保在 max-width: 576px 時，樣式仍然能覆蓋 */
     #topbarMenu:not(.collapsed) .topbar-brand-text,
-    #topbarMenu:not(.collapsed) .topbar-menu-text {
+    #topbarMenu:not(.collapsed) .topbar-nav-text {
         display: none;
     }
-    #topbarMenu:not(.collapsed) .topbar-menu-button {
+    #topbarMenu:not(.collapsed) .topbar-nav-button {
         padding: 8px 10px;
     }
-    #topbarMenu:not(.collapsed) .topbar-menu-button i {
+    #topbarMenu:not(.collapsed) .topbar-nav-button i {
         margin-right: 0;
     }
-    #topbarMenu:not(.collapsed) .topbar-toggle-btn {
+    #topbarMenu:not(.collapsed) .topbar-toggle-button {
         transition: transform 0.25s;
     
         /* 實現左右相反的鏡像翻轉 */

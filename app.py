@@ -16,7 +16,7 @@ def index():
     return render_template('index.html')
 
 @app.route('/customer_churn_bank_model')
-def bank_churn_page():
+def customer_churn_bank_page():
     return render_template('churn_bank.html')
 
 # --- 啟動服務 ---

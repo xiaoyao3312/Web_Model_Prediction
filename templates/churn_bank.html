@@ -13,35 +13,31 @@
 <body>
 
     <header id="topbarMenu">
-        
-        <button class="toggle-btn" id="toggle-btn">
-            <i class="fas fa-chevron-right"></i>
+        <button class="topbar-toggle-button" id="topbarToggleButton">
+            <svg class="topbar-toggle-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M471.1 297.4C483.6 309.9 483.6 330.2 471.1 342.7L279.1 534.7C266.6 547.2 246.3 547.2 233.8 534.7C221.3 522.2 221.3 501.9 233.8 489.4L403.2 320L233.9 150.6C221.4 138.1 221.4 117.8 233.9 105.3C246.4 92.8 266.7 92.8 279.2 105.3L471.2 297.3z"/></svg>
         </button>
-
         <div class="topbar-brand">
-            <span class="fas fa-brain"></span> <span class="brand-text">模型預測網站</span>
+            <svg class="topbar-brand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M184 120C184 89.1 209.1 64 240 64L264 64C281.7 64 296 78.3 296 96L296 544C296 561.7 281.7 576 264 576L232 576C202.2 576 177.1 555.6 170 528C169.3 528 168.7 528 168 528C123.8 528 88 492.2 88 448C88 430 94 413.4 104 400C84.6 385.4 72 362.2 72 336C72 305.1 89.6 278.2 115.2 264.9C108.1 252.9 104 238.9 104 224C104 179.8 139.8 144 184 144L184 120zM456 120L456 144C500.2 144 536 179.8 536 224C536 239 531.9 253 524.8 264.9C550.5 278.2 568 305 568 336C568 362.2 555.4 385.4 536 400C546 413.4 552 430 552 448C552 492.2 516.2 528 472 528C471.3 528 470.7 528 470 528C462.9 555.6 437.8 576 408 576L376 576C358.3 576 344 561.7 344 544L344 96C344 78.3 358.3 64 376 64L400 64C430.9 64 456 89.1 456 120z"/></svg>
+            <span class="topbar-brand-text">模型預測網站</span>
         </div>
-
         <div class="topbar-nav-links">
-            
-            <a href="{{ url_for('index') }}" class="topbarMenu-item {% if request.path == '/' %}active{% endif %}" id="menu-dashboard">
-                <button class="menu-button">
-                    <i class="fas fa-home"></i> 
-                    <span class="menu-text">儀表板</span>
+            <a class="topbar-nav-item {% if request.path == url_for('index') %} active {% endif %}" href="{{ url_for('index') }}" >
+                <button class="topbar-nav-button">
+                    <svg class="topbar-nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M298.2 72.6C310.5 61.2 329.5 61.2 341.7 72.6L432 156.3L432 144C432 126.3 446.3 112 464 112L496 112C513.7 112 528 126.3 528 144L528 245.5L565.8 280.6C575.4 289.6 578.6 303.5 573.8 315.7C569 327.9 557.2 336 544 336L528 336L528 512C528 547.3 499.3 576 464 576L176 576C140.7 576 112 547.3 112 512L112 336L96 336C82.8 336 71 327.9 66.2 315.7C61.4 303.5 64.6 289.5 74.2 280.6L298.2 72.6zM304 384C277.5 384 256 405.5 256 432L256 528L384 528L384 432C384 405.5 362.5 384 336 384L304 384z"/></svg>
+                    <span class="topbar-nav-text">首頁</span>
                 </button>
             </a>
-            
-            <a href="/customer_churn_bank_model" class="topbarMenu-item" id="menu-bank">
-                <button class="menu-button">
-                    <i class="fas fa-university"></i> 
-                    <span class="menu-text">客戶流失_銀行</span>
+            <a class="topbar-nav-item {% if request.path == url_for('customer_churn_bank_page') %} active {% endif %}" href="/customer_churn_bank_model" >
+                <button class="topbar-nav-button">
+                    <svg class="topbar-nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path path fill="currentColor" d="M335.9 84.2C326.1 78.6 314 78.6 304.1 84.2L80.1 212.2C67.5 219.4 61.3 234.2 65 248.2C68.7 262.2 81.5 272 96 272L128 272L128 480L128 480L76.8 518.4C68.7 524.4 64 533.9 64 544C64 561.7 78.3 576 96 576L544 576C561.7 576 576 561.7 576 544C576 533.9 571.3 524.4 563.2 518.4L512 480L512 272L544 272C558.5 272 571.2 262.2 574.9 248.2C578.6 234.2 572.4 219.4 559.8 212.2L335.8 84.2zM464 272L464 480L400 480L400 272L464 272zM352 272L352 480L288 480L288 272L352 272zM240 272L240 480L176 480L176 272L240 272zM320 160C337.7 160 352 174.3 352 192C352 209.7 337.7 224 320 224C302.3 224 288 209.7 288 192C288 174.3 302.3 160 320 160z"/></svg>
+                    <span class="topbar-nav-text">客戶流失_銀行</span>
                 </button>
             </a>
         </div>
-        
     </header>
 
-    <div class="main-content" id="main-content">
+    <div class="topbar-content-gap" id="topbarContentGap"></div>
+
         <div id="churn_bank" class="page-content">
             <h1 class="page-title">客戶流失_銀行MODEL - 預測分析 (含 AI 解釋)</h1>
             
@@ -259,14 +255,14 @@
         <div id="fabContent"> 
             <div class="fab-panel-title">背景顏色調整</div> 
             <div class="fab-sliders"> 
-                <label>R: <span id="valR">128</span></label> 
-                <input type="range" id="rangeR" min="0" max="255" value="128"> 
-                <label>G: <span id="valG">128</span></label> 
-                <input type="range" id="rangeG" min="0" max="255" value="128"> 
-                <label>B: <span id="valB">128</span></label> 
-                <input type="range" id="rangeB" min="0" max="255" value="128"> 
-                <label>A: <span id="valA">1</span></label> 
-                <input type="range" id="rangeA" min="0" max="1" step="0.01" value="1"> 
+                <label>R: <span id="fabValR">128</span></label> 
+                <input type="range" id="fabRangeR" min="0" max="255" value="128"> 
+                <label>G: <span id="fabValG">128</span></label> 
+                <input type="range" id="fabRangeG" min="0" max="255" value="128"> 
+                <label>B: <span id="fabValB">128</span></label> 
+                <input type="range" id="fabRangeB" min="0" max="255" value="128"> 
+                <label>A: <span id="fabValA">1</span></label> 
+                <input type="range" id="fabRangeA" min="0" max="1" step="0.01" value="1"> 
             </div>
             <div class="fab-themes"> 
                 <button class="fab-theme-btn" data-color="rgba(0,0,0,1)">黑色</button>
@@ -276,7 +272,7 @@
             <div class="fab-themes"> 
                 <button class="fab-theme-btn" data-color="rgba(170,170,170,1)">淺色</button>
                 <button class="fab-theme-btn" data-color="rgba(255,255,255,1)">白色</button>
-                <button id="randomBtn" class="fab-theme-btn">隨機</button>       
+                <button class="fab-theme-btn" id="fabRandomButton">隨機</button>       
             </div> 
         </div>
     </div>

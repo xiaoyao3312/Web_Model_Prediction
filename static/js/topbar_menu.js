@@ -29,9 +29,9 @@ document.addEventListener('DOMContentLoaded', () => {
  */
 function setupTopbarToggle() {
     const topbarMenu = document.getElementById('topbarMenu');
-    const toggleBtn = document.getElementById('toggleBtn');
+    const topbarToggleButton = document.getElementById('topbarToggleButton');
     
-    if (!topbarMenu || !toggleBtn) return;
+    if (!topbarMenu || !topbarToggleButton) return;
 
     // 從 localStorage 讀取狀態
     let isCollapsed = localStorage.getItem('topbarCollapsed') === 'true';
@@ -41,7 +41,7 @@ function setupTopbarToggle() {
         topbarMenu.classList.add('collapsed');
     }
 
-    toggleBtn.addEventListener('click', () => {
+    topbarToggleButton.addEventListener('click', () => {
         isCollapsed = !isCollapsed;
         // 切換 'collapsed' class
         topbarMenu.classList.toggle('collapsed', isCollapsed);
@@ -60,20 +60,20 @@ function setupTopbarToggle() {
  */
 function updateHeaderPositions() {
     const topbarMenu = document.getElementById('topbarMenu');
-    const mainContent = document.getElementById('mainContent');
+    const topbarContentGap = document.getElementById('topbarContentGap');
     const root = document.documentElement; // 獲取 :root 元素
 
-    if (!topbarMenu || !mainContent) return;
+    if (!topbarMenu || !topbarContentGap) return;
 
     // 1. 獲取 TopBar-Primary 的實際高度 (包含 padding 和可能的換行)
     const topbarActualHeight = topbarMenu.offsetHeight;
     
     // 2. 更新 CSS 全域變數，供 .main-content 的 CSS 計算 padding-top
-    // 這裡更新的是 --dynamic-topbar-total-height 變數
-    root.style.setProperty('--dynamic-topbar-total-height', `${topbarActualHeight}px`);
+    // 這裡更新的是 --topbarMenu-dynamic-height 變數
+    root.style.setProperty('--topbarMenu-dynamic-height', `${topbarActualHeight}px`);
     
     // 3. (可選) 直接設定 Main Content 的 padding-top (若 CSS 計算不可靠時使用)
     // 為了與 CSS 檔案保持一致，建議讓 CSS 處理 padding-top，但這裡保留註解以備參考。
     // const totalSpacing = 10; // TopBar 和 Main Content 之間的間距
-    // mainContent.style.paddingTop = `${topbarActualHeight + totalSpacing}px`;
+    // topbarContentGap.style.paddingTop = `${topbarActualHeight + totalSpacing}px`;
 }

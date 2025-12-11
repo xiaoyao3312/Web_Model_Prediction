@@ -7,14 +7,14 @@
     <div id="fabContent"> 
         <div class="fab-panel-title">背景顏色調整</div> 
         <div class="fab-sliders"> 
-            <label>R: <span id="valR">128</span></label> 
-            <input type="range" id="rangeR" min="0" max="255" value="128"> 
-            <label>G: <span id="valG">128</span></label> 
-            <input type="range" id="rangeG" min="0" max="255" value="128"> 
-            <label>B: <span id="valB">128</span></label> 
-            <input type="range" id="rangeB" min="0" max="255" value="128"> 
-            <label>A: <span id="valA">1</span></label> 
-            <input type="range" id="rangeA" min="0" max="1" step="0.01" value="1"> 
+            <label>R: <span id="fabValR">128</span></label> 
+            <input type="range" id="fabRangeR" min="0" max="255" value="128"> 
+            <label>G: <span id="fabValG">128</span></label> 
+            <input type="range" id="fabRangeG" min="0" max="255" value="128"> 
+            <label>B: <span id="fabValB">128</span></label> 
+            <input type="range" id="fabRangeB" min="0" max="255" value="128"> 
+            <label>A: <span id="fabValA">1</span></label> 
+            <input type="range" id="fabRangeA" min="0" max="1" step="0.01" value="1"> 
         </div>
         <div class="fab-themes"> 
             <button class="fab-theme-btn" data-color="rgba(0,0,0,1)">黑色</button>
@@ -24,7 +24,7 @@
         <div class="fab-themes"> 
             <button class="fab-theme-btn" data-color="rgba(170,170,170,1)">淺色</button>
             <button class="fab-theme-btn" data-color="rgba(255,255,255,1)">白色</button>
-            <button id="randomBtn" class="fab-theme-btn">隨機</button>       
+            <button class="fab-theme-btn" id="fabRandomButton">隨機</button>       
         </div> 
     </div>
 </div>
@@ -42,7 +42,7 @@ window.ThemeControl = (function() {
     let offsetY = 0;
 
     // --- DOM 元素變數 (需要在 DOMContentLoaded 後才能安全取得) ---
-    let fab, icon, content, randomBtn;
+    let fabColorControl, fabIcon, fabContent, fabRandomButton;
     let sliders = {};
     let labels = {};
     let themeBtns;
@@ -119,46 +119,46 @@ window.ThemeControl = (function() {
     }
     
     function forceLayoutRecalculation() {
-        void content.offsetHeight;
+        void fabContent.offsetHeight;
     }
 
     function positionPanel(){
-        const fabRect = fab.getBoundingClientRect();
+        const fabColorControlRect = fabColorControl.getBoundingClientRect();
         const windowW = window.innerWidth;
         
-        const isNearRight = (fab.offsetLeft + fab.offsetWidth / 2) > (windowW / 2);
+        const isNearRight = (fabColorControl.offsetLeft + fabColorControl.offsetWidth / 2) > (windowW / 2);
         
         if (isNearRight) {
-            content.style.left = "auto";
-            content.style.right = fabRect.width + 15 + "px";
+            fabContent.style.left = "auto";
+            fabContent.style.right = fabColorControlRect.width + 15 + "px";
         } else {
-            content.style.right = "auto";
-            content.style.left = fabRect.width + 15 + "px";
+            fabContent.style.right = "auto";
+            fabContent.style.left = fabColorControlRect.width + 15 + "px";
         }
         
         // 垂直居中定位
-        content.style.top = (fabRect.height / 2) - (content.offsetHeight / 2) + "px"; 
+        fabContent.style.top = (fabColorControlRect.height / 2) - (fabContent.offsetHeight / 2) + "px"; 
         
         // 邊界修正邏輯
-        const contentRect = content.getBoundingClientRect();
-        if (contentRect.top < EDGE_MARGIN) {
-            content.style.top = (fabRect.height / 2) - (contentRect.height / 2) + (EDGE_MARGIN - contentRect.top) + "px";
+        const fabContentRect = fabContent.getBoundingClientRect();
+        if (fabContentRect.top < EDGE_MARGIN) {
+            fabContent.style.top = (fabColorControlRect.height / 2) - (fabContentRect.height / 2) + (EDGE_MARGIN - fabContentRect.top) + "px";
         }
-        if (contentRect.bottom > window.innerHeight - EDGE_MARGIN) {
-            const pushUpDistance = contentRect.bottom - (window.innerHeight - EDGE_MARGIN);
-            const initialTop = (fabRect.height / 2) - (content.offsetHeight / 2);
+        if (fabContentRect.bottom > window.innerHeight - EDGE_MARGIN) {
+            const pushUpDistance = fabContentRect.bottom - (window.innerHeight - EDGE_MARGIN);
+            const initialTop = (fabColorControlRect.height / 2) - (fabContent.offsetHeight / 2);
             const newTop = initialTop - pushUpDistance;
-            content.style.top = newTop + "px";
+            fabContent.style.top = newTop + "px";
         }
     }
 
     function saveSettings(){
-        if (!fab) return;
+        if (!fabColorControl) return;
         localStorage.setItem("FABSettings", JSON.stringify({
-            left: fab.style.left,
-            right: fab.style.right,
-            top: fab.style.top,
-            bottom: fab.style.bottom,
+            left: fabColorControl.style.left,
+            right: fabColorControl.style.right,
+            top: fabColorControl.style.top,
+            bottom: fabColorControl.style.bottom,
             r: sliders.r.value,
             g: sliders.g.value,
             b: sliders.b.value,
@@ -169,32 +169,32 @@ window.ThemeControl = (function() {
     function stickToEdge(x, y){
         const windowW = window.innerWidth;
         const windowH = window.innerHeight;
-        const fabW = fab.offsetWidth;
-        const fabH = fab.offsetHeight;
+        const fabColorControlW = fabColorControl.offsetWidth;
+        const fabColorControlbH = fabColorControl.offsetHeight;
 
-        const isNearRight = (x + fabW / 2) > (windowW / 2);
+        const isNearRight = (x + fabColorControlW / 2) > (windowW / 2);
         
         let finalY;
 
         if (isNearRight) {
-            fab.style.right = EDGE_MARGIN + "px";
-            fab.style.left = "auto";
+            fabColorControl.style.right = EDGE_MARGIN + "px";
+            fabColorControl.style.left = "auto";
         } else {
-            fab.style.left = EDGE_MARGIN + "px";
-            fab.style.right = "auto";
+            fabColorControl.style.left = EDGE_MARGIN + "px";
+            fabColorControl.style.right = "auto";
         }
         
         finalY = y;
         if (y < EDGE_MARGIN) {
             finalY = EDGE_MARGIN;
-        } else if (y > windowH - fabH - EDGE_MARGIN) {
-            finalY = windowH - fabH - EDGE_MARGIN;
+        } else if (y > windowH - fabColorControlH - EDGE_MARGIN) {
+            finalY = windowH - fabColorControlH - EDGE_MARGIN;
         }
 
-        fab.style.top = finalY + "px";
-        fab.style.bottom = "auto";
+        fabColorControl.style.top = finalY + "px";
+        fabColorControl.style.bottom = "auto";
         
-        if(content.style.display === "flex") positionPanel();
+        if(fabContent.style.display === "flex") positionPanel();
     }
     
     // ----------------------------------------------------
@@ -224,8 +224,8 @@ window.ThemeControl = (function() {
         });
         
         // 隨機按鈕事件
-        if (randomBtn) {
-            randomBtn.addEventListener("click", () => {
+        if (fabRandomButton) {
+            fabRandomButton.addEventListener("click", () => {
                 randomizeColor();
                 updateLabels();
                 applyColor();
@@ -233,22 +233,22 @@ window.ThemeControl = (function() {
         }
         
         // FAB 圖標點擊事件 (展開/收合面板)
-        icon.addEventListener("click", () => {
-            content.style.display = content.style.display === "flex" ? "none" : "flex";
-            if (content.style.display === "flex") {
+        fabIcon.addEventListener("click", () => {
+            fabContent.style.display = fabContent.style.display === "flex" ? "none" : "flex";
+            if (fabContent.style.display === "flex") {
                 forceLayoutRecalculation();
                 positionPanel();
             }
         });
 
         // 拖曳事件
-        icon.addEventListener("mousedown", e => {
+        fabIcon.addEventListener("mousedown", e => {
             e.stopPropagation();
             e.preventDefault();
             isDrag = true;
-            offsetX = e.clientX - fab.offsetLeft;
-            offsetY = e.clientY - fab.offsetTop;
-            fab.style.cursor = 'grabbing';
+            offsetX = e.clientX - fabColorControl.offsetLeft;
+            offsetY = e.clientY - fabColorControl.offsetTop;
+            fabColorControl.style.cursor = 'grabbing';
         });
 
         document.addEventListener("mousemove", e => {
@@ -256,31 +256,31 @@ window.ThemeControl = (function() {
             let newX = e.clientX - offsetX;
             let newY = e.clientY - offsetY;
 
-            newX = Math.max(0, Math.min(window.innerWidth - fab.offsetWidth, newX));
-            newY = Math.max(0, Math.min(window.innerHeight - fab.offsetHeight, newY));
+            newX = Math.max(0, Math.min(window.innerWidth - fabColorControl.offsetWidth, newX));
+            newY = Math.max(0, Math.min(window.innerHeight - fabColorControl.offsetHeight, newY));
 
-            fab.style.left = newX + "px";
-            fab.style.top = newY + "px";
-            fab.style.right = "auto";
-            fab.style.bottom = "auto";
+            fabColorControl.style.left = newX + "px";
+            fabColorControl.style.top = newY + "px";
+            fabColorControl.style.right = "auto";
+            fabColorControl.style.bottom = "auto";
 
-            if (content.style.display === "flex") positionPanel();
+            if (fabContent.style.display === "flex") positionPanel();
         });
 
         document.addEventListener("mouseup", e => {
             if (!isDrag) return;
             isDrag = false;
-            fab.style.cursor = 'grab';
-            stickToEdge(fab.offsetLeft, fab.offsetTop);
+            fabColorControl.style.cursor = 'grab';
+            stickToEdge(fabColorControl.offsetLeft, fabColorControl.offsetTop);
             saveSettings();
         });
 
         // 視窗大小改變事件
         window.addEventListener("resize", () => {
-            if (fab.style.left !== "auto" || fab.style.right !== "auto") {
-                stickToEdge(fab.offsetLeft, fab.offsetTop);
+            if (fabColorControl.style.left !== "auto" || fabColorControl.style.right !== "auto") {
+                stickToEdge(fabColorControl.offsetLeft, fabColorControl.offsetTop);
             }
-            if (content.style.display === "flex") positionPanel();
+            if (fabContent.style.display === "flex") positionPanel();
         });
     }
 
@@ -289,20 +289,20 @@ window.ThemeControl = (function() {
      */
     function loadSettings() {
         // 1. 確保 DOM 元素已獲取
-        if (!fab) {
+        if (!fabColorControl) {
             console.error("Initialization failed: FAB element not found.");
             return;
         }
 
         const s = JSON.parse(localStorage.getItem("FABSettings"));
         
-        content.style.display = "none";
+        fabContent.style.display = "none";
         
         if (!s) { // 首次載入：預設在右上方
-            fab.style.left = "auto";
-            fab.style.bottom = "auto";
-            fab.style.right = EDGE_MARGIN + "px";
-            fab.style.top = EDGE_MARGIN + "px";
+            fabColorControl.style.left = "auto";
+            fabColorControl.style.bottom = "auto";
+            fabColorControl.style.right = EDGE_MARGIN + "px";
+            fabColorControl.style.top = EDGE_MARGIN + "px";
             
             // 首次載入：設定預設顏色 (例如中灰)
             sliders.r.value = 128; 
@@ -311,10 +311,10 @@ window.ThemeControl = (function() {
             sliders.a.value = 1;
 
         } else { // 載入儲存的設定
-            fab.style.left = s.left;
-            fab.style.right = s.right;
-            fab.style.top = s.top;
-            fab.style.bottom = s.bottom;
+            fabColorControl.style.left = s.left;
+            fabColorControl.style.right = s.right;
+            fabColorControl.style.top = s.top;
+            fabColorControl.style.bottom = s.bottom;
             
             sliders.r.value = s.r;
             sliders.g.value = s.g;
@@ -326,7 +326,7 @@ window.ThemeControl = (function() {
         applyColor(); // 應用載入或預設的顏色
         
         window.requestAnimationFrame(() => {
-            stickToEdge(fab.offsetLeft, fab.offsetTop);
+            stickToEdge(fabColorControl.offsetLeft, fabColorControl.offsetTop);
         });
     }
 
@@ -335,27 +335,27 @@ window.ThemeControl = (function() {
      */
     function initialize() {
         // 1. 獲取所有 DOM 元素
-        fab = document.getElementById("fabColorControl");
-        if (!fab) {
+        fabColorControl = document.getElementById("fabColorControl");
+        if (!fabColorControl) {
             console.error("Error: FAB element (#fabColorControl) not found. Cannot initialize.");
             return;
         }
-        icon = document.getElementById("fabIcon");
-        content = document.getElementById("fabContent");
-        randomBtn = document.getElementById("randomBtn");
+        fabIcon = document.getElementById("fabIcon");
+        fabContent = document.getElementById("fabContent");
+        fabRandomButton = document.getElementById("fabRandomButton");
         
         sliders = {
-            r: document.getElementById("rangeR"),
-            g: document.getElementById("rangeG"),
-            b: document.getElementById("rangeB"),
-            a: document.getElementById("rangeA")
+            r: document.getElementById("fabRangeR"),
+            g: document.getElementById("fabRangeG"),
+            b: document.getElementById("fabRangeB"),
+            a: document.getElementById("fabRangeA")
         };
         
         labels = {
-            r: document.getElementById("valR"),
-            g: document.getElementById("valG"),
-            b: document.getElementById("valB"),
-            a: document.getElementById("valA")
+            r: document.getElementById("fabValR"),
+            g: document.getElementById("fabValG"),
+            b: document.getElementById("fabValB"),
+            a: document.getElementById("fabValA")
         };
         
         themeBtns = document.querySelectorAll(".fab-theme-btn");

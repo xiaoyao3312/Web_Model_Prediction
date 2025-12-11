@@ -6,7 +6,7 @@ tree "C:\Users\user\Desktop\Web_Model_Prediction" /F
 C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  app.py
 │  config.py
-│  css_tool.txt
+│  css_notes.py
 │  Dockerfile
 │  Procfile
 │  requirements.txt
@@ -16,24 +16,22 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 ├─api
 │  └─churn_bank
 │          predict
+│          predict_batch
 │
 ├─projects
-│  ├─Churn_Bank_code
-│  │  │  churn_bank_model.joblib
-│  │  │  churn_bank_shap.py
-│  │  │  churn_bank_test.csv
-│  │  │  churn_bank_train.csv
-│  │  │  churn_bank_train.py
-│  │  │  feature_columns.joblib
-│  │  │  fe_pipeline_name.txt
-│  │  │  shap_summary_plot.png
-│  │  │  submission.csv
-│  │  │
-│  │  └─__pycache__
-│  │          churn_bank_train.cpython-311.pyc
-│  │
-│  └─Churn_Telco_code
-│          churn_telco.ipynb
+│  └─Churn_Bank_code
+│      │  churn_bank_model.joblib
+│      │  churn_bank_shap.py
+│      │  churn_bank_test.csv
+│      │  churn_bank_train.csv
+│      │  churn_bank_train.py
+│      │  feature_columns.joblib
+│      │  fe_pipeline_name.txt
+│      │  shap_summary_plot.png
+│      │  submission.csv
+│      │
+│      └─__pycache__
+│              churn_bank_train.cpython-311.pyc
 │
 ├─routes
 │  │  churn_bank_routes.py
@@ -50,26 +48,25 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │
 ├─static
 │  ├─css
-│  │      base_churn.css
 │  │      churn_bank.css
-│  │      churn_telco.css
-│  │      color_bg_control.css
+│  │      fab_color_control.css
+│  │      general.css
 │  │      index.css
+│  │      topbar_menu.css
 │  │
 │  ├─img
 │  │      churn_bank.jpg
-│  │      churn_telco.jpg
 │  │      doro.gif
 │  │      logo.png
 │  │
 │  └─js
-│          base_churn.js
 │          churn_bank.js
-│          churn_telco.js
-│          color_bg_control.js
+│          fab_color_control.js
+│          topbar_menu.js
 │
-└─templates
-        base_churn.html
-        churn_bank.html
-        churn_telco.html
-        index.html
+├─templates
+│      churn_bank.html
+│      index.html
+│
+└─__pycache__
+        config.cpython-311.pyc

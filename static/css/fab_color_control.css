@@ -39,7 +39,6 @@
     --fabColorControl-0:                     0;
     
     /* 字體 */
-    --fabColorControl-font-weight:             900;
     --fabColorControl-font-size:               15px;
     --fabColorControl-panel-title-font-size:   20px;
 
@@ -140,7 +139,7 @@ body {
 #fabColorControl .fab-panel-title {
     /* 字體 */
     font-size:   var(--fabColorControl-panel-title-font-size);
-    font-weight: var(--fabColorControl-font-weight);
+    font-weight: bold;
     
     /* 排版與對齊 */
     text-align:  center;
@@ -226,7 +225,7 @@ body {
     
     /* 字體 */
     font-size:        var(--fabColorControl-font-size);
-    font-weight:      var(--fabColorControl-font-weight);
+    font-weight:      bold;
     
     /* 外觀 */
     cursor:           pointer;
