@@ -36,7 +36,7 @@
     --fabColorControl-10px:                    10px;
     --fabColorControl-5px:                     5px;
     --fabColorControl-1px:                     1px;
-    --fabColorControl-0:                     0;
+    --fabColorControl-0:                       0;
     
     /* 字體 */
     --fabColorControl-font-size:               15px;
@@ -93,8 +93,11 @@ body {
 
 #fabColorControl #fabIcon {
     /* 外觀 */
-    font-size:   var(--fabColorControl-icon-size);
-    user-select: none;
+    font-size:     var(--fabColorControl-icon-size);
+    background:    var(--fabColorControl-global-font-color);
+    border-radius: var(--fabColorControl-border-radius);
+    color:         var(--fabColorControl-global-bg-color);
+    user-select:   none;
 }
 
 /* -------------------------------------- */

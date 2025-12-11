@@ -1,4 +1,4 @@
-/* static\css\index.css - 整合通用的響應式字體、儀表板和卡片樣式，確保動態顏色變數生效 */
+/* static\css\index_dashboard.css */
 
 /* -------------------------------------- */
 /* --- 1. 全局變數定義 (Root Variables) --- */
@@ -12,12 +12,15 @@
     --indexDashboard-box-shadow-hover:  0px 0px 10px 5px rgba(0, 0, 0, 0.5);
 
     /* 尺寸與間距 */
-    --indexDashboard-width:             80%;
-    --indexDashboard-heigth:            80%;
+    --indexDashboard-width:             90%;
+    --indexDashboard-heigth:            90%;
+    --indexDashboard-100px:             100px;
+    --indexDashboard-30px:              30px;
     --indexDashboard-20px:              20px;
-    --indexDashboard-15px:              15px; /* 用於 gap */
-    --indexDashboard-10px:              10px; /* 用於 border-radius 和 lift amount */
+    --indexDashboard-15px:              15px; /* gap */
+    --indexDashboard-10px:              10px; /* border-radius, lift */
     --indexDashboard-1px:               1px;
+    --indexDashboard-1em:               1em;
     --indexDashboard-font-weight:       900;
     
     /* 動畫 */
@@ -54,49 +57,40 @@
 /* -------------------------------------- */
 /* --- 3. 元素置中與排版 (H1, H2, Icon) --- */
 /* -------------------------------------- */
-/* 調整 H1 標題置中 */
-#indexDashboard .index-h1 {
-    text-align:   center; /* 置中文字內容 */
-    margin-left:  auto;
-    margin-right: auto;
-}
-
-/* 新增 H2 標題置中 */
-#indexDashboard .index-panel .index-h2 {
-    text-align:   center; /* 置中文字內容 */
-    margin-left:  auto;
-    margin-right: auto;
-}
-
-#indexDashboard .index-content .index-h3 {
-    text-align:   center; /* 置中文字內容 */
-    margin-left:  auto;
-    margin-right: auto;
-}
-
+/* 調整所有標題置中 */
+#indexDashboard .index-h1,
+#indexDashboard .index-panel .index-h2,
+#indexDashboard .index-content .index-h3,
 #indexDashboard .index-content .index-h5 {
-    text-align:   center; /* 置中文字內容 */
+    text-align:   center;
     margin-left:  auto;
     margin-right: auto;
 }
 
+/* H6 響應式字體設定 */
 #indexDashboard .index-content .index-h6 {
-    text-align:   center; /* 置中文字內容 */
+    text-align:   center; 
     margin-left:  auto;
     margin-right: auto;
 }
 
-/* 修正 Icon 樣式 */
+/* 銀行圖標 (大的) */
 #indexDashboard .index-bank-icon {
-    font-size:    clamp(40px, 8vw, 80px);
-    /* 依賴父層 .card 的 text-align 進行置中 */
+    max-width:    var(--indexDashboard-100px);
+    height:       auto;
+    color:        var(--indexDashboard-global-font-color);
     margin-left:  unset;
     margin-right: unset;
+    transition:   var(--indexDashboard-transition);
 }
 
+/* 右箭頭 SVG 圖標 */
 #indexDashboard .index-right-icon {
-    font-size:   clamp(18px, 3vw, 22px);
-    margin-left: clamp(10px, 2vw, 20px);
+    width:       var(--indexDashboard-1em);
+    height:      var(--indexDashboard-1em);
+    margin-left: clamp(14px, 2.5vw, 18px); 
+    color:       var(--indexDashboard-global-font-color);
+    transition:  var(--indexDashboard-transition);
 }
 
 /* -------------------------------------- */
@@ -106,6 +100,11 @@
     /* 顏色與背景 */
     background-color: var(--indexDashboard-global-bg-color);
     color:            var(--indexDashboard-global-font-color);
+    
+    width:            var(--indexDashboard-width);
+    height:           var(--indexDashboard-heigth);
+    margin-left:      auto;
+    margin-right:     auto;
     
     /* 間距與邊框 */
     padding-top:      var(--indexDashboard-1px);
@@ -123,15 +122,18 @@
 /* 讓 Card 內所有文字、標題、和 Icon 置中 */
 #indexDashboard .index-card {
     /* 佈局與置中 */
-    text-align:       center; /* 設置文字水平置中 */
+    text-align:       center; 
     
     /* 顏色與背景 */
     background-color: var(--indexDashboard-panel-bg-color); 
     color:            var(--indexDashboard-global-font-color);
     
+    /* 核心 Flex 屬性 */
+    flex:             1 1 100%;
+    
     /* 間距與邊框 */
-    padding-top:      var(--indexDashboard-1px);
-    padding-bottom:   var(--indexDashboard-20px);
+    padding-top:      var(--indexDashboard-10px);
+    padding-bottom:   var(--indexDashboard-10px);
     padding-left:     var(--indexDashboard-20px);
     padding-right:    var(--indexDashboard-20px);
     border-radius:    var(--indexDashboard-10px);  
@@ -147,36 +149,40 @@
     transform:  translateY(calc(-1 * var(--indexDashboard-10px)));
 }
 
-/* 卡片內容 (圖標+標題) 區塊 - 確保與描述區塊有間隔 */
+/* 卡片內容 (圖標+標題) 區塊間隔 */
 #indexDashboard .index-card .index-content {
     margin-top:    var(--indexDashboard-10px);
     margin-bottom: var(--indexDashboard-10px);
 }
 
 /* -------------------------------------- */
-/* --- 5. 模型卡片網格佈局 (Grid & Footer) --- */
+/* --- 5. 模型卡片網格佈局 (Grid) --- */
 /* -------------------------------------- */
 #indexDashboard .index-grid {
     display:         flex;
     flex-wrap:       wrap;
     gap:             var(--indexDashboard-15px);
-    /* 讓 .grid 內的卡片群組 (當一行未滿時) 居中 */
-    justify-content: center;
+    justify-content: center; /* 居中卡片群組 */
 }
+
 
 /* -------------------------------------- */
 /* --- 6. 響應式佈局 (Media Queries) --- */
 /* -------------------------------------- */
-/* sm:grid-cols-2 (576px 及以上) */
-@media (min-width: 576px) {
+/* sm:grid-cols-2 (577px 及以上) */
+@media (min-width: 577px) { 
     #indexDashboard .index-card {
-        width: calc(50% - (var(--indexDashboard-15px) / 2));
+        /* 2 欄排列 */
+        flex:      1 1 calc(50% - (var(--indexDashboard-15px) / 2));
+        max-width: none;
     }
 }
 
 /* lg:grid-cols-3 (1024px 及以上) */
 @media (min-width: 1024px) {
     #indexDashboard .index-card {
-        width: calc(33.3333% - (2 * var(--indexDashboard-15px) / 3));
+        /* 3 欄排列 */
+        flex:      1 1 calc(33.3333% - (2 * var(--indexDashboard-15px) / 3));
+        max-width: none;
     }
 }

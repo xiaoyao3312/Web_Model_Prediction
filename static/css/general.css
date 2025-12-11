@@ -7,7 +7,6 @@
     --h5-font-size: clamp(18px, 3vw, 22px);   
     --h6-font-size: clamp(14px, 2.5vw, 18px); 
     --li-font-size: clamp(10px, 2vw, 14px);   
-    --a-font-size:  clamp(10px, 2vw, 14px);   
     --p-font-size:  clamp(10px, 2vw, 14px);
 }
 
@@ -18,5 +17,4 @@ h4 { font-size: var(--h4-font-size); }
 h5 { font-size: var(--h5-font-size); }
 h6 { font-size: var(--h6-font-size); }
 li { font-size: var(--li-font-size); }
-a  { font-size: var(--a-font-size);  }
 p  { font-size: var(--p-font-size);  }
