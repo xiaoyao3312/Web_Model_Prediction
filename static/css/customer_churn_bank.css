@@ -1,7 +1,26 @@
+/* static\css\customer_churn_bank.css */
 /* -------------------------------------- */
 /* --- 0. CSS 變量與通用設定 --- */
 /* -------------------------------------- */
 :root {
+    --customerChurnBank-global-font-color: var(--fabColorControl-global-font-color);
+    --customerChurnBank-global-bg-color: var(--fabColorControl-global-bg-color);
+    --customerChurnBank-panel-bg-color: var(--fabColorControl-panel-bg-color);
+    --customerChurnBank-global-transition: var(--fabColorControl-global-transition);
+    /* 陰影 */
+    --customerChurnBank-box-shadow:        0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    --customerChurnBank-box-shadow-hover:  0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+    
+    --customerChurnBank-width:             auto;
+    --customerChurnBank-heigth:            auto;
+    --customerChurnBank-100px:             100px;
+    --customerChurnBank-30px:              30px;
+    --customerChurnBank-20px:              20px;
+    --customerChurnBank-15px:              15px; /* gap */
+    --customerChurnBank-10px:              10px; /* border-radius, lift */
+    --customerChurnBank-1px:               1px;
+    --customerChurnBank-1em:               1em;
+    --customerChurnBank-font-weight:       900;
 
     --primary-color: #008080; /* Teal/水鴨綠 */
     --fixed-primary-color: #008080;
@@ -14,32 +33,41 @@
 }
 
 
-/* -------------------------------------- */
-/* --- 0. 響應式字體基線調整 --- */
-/* -------------------------------------- */
-body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--global-bg-color);
-    color: var(--global-font-color);
-    line-height: 1.5;
-    padding: var(--spacing);
-    font-size: clamp(0.75rem, 2vw, 1.25rem);
+#customerChurnBank{
+        /* 尺寸與定位 */
+    width:            var(--customerChurnBank-width);
+    /* margin-left: 20px;
+    margin-right: 20px;
+    margin-bottom: 20px; */
+    
+    
+    /* 顏色與背景 */
+    background-color: var(--customerChurnBank-global-bg-color);
+    color:            var(--customerChurnBank-global-font-color);
+    
+    /* 間距與邊框 */
+    padding-bottom:   var(--customerChurnBank-20px);
+    padding-left:     var(--customerChurnBank-20px);
+    padding-right:    var(--customerChurnBank-20px);
+    /* border-radius:    var(--customerChurnBank-10px); */
+    border:           var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color);
+    box-shadow:       var(--customerChurnBank-box-shadow);
+    
+    /* 動畫 */
+    transition:       var(--customerChurnBank-global-transition);
 }
 
-/* 標題顏色過渡 */
-h1, h2, h3, h4, h5, h6 {
-    color: var(--header-font-color);
-    transition: color 0.5s linear;
+#customerChurnBank .bank-h2{
+    text-align:   left; 
+    margin-left:  auto;
+    margin-right: auto;
 }
 
-/* -------------------------------------- */
-/* --- 1. 通用元件樣式 (Tailwind 類別翻譯) --- */
-/* -------------------------------------- */
 
 /* 通用卡片容器 (.card) */
-.card {
+#customerChurnBank .card {
     font-size: clamp(0.75rem, 2vw, 1rem);
-    background-color: var(--panel-bg-color);
+    background-color: var(--fabColorControl-panel-bg-color);
     color: var(--global-font-color);
     padding: var(--spacing, 1.5rem); 
     border-radius: 0.5rem; /* rounded-lg */
@@ -50,7 +78,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 頁面主要標題 (.page-title) */
-.page-title {
+#customerChurnBank .page-title {
     font-size: clamp(1.25rem, 2.5vw, 2rem);
     font-weight: 700;
     margin-bottom: 1.5rem;
@@ -58,7 +86,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 卡片內標題 (.card-title) - 整合了新的樣式 */
-.card-title {
+#customerChurnBank .card-title {
     font-size: clamp(1.05rem, 2.2vw, 1.5rem);
     font-weight: 600;
     margin-bottom: 1rem;
@@ -72,12 +100,12 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 2px solid var(--secondary-color); /* 使用變量或直接顏色 #3b82f6 */
     padding-bottom: 0.5rem;
 }
-.card-title .fas { /* .mr-2, .mr-1 */
+#customerChurnBank .card-title .fas { /* .mr-2, .mr-1 */
     margin-right: 0.5rem;
 }
 
 /* 輸入欄位群組 */
-.input-group {
+#customerChurnBank .input-group {
     font-size: clamp(0.75rem, 2vw, 1rem);
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -85,7 +113,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 批次結果篩選控制群組的佈局 */
-.filter-controls {
+#customerChurnBank .filter-controls {
     display: flex;
     gap: 20px;
     align-items: center; /* flex items-center */
@@ -93,18 +121,18 @@ h1, h2, h3, h4, h5, h6 {
     margin-top: 1rem; /* mt-4 */
 }
 
-.filter-controls > div { /* flex items-center gap-2 */
+#customerChurnBank .filter-controls > div { /* flex items-center gap-2 */
     display: flex;
     align-items: center;
     gap: 0.5rem; 
 }
 
-.filter-stats { /* text-sm text-gray-600 */
+#customerChurnBank .filter-stats { /* text-sm text-gray-600 */
     font-size: 0.875rem;
     color: #4b5563; 
 }
 
-.input-field-container {
+#customerChurnBank .input-field-container {
     font-size: clamp(0.75rem, 2vw, 1rem);
     display: flex;
     flex-direction: column;
@@ -113,16 +141,16 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 標籤樣式 */
-.input-field-container label {
+#customerChurnBank .input-field-container label {
     font-size: 0.875rem; /* text-sm */
     font-weight: 500;
     color: var(--global-font-color) !important;
 }
 
 /* 通用輸入框和文本區域 (.theme-input-field) */
-.theme-input-field {
+#customerChurnBank .theme-input-field {
     font-size: clamp(0.75rem, 2vw, 1rem);
-    background-color: var(--panel-bg-color);
+    background-color: var(--fabColorControl-panel-bg-color);
     color: var(--global-font-color);
     border: 1px solid var(--card-border-color); /* border-gray-300 */
     transition: background-color 0.5s linear, color 0.5s linear, border-color 0.3s;
@@ -135,25 +163,25 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 移除 type="number" 的上/下箭頭 */
-.theme-input-field[type="number"] {
+#customerChurnBank .theme-input-field[type="number"] {
     -moz-appearance: textfield; 
     appearance: textfield;
 }
-.theme-input-field[type="number"]::-webkit-outer-spin-button,
-.theme-input-field[type="number"]::-webkit-inner-spin-button {
+#customerChurnBank .theme-input-field[type="number"]::-webkit-outer-spin-button,
+#customerChurnBank .theme-input-field[type="number"]::-webkit-inner-spin-button {
     -webkit-appearance: none; 
     margin: 0;
 }
 
 /* 輸入框 Focus (聚焦狀態) */
-.theme-input-field:focus {
+#customerChurnBank .theme-input-field:focus {
     border-color: var(--primary-color);
     outline: none;
     box-shadow: 0 0 0 1px var(--primary-color);
 }
 
 /* 分析按鈕 (.analyze-btn) */
-.analyze-btn {
+#customerChurnBank .analyze-btn {
     font-size: clamp(0.75rem, 2vw, 1rem);
     width: auto;
     margin-top: 0;
@@ -170,33 +198,33 @@ h1, h2, h3, h4, h5, h6 {
     cursor: pointer;
     text-decoration: none;
 }
-.analyze-btn:hover {
+#customerChurnBank .analyze-btn:hover {
     opacity: 0.9;
     transform: translateY(-1px);
 }
 
-.analyze-btn:disabled {
+#customerChurnBank .analyze-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
     transform: none;
 }
 
 /* 特定按鈕樣式 */
-.analyze-predict-only {
+#customerChurnBank .analyze-predict-only {
     background-color: color-mix(in srgb, var(--fixed-primary-color) 80%, black) !important;
     color: white !important;
 }
 
 /* 錯誤訊息 */
-#apiStatusMsg, #errorMsg { /* text-sm mt-2/mt-3 text-red-500 */
+#customerChurnBank #apiStatusMsg, #errorMsg { /* text-sm mt-2/mt-3 text-red-500 */
     color: var(--error-color);
     font-size: 0.875rem;
     margin-top: 0.5rem;
 }
-#errorMsg { margin-top: 0.75rem; }
+#customerChurnBank #errorMsg { margin-top: 0.75rem; }
 
 /* 預測結果樣式容器 - 在解釋面板中使用 (.explanation-panel .prediction-result) */
-.explanation-panel .prediction-result {
+#customerChurnBank .explanation-panel .prediction-result {
     font-size: clamp(0.75rem, 2vw, 1rem);
     margin-bottom: 15px;
     transition: all 0.3s ease;
@@ -212,7 +240,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 高風險顏色 (.high-risk) - 整合新樣式 */
-.high-risk {
+#customerChurnBank .high-risk {
     color: var(--error-color);
     
     /* 新增樣式 */
@@ -223,7 +251,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 低風險顏色 (.low-risk) - 整合新樣式 */
-.low-risk {
+#customerChurnBank .low-risk {
     color: var(--success-color);
 
     /* 新增樣式 */
@@ -233,7 +261,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* 卡片分隔線 (.card-divider) - 整合新樣式 */
-.card-divider { /* hr mt-8 / mb-4 */
+#customerChurnBank .card-divider { /* hr mt-8 / mb-4 */
     border: 0;
     height: 1px;
     background-color: var(--card-border-color);
@@ -242,17 +270,17 @@ h1, h2, h3, h4, h5, h6 {
     /* 新增樣式 */
     border-top: 1px solid #e5e7eb;
 }
-hr.mt-8 { margin-top: 2rem; }
-hr.mb-4 { margin-bottom: 1rem; }
-.batch-upload-container hr.card-divider { margin-top: 1rem; margin-bottom: 1rem; }
+#customerChurnBank hr.mt-8 { margin-top: 2rem; }
+#customerChurnBank hr.mb-4 { margin-bottom: 1rem; }
+#customerChurnBank .batch-upload-container hr.card-divider { margin-top: 1rem; margin-bottom: 1rem; }
 
 /* AI 解釋區塊的初始/輸出內容樣式 */
-#explanationOutput {
+#customerChurnBank #explanationOutput {
     white-space: pre-wrap;
     min-height: 100px;
 }
 
-.initial-message { /* text-gray-400 p-5 */
+#customerChurnBank .initial-message { /* text-gray-400 p-5 */
     color: #9ca3af; 
     opacity: 1;
     padding: 1.25rem;
@@ -262,7 +290,7 @@ hr.mb-4 { margin-bottom: 1rem; }
 }
 
 /* 載入訊息 - 新增樣式 */
-.loading-message {
+#customerChurnBank .loading-message {
     color: #6b7280;
     font-style: italic;
     display: flex;
@@ -272,7 +300,7 @@ hr.mb-4 { margin-bottom: 1rem; }
 }
 
 /* 簡單的載入動畫 */
-.loading-message::before {
+#customerChurnBank .loading-message::before {
     content: '...';
     animation: pulse-dots 1.5s infinite ease-in-out;
     color: var(--secondary-color); /* 使用次要顏色，通常是藍色 */
@@ -288,47 +316,47 @@ hr.mb-4 { margin-bottom: 1rem; }
 
 
 /* 批次上傳區塊的調整 */
-.batch-upload-container {
+#customerChurnBank .batch-upload-container {
     margin-bottom: var(--spacing);
 }
 
-.batch-upload-area {
+#customerChurnBank .batch-upload-area {
     padding: 1rem;
     border: 1px solid var(--card-border-color);
     border-radius: 6px;
 }
 
 /* Flex utilities translation */
-.flex { display: flex; }
-.flex-col { flex-direction: column; }
-.flex-grow { flex-grow: 1; }
-.flex-shrink-0 { flex-shrink: 0; }
-.gap-3 { gap: 0.75rem; }
-.gap-4 { gap: 1rem; }
-.items-center { align-items: center; }
-.justify-center { justify-content: center; }
-.whitespace-nowrap { white-space: nowrap; }
+#customerChurnBank .flex { display: flex; }
+#customerChurnBank .flex-col { flex-direction: column; }
+#customerChurnBank .flex-grow { flex-grow: 1; }
+#customerChurnBank .flex-shrink-0 { flex-shrink: 0; }
+#customerChurnBank.gap-3 { gap: 0.75rem; }
+#customerChurnBank .gap-4 { gap: 1rem; }
+#customerChurnBank .items-center { align-items: center; }
+#customerChurnBank .justify-center { justify-content: center; }
+#customerChurnBank .whitespace-nowrap { white-space: nowrap; }
 
 /* Grid utilities translation */
-.grid { display: grid; }
-.grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+#customerChurnBank .grid { display: grid; }
+#customerChurnBank .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 
 /* Width utilities translation */
-.w-32 { width: 8rem; }
-.w-60px { width: 60px; }
+#customerChurnBank .w-32 { width: 8rem; }
+#customerChurnBank .w-60px { width: 60px; }
 
 /* Other utilities */
-.text-sm { font-size: 0.875rem; }
-.font-semibold { font-weight: 600; }
-.font-bold { font-weight: 700; }
-.hidden { display: none !important; }
-.cursor-pointer { cursor: pointer; }
-.overflow-x-auto { overflow-x: auto; }
+#customerChurnBank .text-sm { font-size: 0.875rem; }
+#customerChurnBank .font-semibold { font-weight: 600; }
+#customerChurnBank .font-bold { font-weight: 700; }
+#customerChurnBank .hidden { display: none !important; }
+#customerChurnBank .cursor-pointer { cursor: pointer; }
+#customerChurnBank .overflow-x-auto { overflow-x: auto; }
 
 /* -------------------------------------- */
 /* --- 1.1 自訂下拉選單樣式 --- */
 /* -------------------------------------- */
-.dropdown-input {
+#customerChurnBank .dropdown-input {
     cursor: pointer;
     background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23888" d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>');
     background-repeat: no-repeat;
@@ -337,17 +365,17 @@ hr.mb-4 { margin-bottom: 1rem; }
     padding-right: 2.25rem; 
 }
 
-.dropdown-container {
+#customerChurnBank .dropdown-container {
     position: relative;
 }
 
-.dropdown-list {
+#customerChurnBank .dropdown-list {
     position: absolute;
     top: 100%; 
     left: 0;
     right: 0;
     z-index: 10;
-    background-color: var(--panel-bg-color);
+    background-color: var(--fabColorControl-panel-bg-color);
     border: 1px solid var(--primary-color);
     border-top: none;
     border-radius: 0 0 4px 4px;
@@ -356,13 +384,13 @@ hr.mb-4 { margin-bottom: 1rem; }
     overflow-y: auto;
 }
 
-.dropdown-item {
+#customerChurnBank .dropdown-item {
     padding: 0.5rem;
     cursor: pointer;
     transition: background-color 0.2s;
 }
 
-.dropdown-item:hover {
+#customerChurnBank .dropdown-item:hover {
     background-color: color-mix(in srgb, var(--primary-color) 20%, transparent);
 }
 
@@ -370,7 +398,7 @@ hr.mb-4 { margin-bottom: 1rem; }
 /* --- 2. 佈局調整 (大視窗 Grid 佈局) --- */
 /* -------------------------------------- */
 
-.main-panel-grid {
+#customerChurnBank .bank-panel-grid {
     display: grid;
     margin-bottom: 1rem;
     grid-template-columns: 1fr 1fr; 
@@ -383,60 +411,60 @@ hr.mb-4 { margin-bottom: 1rem; }
     min-height: 80vh; 
 }
 
-.api-key-panel {
+#customerChurnBank .api-key-panel {
     grid-area: api_key;
     height: auto;
     overflow: hidden;
 }
 
-.input-and-prompt-panel {
+#customerChurnBank .input-and-prompt-panel {
     grid-area: input_prompt;
     height: auto;
     overflow-y: auto; 
 }
 
-.explanation-panel {
+#customerChurnBank .explanation-panel {
     grid-area: explanation;
     overflow-y: auto;
     min-height: 200px; 
     padding-bottom: 1rem;
 }
 
-.chart-panel {
+#customerChurnBank .chart-panel {
     grid-area: chart_panel;
     grid-row-end: span 3; 
     overflow-y: auto; 
     padding-bottom: 1rem;
 }
 
-.api-key-panel .api-key-container {
+#customerChurnBank .api-key-panel .api-key-container {
     display: flex;
     gap: 10px;
     align-items: center;
 }
 
-.api-key-panel .api-key-container .theme-input-field {
+#customerChurnBank .api-key-panel .api-key-container .theme-input-field {
     flex-grow: 1;
     max-width: 400px;
 }
 
-#inputForm { /* grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 */
+#customerChurnBank #inputForm { /* grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 */
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 1rem;
     margin-top: 1rem;
 }
 
-.chart-display { /* grid grid-cols-1 md:grid-cols-2 gap-4 */
+#customerChurnBank .chart-display { /* grid grid-cols-1 md:grid-cols-2 gap-4 */
     display: grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 1rem;
 }
 
 /* 圖表佔位符 */
-.chart-placeholder {
+#customerChurnBank .chart-placeholder {
     height: 300px;
-    background-color: color-mix(in srgb, var(--panel-bg-color) 80%, var(--global-bg-color));
+    background-color: color-mix(in srgb, var(--fabColorControl-panel-bg-color) 80%, var(--global-bg-color));
     border: 1px dashed var(--global-font-color);
     display: flex;
     flex-direction: column;
@@ -453,12 +481,12 @@ hr.mb-4 { margin-bottom: 1rem; }
 /* --- 2.1 批次結果表格樣式 (fl-table) --- */
 /* -------------------------------------- */
 
-.table-wrapper { /* mt-4 overflow-x-auto */
+#customerChurnBank .table-wrapper { /* mt-4 overflow-x-auto */
     margin-top: 1rem;
     overflow-x: auto;
 }
 
-.fl-table {
+#customerChurnBank .fl-table {
     border-radius: 5px;
     font-size: 0.9em;
     font-weight: normal;
@@ -467,80 +495,80 @@ hr.mb-4 { margin-bottom: 1rem; }
     width: 100%;
     max-width: 100%;
     white-space: nowrap;
-    background-color: var(--panel-bg-color);
+    background-color: var(--fabColorControl-panel-bg-color);
     transition: background-color 0.5s linear;
 }
 
-.fl-table td, .fl-table th {
+#customerChurnBank .fl-table td, .fl-table th {
     text-align: center;
     padding: 12px;
 }
 
-.fl-table td {
+#customerChurnBank .fl-table td {
     border-right: 1px solid var(--card-border-color);
     font-size: 1em;
 }
 
-.fl-table thead th {
+#customerChurnBank .fl-table thead th {
     color: var(--primary-color);
     background: color-mix(in srgb, var(--primary-color) 10%, transparent);
     cursor: pointer;
 }
 
-.fl-table thead th:nth-child(odd) {
+#customerChurnBank .fl-table thead th:nth-child(odd) {
     background: color-mix(in srgb, var(--primary-color) 15%, transparent);
 }
 
-.fl-table tr:nth-child(even) {
-    background: color-mix(in srgb, var(--panel-bg-color) 95%, black);
+#customerChurnBank .fl-table tr:nth-child(even) {
+    background: color-mix(in srgb, var(--fabColorControl-panel-bg-color) 95%, black);
 }
 
-.fl-table tbody tr:hover {
+#customerChurnBank .fl-table tbody tr:hover {
     background-color: color-mix(in srgb, var(--primary-color) 10%, transparent);
 }
 
 /* 表格邊框和圓角 */
-.fl-table thead th:first-child {
+#customerChurnBank .fl-table thead th:first-child {
     border-radius: 5px 0 0 0;
 }
-.fl-table thead th:last-child {
+#customerChurnBank .fl-table thead th:last-child {
     border-radius: 0 5px 0 0;
     border-right: none;
 }
-.fl-table tbody tr:last-child td:first-child {
+#customerChurnBank .fl-table tbody tr:last-child td:first-child {
     border-bottom-left-radius: 5px;
 }
-.fl-table tbody tr:last-child td:last-child {
+#customerChurnBank .fl-table tbody tr:last-child td:last-child {
     border-bottom-right-radius: 5px;
 }
 
 /* 排序圖標 */
-.sort-icon { margin-left: 5px; }
-.sort-icon .fas { font-size: 0.75rem; }
-.sort-icon::before {
+#customerChurnBank .sort-icon { margin-left: 5px; }
+#customerChurnBank .sort-icon .fas { font-size: 0.75rem; }
+#customerChurnBank .sort-icon::before {
     content: '';
     font-size: 10px;
     margin-left: 5px;
     color: #888;
 }
-th[data-sort-order="asc"] .sort-icon::before {
+#customerChurnBank th[data-sort-order="asc"] .sort-icon::before {
     content: '▲';
     color: var(--success-color);
 }
-th[data-sort-order="desc"] .sort-icon::before {
+#customerChurnBank th[data-sort-order="desc"] .sort-icon::before {
     content: '▼';
     color: var(--error-color);
 }
 /* 避免佔位符文字過長 */
-.fl-table tbody tr td:nth-child(1),
-.fl-table tbody tr td:nth-child(2),
-.fl-table tbody tr td:nth-child(3) {
+#customerChurnBank .fl-table tbody tr td:nth-child(1),
+#customerChurnBank .fl-table tbody tr td:nth-child(2),
+#customerChurnBank .fl-table tbody tr td:nth-child(3) {
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-.fl-table tbody tr td.text-center { /* text-center p-5 text-gray-400 */
+#customerChurnBank .fl-table tbody tr td.text-center { /* text-center p-5 text-gray-400 */
     text-align: center;
     padding: 1.25rem;
     color: #9ca3af;
@@ -548,19 +576,19 @@ th[data-sort-order="desc"] .sort-icon::before {
 
 
 /* 批次結果風險等級顏色 */
-.risk-low { color: var(--success-color); font-weight: bold; }
-.risk-medium { color: var(--warning-color); font-weight: bold; }
-.risk-high { color: var(--error-color); font-weight: bold; }
+#customerChurnBank .risk-low { color: var(--success-color); font-weight: bold; }
+#customerChurnBank .risk-medium { color: var(--warning-color); font-weight: bold; }
+#customerChurnBank .risk-high { color: var(--error-color); font-weight: bold; }
 
 /* 分頁控制 */
-.pagination-controls {
+#customerChurnBank .pagination-controls {
     display: flex; 
     justify-content: center; 
     align-items: center; 
     gap: 10px; 
     margin-top: 1rem;
 }
-.pagination-controls .theme-input-field {
+#customerChurnBank .pagination-controls .theme-input-field {
     width: 60px; 
     text-align: center;
 }
@@ -570,35 +598,35 @@ th[data-sort-order="desc"] .sort-icon::before {
 /* -------------------------------------- */
 
 @media (min-width: 640px) { /* sm:breakpoint */
-    #inputForm { 
+    #customerChurnBank #inputForm { 
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
-    .api-key-panel .api-key-container {
+    #customerChurnBank .api-key-panel .api-key-container {
         flex-direction: row;
     }
-    .action-buttons-container { /* sm:flex-row */
+    #customerChurnBank .action-buttons-container { /* sm:flex-row */
         flex-direction: row;
     }
 }
 
 @media (min-width: 768px) { /* md:breakpoint */
-    .chart-display { 
+    #customerChurnBank .chart-display { 
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
 @media (min-width: 1024px) {
     /* 主 Grid 容器 (切換為 Grid 兩欄) */
-    .main-panel-grid {
+    #customerChurnBank .bank-panel-grid {
         display: grid;
         flex-direction: initial;
     }
     
     /* 確保 Grid 區域定義生效 */
-    .api-key-panel,
-    .input-and-prompt-panel,
-    .explanation-panel,
-    .chart-panel {
+    #customerChurnBank .api-key-panel,
+    #customerChurnBank .input-and-prompt-panel,
+    #customerChurnBank .explanation-panel,
+    #customerChurnBank .chart-panel {
         height: auto;
         overflow-y: auto;
         min-height: unset; 
@@ -607,7 +635,7 @@ th[data-sort-order="desc"] .sort-icon::before {
 
 @media (max-width: 1023px) {
     /* 主 Grid 容器 (切換為 Flex 垂直堆疊) */
-    .main-panel-grid {
+    #customerChurnBank .bank-panel-grid {
         display: flex;
         flex-direction: column;
         gap: var(--spacing, 1.5rem);
@@ -619,51 +647,51 @@ th[data-sort-order="desc"] .sort-icon::before {
     }
     
     /* 確保在小螢幕上取消所有固定/滾動設定 */
-    .api-key-panel,
-    .input-and-prompt-panel,
-    .explanation-panel,
-    .chart-panel {
+    #customerChurnBank .api-key-panel,
+    #customerChurnBank .input-and-prompt-panel,
+    #customerChurnBank .explanation-panel,
+    #customerChurnBank .chart-panel {
         height: auto !important;
         overflow-y: visible !important;
         min-height: unset; 
     }
     
-    .chart-display {
+    #customerChurnBank .chart-display {
         grid-template-columns: repeat(1, minmax(0, 1fr));
     }
 
     /* 篩選控制 (垂直堆疊) */
-    .filter-controls {
+    #customerChurnBank .filter-controls {
         flex-direction: column;
         align-items: stretch;
     }
-    .filter-controls > div {
+    #customerChurnBank .filter-controls > div {
         flex-wrap: wrap;
     }
 }
 
 @media (max-width: 639px) {
         /* 輸入群組 (切換為單欄) */
-    #inputForm { 
+    #customerChurnBank #inputForm { 
         grid-template-columns: 1fr;
     }
     
     /* API Key 容器 (切換為垂直堆疊) */
-    .api-key-panel .api-key-container {
+    #customerChurnBank .api-key-panel .api-key-container {
         flex-direction: column;
         align-items: stretch;
     }
-    .api-key-panel .api-key-container .theme-input-field {
+    #customerChurnBank .api-key-panel .api-key-container .theme-input-field {
         max-width: unset;
     }
     
     /* 按鈕容器 (切換為垂直堆疊) */
-    .action-buttons-container { /* flex-col */
+    #customerChurnBank .action-buttons-container { /* flex-col */
         flex-direction: column;
     }
     
     /* 批次檔案上傳控制 (垂直堆疊) */
-    .batch-upload-area > .flex { /* flex flex-col sm:flex-row gap-3 */
+    #customerChurnBank .batch-upload-area > .flex { /* flex flex-col sm:flex-row gap-3 */
         flex-direction: column;
         gap: 0.75rem;
     }

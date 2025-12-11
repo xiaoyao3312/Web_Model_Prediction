@@ -1,8 +1,4 @@
-/**
- * Churn_Bank.js
- * 銀行流失頁面專有邏輯：API Key 處理、收集輸入、呼叫後端 API、
- * 串接 Gemini API 取得解釋、渲染結果
- */
+// static\js\customer_churn_bank.js
 
 const API_KEY_STORAGE_KEY = 'geminiApiKey';
 const storage = sessionStorage;

@@ -1,3 +1,4 @@
+<!-- templates\customer_churn_bank.html -->
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
@@ -38,10 +39,10 @@
 
     <div class="topbar-content-gap" id="topbarContentGap"></div>
 
-    <div class="page-content" id="customer_churn_bank">
-        <h1 class="page-title">客戶流失_銀行MODEL - 預測分析 (含 AI 解釋)</h1>
+    <div id="customerChurnBank">
+        <h2 class="bank-h2">銀行客戶流失 - 預測分析模型</h2>
         
-        <div class="main-panel-grid">
+        <div class="bank-panel-grid">
             
             <div class="api-key-panel card">
                 <h2 class="card-title"><i class="fas fa-key mr-2"></i> Gemini API 啟用</h2>
@@ -186,7 +187,7 @@
 
             <div class="chart-panel card">
                 <h2 class="card-title"><i class="fas fa-chart-area mr-2"></i> 模型內建輸出圖表顯示區</h2>
-                <div id="chartDisplay" class="chart-display grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div id="chartDisplay" class="chart-display grid grid-cols-1  gap-4">
                     <div class="chart-placeholder flex items-center justify-center">圖表 1: **單一客戶局部 SHAP 影響力**</div>
                     <div class="chart-placeholder flex items-center justify-center">圖表 2: **模型全局 SHAP 摘要圖**</div>
                 </div>

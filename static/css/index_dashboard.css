@@ -1,5 +1,4 @@
 /* static\css\index_dashboard.css */
-
 /* -------------------------------------- */
 /* --- 1. 全局變數定義 (Root Variables) --- */
 /* -------------------------------------- */
@@ -12,19 +11,19 @@
     --indexDashboard-box-shadow-hover:  0px 0px 10px 5px rgba(0, 0, 0, 0.5);
 
     /* 尺寸與間距 */
-    --indexDashboard-width:             90%;
-    --indexDashboard-heigth:            90%;
-    --indexDashboard-100px:             100px;
-    --indexDashboard-30px:              30px;
-    --indexDashboard-20px:              20px;
-    --indexDashboard-15px:              15px; /* gap */
-    --indexDashboard-10px:              10px; /* border-radius, lift */
-    --indexDashboard-1px:               1px;
-    --indexDashboard-1em:               1em;
-    --indexDashboard-font-weight:       900;
+    --indexDashboard-font-weight: 900;
+    --indexDashboard-width:       auto;
+    --indexDashboard-heigth:      auto;
+    --indexDashboard-100px:       100px;
+    --indexDashboard-30px:        30px;
+    --indexDashboard-20px:        20px;
+    --indexDashboard-15px:        15px; /* gap */
+    --indexDashboard-10px:        10px; /* border-radius, lift */
+    --indexDashboard-1px:         1px;
+    --indexDashboard-1em:         1em;
     
     /* 動畫 */
-    --indexDashboard-transition:        var(--fabColorControl-global-transition);
+    --indexDashboard-global-transition: var(--fabColorControl-global-transition);
 }
 
 /* -------------------------------------- */
@@ -32,26 +31,26 @@
 /* -------------------------------------- */
 #indexDashboard {
     /* 尺寸與定位 */
-    width:            var(--indexDashboard-width);
-    height:           var(--indexDashboard-heigth);
-    margin-left:      auto;
-    margin-right:     auto;
+    width:              var(--indexDashboard-width);
+    height:             var(--indexDashboard-heigth);
+    /* margin-left:        var(--indexDashboard-20px);
+    margin-right:       var(--indexDashboard-20px);
+    margin-bottom:      var(--indexDashboard-20px); */
     
     /* 顏色與背景 */
-    background-color: var(--indexDashboard-panel-bg-color);
-    color:            var(--indexDashboard-global-font-color);
+    background-color:   var(--indexDashboard-panel-bg-color);
+    color:              var(--indexDashboard-global-font-color);
     
     /* 間距與邊框 */
-    padding-top:      var(--indexDashboard-1px);
-    padding-bottom:   var(--indexDashboard-20px);
-    padding-left:     var(--indexDashboard-20px);
-    padding-right:    var(--indexDashboard-20px);
-    border-radius:    var(--indexDashboard-10px);
-    border:           var(--indexDashboard-1px) solid var(--indexDashboard-global-font-color);
-    box-shadow:       var(--indexDashboard-box-shadow);
+    padding-bottom:     var(--indexDashboard-20px);
+    padding-left:       var(--indexDashboard-20px);
+    padding-right:      var(--indexDashboard-20px);
+    /* border-radius:      var(--indexDashboard-10px); */
+    border:             var(--indexDashboard-1px) solid var(--indexDashboard-global-font-color);
+    box-shadow:         var(--indexDashboard-box-shadow);
     
     /* 動畫 */
-    transition:       var(--indexDashboard-transition);
+    transition:         var(--indexDashboard-global-transition);
 }
 
 /* -------------------------------------- */
@@ -61,108 +60,106 @@
 #indexDashboard .index-h1,
 #indexDashboard .index-panel .index-h2,
 #indexDashboard .index-content .index-h3,
-#indexDashboard .index-content .index-h5 {
-    text-align:   center;
-    margin-left:  auto;
-    margin-right: auto;
-}
-
-/* H6 響應式字體設定 */
+#indexDashboard .index-content .index-h5,
 #indexDashboard .index-content .index-h6 {
-    text-align:   center; 
-    margin-left:  auto;
-    margin-right: auto;
+    text-align:         center; 
+    margin-left:        auto;
+    margin-right:       auto;
 }
 
 /* 銀行圖標 (大的) */
 #indexDashboard .index-bank-icon {
-    max-width:    var(--indexDashboard-100px);
-    height:       auto;
-    color:        var(--indexDashboard-global-font-color);
-    margin-left:  unset;
-    margin-right: unset;
-    transition:   var(--indexDashboard-transition);
+    max-width:          var(--indexDashboard-100px);
+    height:             auto;
+    color:              var(--indexDashboard-global-font-color);
+    margin-left:        unset; 
+    margin-right:       unset;
+    transition:         var(--indexDashboard-global-transition);
 }
 
 /* 右箭頭 SVG 圖標 */
 #indexDashboard .index-right-icon {
-    width:       var(--indexDashboard-1em);
-    height:      var(--indexDashboard-1em);
-    margin-left: clamp(14px, 2.5vw, 18px); 
-    color:       var(--indexDashboard-global-font-color);
-    transition:  var(--indexDashboard-transition);
+    width:              var(--indexDashboard-1em);
+    height:             var(--indexDashboard-1em);
+    margin-left:        clamp(14px, 2.5vw, 18px); 
+    color:              var(--indexDashboard-global-font-color);
+    transition:         var(--indexDashboard-global-transition);
 }
 
 /* -------------------------------------- */
 /* --- 4. 面板與卡片結構 (Panel & Card) --- */
 /* -------------------------------------- */
+/* 面板容器 */
 #indexDashboard .index-panel {
     /* 顏色與背景 */
-    background-color: var(--indexDashboard-global-bg-color);
-    color:            var(--indexDashboard-global-font-color);
+    background-color:   var(--indexDashboard-global-bg-color);
+    color:              var(--indexDashboard-global-font-color);
     
-    width:            var(--indexDashboard-width);
-    height:           var(--indexDashboard-heigth);
-    margin-left:      auto;
-    margin-right:     auto;
+    /* 尺寸與居中 */
+    width:              var(--indexDashboard-width);
+    height:             var(--indexDashboard-heigth);
+    margin-left:        auto;
+    margin-right:       auto;
     
     /* 間距與邊框 */
-    padding-top:      var(--indexDashboard-1px);
-    padding-bottom:   var(--indexDashboard-20px);
-    padding-left:     var(--indexDashboard-20px);
-    padding-right:    var(--indexDashboard-20px);
-    border-radius:    var(--indexDashboard-10px);
-    border:           var(--indexDashboard-1px) solid var(--indexDashboard-global-font-color);
-    box-shadow:       var(--indexDashboard-box-shadow);
+    padding-top:        var(--indexDashboard-1px);
+    padding-bottom:     var(--indexDashboard-20px);
+    padding-left:       var(--indexDashboard-20px);
+    padding-right:      var(--indexDashboard-20px);
+    border-radius:      var(--indexDashboard-10px);
+    border:             var(--indexDashboard-1px) solid var(--indexDashboard-global-font-color);
+    box-shadow:         var(--indexDashboard-box-shadow);
 
     /* 動畫 */
-    transition:       var(--indexDashboard-transition);
+    transition:         var(--indexDashboard-global-transition);
 }
 
-/* 讓 Card 內所有文字、標題、和 Icon 置中 */
+/* 模型卡片 */
 #indexDashboard .index-card {
     /* 佈局與置中 */
-    text-align:       center; 
+    text-align:         center; 
     
     /* 顏色與背景 */
-    background-color: var(--indexDashboard-panel-bg-color); 
-    color:            var(--indexDashboard-global-font-color);
+    background-color:   var(--indexDashboard-panel-bg-color); 
+    color:              var(--indexDashboard-global-font-color);
     
     /* 核心 Flex 屬性 */
-    flex:             1 1 100%;
+    flex:               1 1 100%; 
     
     /* 間距與邊框 */
-    padding-top:      var(--indexDashboard-10px);
-    padding-bottom:   var(--indexDashboard-10px);
-    padding-left:     var(--indexDashboard-20px);
-    padding-right:    var(--indexDashboard-20px);
-    border-radius:    var(--indexDashboard-10px);  
-    border:           var(--indexDashboard-1px) solid var(--indexDashboard-global-font-color);
-    box-shadow:       var(--indexDashboard-box-shadow);
+    padding-top:        var(--indexDashboard-10px);
+    padding-bottom:     var(--indexDashboard-10px);
+    padding-left:       var(--indexDashboard-20px);
+    padding-right:      var(--indexDashboard-20px);
+    border-radius:      var(--indexDashboard-10px);  
+    border:             var(--indexDashboard-1px) solid var(--indexDashboard-global-font-color);
+    box-shadow:         var(--indexDashboard-box-shadow);
 
     /* 動畫 */
-    transition:       var(--indexDashboard-transition);
+    transition:         var(--indexDashboard-global-transition);
 }
 
+/* 卡片懸停效果 */
 #indexDashboard .index-card:hover {
-    box-shadow: var(--indexDashboard-box-shadow-hover);
-    transform:  translateY(calc(-1 * var(--indexDashboard-10px)));
+    box-shadow:         var(--indexDashboard-box-shadow-hover);
+    transform:          translateY(calc(-1 * var(--indexDashboard-10px))); 
 }
 
-/* 卡片內容 (圖標+標題) 區塊間隔 */
+/* 卡片內容區塊間隔 */
 #indexDashboard .index-card .index-content {
-    margin-top:    var(--indexDashboard-10px);
-    margin-bottom: var(--indexDashboard-10px);
+    margin-top:         var(--indexDashboard-10px);
+    margin-bottom:      var(--indexDashboard-10px);
 }
 
 /* -------------------------------------- */
 /* --- 5. 模型卡片網格佈局 (Grid) --- */
 /* -------------------------------------- */
+/* Flex 容器 */
 #indexDashboard .index-grid {
-    display:         flex;
-    flex-wrap:       wrap;
-    gap:             var(--indexDashboard-15px);
-    justify-content: center; /* 居中卡片群組 */
+    display:            flex;
+    flex-wrap:          wrap;
+    gap:                var(--indexDashboard-15px);
+    justify-content:    center;
 }
 
 
@@ -173,8 +170,8 @@
 @media (min-width: 577px) { 
     #indexDashboard .index-card {
         /* 2 欄排列 */
-        flex:      1 1 calc(50% - (var(--indexDashboard-15px) / 2));
-        max-width: none;
+        flex:           1 1 calc(50% - (var(--indexDashboard-15px) / 2));
+        max-width:      none;
     }
 }
 
@@ -182,7 +179,7 @@
 @media (min-width: 1024px) {
     #indexDashboard .index-card {
         /* 3 欄排列 */
-        flex:      1 1 calc(33.3333% - (2 * var(--indexDashboard-15px) / 3));
-        max-width: none;
+        flex:           1 1 calc(33.3333% - (2 * var(--indexDashboard-15px) / 3));
+        max-width:      none;
     }
 }

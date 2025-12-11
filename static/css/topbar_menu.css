@@ -198,8 +198,8 @@
 /* --- 2. 主要內容區域 (容器) --- */
 /* -------------------------------------- */
 .topbar-content-gap {
-    /* padding-top 使用 JS 動態更新的 CSS 變數 */
-    padding-top: calc(var(--topbarMenu-dynamic-height) + 10px);
+    /* padding-bottom: calc(var(--topbarMenu-dynamic-height) + var(--topbarMenu-20px)); */
+    padding-bottom: var(--topbarMenu-dynamic-height);
 }
 
 /* -------------------------------------- */
