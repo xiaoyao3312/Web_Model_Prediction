@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from routes.churn_bank_routes import churn_bank_bp  # Blueprint
+from routes.customer_churn_bank_routes import customer_churn_bank_blueprint
 from flask_cors import CORS # 1. 導入 CORS 模組
 import os
 
@@ -8,7 +8,7 @@ app = Flask(__name__)
 CORS(app) # 2. 啟用 CORS
 
 # 註冊 Blueprint
-app.register_blueprint(churn_bank_bp, url_prefix='/api/churn_bank')
+app.register_blueprint(customer_churn_bank_blueprint, url_prefix='/api/customer_churn_bank')
 
 # --- 前端頁面路由 ---
 @app.route('/')
@@ -17,7 +17,7 @@ def index():
 
 @app.route('/customer_churn_bank_model')
 def customer_churn_bank_page():
-    return render_template('churn_bank.html')
+    return render_template('customer_churn_bank.html')
 
 # --- 啟動服務 ---
 if __name__ == '__main__':

@@ -1,4 +1,4 @@
-# C:\Users\user\Desktop\Web_Model_Prediction\projects\Churn_Bank_code\churn_bank_train.py
+# projects\Churn_Bank_code\customer_churn_bank_train.py
 # 銀行客戶流失預測 - XGBoost Optuna/SHAP 整合版 (訓練部分)
 
 import logging
@@ -445,7 +445,7 @@ class ModelTrainer:
         保存模型、特徵工程管道名稱和最佳參數。
         此處加入了 XGBoost 模型的強制修正邏輯，以解決 SHAP 的載入錯誤 (ValueError: could not convert string to float)。
         """
-        model_filename = "churn_bank_model.joblib" 
+        model_filename = "customer_churn_bank_model.joblib" 
         full_model_path = os.path.join(output_path, model_filename)
 
         # ⭐⭐⭐ 關鍵修復：手動修正 base_score 為標準浮點數 ⭐⭐⭐
@@ -453,7 +453,7 @@ class ModelTrainer:
             if isinstance(model, XGBClassifier):
                 
                 # 1. 儲存為臨時的 XGBoost 原生格式 (JSON)，這一步通常能修復大部分元數據
-                temp_model_json_path = os.path.join(output_path, "churn_bank_model_temp.json")
+                temp_model_json_path = os.path.join(output_path, "customer_churn_bank_model_temp.json")
                 model.save_model(temp_model_json_path)
 
                 # 2. 重新載入這個文件到一個新的 XGBoost 實例中
@@ -641,8 +641,8 @@ if __name__ == "__main__":
     
     # 預設路徑 (請根據實際情況修改)
     default_root = os.path.dirname(os.path.abspath(__file__))
-    default_train_path = os.path.join(default_root, "churn_bank_train.csv") 
-    default_test_path = os.path.join(default_root, "churn_bank_test.csv")
+    default_train_path = os.path.join(default_root, "customer_churn_bank_train.csv") 
+    default_test_path = os.path.join(default_root, "customer_churn_bank_test.csv")
 
     parser.add_argument("--train_file", type=str, default=default_train_path, help="訓練數據文件路徑")
     parser.add_argument("--test_file", type=str, default=default_test_path, help="測試數據文件路徑")

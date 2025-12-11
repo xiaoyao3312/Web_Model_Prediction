@@ -1,4 +1,4 @@
-# routes\churn_bank_routes.py
+# routes\customer_churn_bank_routes.py
 import matplotlib
 import matplotlib.font_manager as fm
 import matplotlib.pyplot as plt
@@ -12,7 +12,7 @@ import os
 import io
 
 from flask import Blueprint, jsonify, request, send_file, make_response
-from services.churn_bank_service import ChurnBankService
+from services.customer_churn_bank_service import CustomerChurnBankService
 from typing import Any, Dict, List, Tuple, Callable
 from werkzeug.exceptions import BadRequest
 from config import Config
@@ -25,7 +25,7 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.append(PROJECT_ROOT)
 
 # --- 日誌設定 ---
-logger = logging.getLogger('ChurnBankRoute')
+logger = logging.getLogger('CustomerChurnBankRoute')
 logger.setLevel(logging.INFO)
 
 logger.info("Matplotlib font cache cleanup logic has been removed for stability.")
@@ -210,16 +210,16 @@ def generate_local_shap_chart(shap_data: Dict[str, float], title: str) -> str:
 
 
 # --- Service 實例化與全局資源載入 (保持不變) ---
-CHURN_BANK_SERVICE = None
+CUSTOMER_CHURN_BANK_SERVICE = None
 GLOBAL_SHAP_BASE64 = "" # 用於儲存預先載入的全局 SHAP 圖
 
 try:
     # 1. 初始化模型服務
-    CHURN_BANK_SERVICE = ChurnBankService(
+    CUSTOMER_CHURN_BANK_SERVICE = CustomerChurnBankService(
         model_path=MODEL_PATH_FULL,
         model_dir=MODEL_DIR
     )
-    logger.info("ChurnBankService 成功初始化。")
+    logger.info("CustomerChurnBankService 成功初始化。")
 
     # 2. 載入離線生成的全局 SHAP 圖表
     if os.path.exists(GLOBAL_SHAP_FILE):
@@ -233,12 +233,12 @@ except Exception as e:
     logger.error(f"初始化服務或載入全局資源失敗: {e}")
 
 # --- Blueprint 定義 ---
-churn_bank_bp = Blueprint('churn_bank_bp', __name__)
+customer_churn_bank_blueprint = Blueprint('customer_churn_bank_blueprint', __name__)
 
 # -----------------------------------------------------------------------
 
 ## 📈 單一客戶流失預測 API (保持不變)
-@churn_bank_bp.route('/predict', methods=['POST'])
+@customer_churn_bank_blueprint.route('/predict', methods=['POST'])
 def predict_churn():
     """
     接收單一客戶的 JSON 輸入，進行預測、局部 SHAP 分析，並返回結果。
@@ -273,9 +273,9 @@ def predict_churn():
         feature_importance_text = "模型未初始化，使用模擬預測，無法提供 AI 解釋。"
         final_charts = []
 
-        if CHURN_BANK_SERVICE and CHURN_BANK_SERVICE.model:
+        if CUSTOMER_CHURN_BANK_SERVICE and CUSTOMER_CHURN_BANK_SERVICE.model:
             # 2. 呼叫服務層進行預處理、預測和 SHAP 分析
-            prediction_results = CHURN_BANK_SERVICE.preprocess_and_predict(
+            prediction_results = CUSTOMER_CHURN_BANK_SERVICE.preprocess_and_predict(
                 input_df=input_df, 
                 fe_pipeline_func=FeatureEngineerForAPI.run_v2_preprocessing
             )
@@ -357,7 +357,7 @@ def predict_churn():
         return jsonify({"error": f"伺服器內部錯誤: {e}"}), 500
 
 ## 💾 批次客戶流失預測 API
-@churn_bank_bp.route('/predict_batch', methods=['POST'])
+@customer_churn_bank_blueprint.route('/predict_batch', methods=['POST'])
 def predict_batch():
     """
     接收 CSV 檔案上傳，進行批次流失預測，並返回結果 JSON 數據。
@@ -365,7 +365,7 @@ def predict_batch():
     - 只要有任何缺失，即拒絕整個 CSV 檔案導入。
     """
     logger.info("接收到批次預測請求。")
-    if CHURN_BANK_SERVICE is None or CHURN_BANK_SERVICE.model is None:
+    if CUSTOMER_CHURN_BANK_SERVICE is None or CUSTOMER_CHURN_BANK_SERVICE.model is None:
         logger.error("模型服務未啟動，無法進行批次預測。")
         return jsonify({"error": "模型服務未啟動，無法進行批次預測。"}), 503
 
@@ -422,7 +422,7 @@ def predict_batch():
         logger.info(f"批次預測 - 輔助數據補齊完成。數據筆數: {len(input_df_processed)}")
         
         # 4. 呼叫服務層進行批次預測
-        result_df = CHURN_BANK_SERVICE.predict_batch_csv(
+        result_df = CUSTOMER_CHURN_BANK_SERVICE.predict_batch_csv(
             input_df=input_df_processed, 
             fe_pipeline_func=FeatureEngineerForAPI.run_v2_preprocessing
         )

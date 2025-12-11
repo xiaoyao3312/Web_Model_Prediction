@@ -14,58 +14,59 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 │  檔案架構.txt
 │
 ├─api
-│  └─churn_bank
+│  └─customer_churn_bank
 │          predict
 │          predict_batch
 │
 ├─projects
-│  └─Churn_Bank_code
-│      │  churn_bank_model.joblib
-│      │  churn_bank_shap.py
-│      │  churn_bank_test.csv
-│      │  churn_bank_train.csv
-│      │  churn_bank_train.py
+│  └─customer_churn_bank_code
+│      │  customer_churn_bank_model.joblib
+│      │  customer_churn_bank_shap.py
+│      │  customer_churn_bank_test.csv
+│      │  customer_churn_bank_train.csv
+│      │  customer_churn_bank_train.py
 │      │  feature_columns.joblib
 │      │  fe_pipeline_name.txt
 │      │  shap_summary_plot.png
 │      │  submission.csv
 │      │
 │      └─__pycache__
-│              churn_bank_train.cpython-311.pyc
+│              customer_churn_bank_shap.cpython-311.pyc
+│              customer_churn_bank_train.cpython-311.pyc
 │
 ├─routes
-│  │  churn_bank_routes.py
+│  │  customer_churn_bank_routes.py
 │  │
 │  └─__pycache__
-│          churn_bank_routes.cpython-311.pyc
+│          customer_churn_bank_routes.cpython-311.pyc
 │
 ├─services
-│  │  churn_bank_service.py
+│  │  customer_churn_bank_service.py
 │  │  gemini_service.py
 │  │
 │  └─__pycache__
-│          churn_bank_service.cpython-311.pyc
+│          customer_churn_bank_service.cpython-311.pyc
 │
 ├─static
 │  ├─css
-│  │      churn_bank.css
+│  │      customer_churn_bank.css
 │  │      fab_color_control.css
 │  │      general.css
-│  │      index.css
+│  │      index_dashboard.css
 │  │      topbar_menu.css
 │  │
 │  ├─img
-│  │      churn_bank.jpg
+│  │      customer_churn_bank.jpg
 │  │      doro.gif
 │  │      logo.png
 │  │
 │  └─js
-│          churn_bank.js
+│          customer_churn_bank.js
 │          fab_color_control.js
 │          topbar_menu.js
 │
 ├─templates
-│      churn_bank.html
+│      customer_churn_bank.html
 │      index.html
 │
 └─__pycache__

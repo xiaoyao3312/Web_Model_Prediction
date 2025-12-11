@@ -1,4 +1,4 @@
-# services/churn_bank_service.py
+# services\customer_churn_bank_service.py
 import pandas as pd
 import numpy as np
 import logging
@@ -11,10 +11,10 @@ from typing import Dict, Any, List, Callable
 # 🚨 為了讓服務能獨立運行，我們不直接從 train.py 導入 FeatureEngineer，而是假設
 # 外部會提供 FE 函數（例如 routes.py 中的 FeatureEngineerForAPI）
 
-logger = logging.getLogger('ChurnBankService')
+logger = logging.getLogger('CustomerChurnBankService')
 logger.setLevel(logging.INFO)
 
-class ChurnBankService:
+class CustomerChurnBankService:
     def __init__(self, model_path: str, model_dir: str):
         self.model = self._load_model(model_path)
         self.model_dir = model_dir

@@ -1,4 +1,4 @@
-# C:\Users\user\Desktop\Web_Model_Prediction\projects\Churn_Bank_code\churn_bank_shap.py
+# projects\customer_churn_bank_code\customer_churn_bank_shap.py
 # 銀行客戶流失預測 - SHAP 值分析 (最終修復版：物理文件修復與正確載入)
 
 import logging
@@ -26,7 +26,7 @@ try:
     import shap
     import matplotlib.pyplot as plt
     # 導入訓練腳本中的 FeatureEngineer 類和 Config
-    from churn_bank_train import FeatureEngineer, Config 
+    from customer_churn_bank_train import FeatureEngineer, Config
 except ImportError as e:
     logger.error(f"錯誤: 缺少必要的庫。請執行 pip install numpy pandas xgboost shap matplotlib scikit-learn: {e}")
     sys.exit(1)
@@ -46,7 +46,7 @@ class ShapAnalyzer:
 
     def load_artifacts(self) -> bool:
         """加載模型、FE 管道名稱和特徵列表。"""
-        model_path = os.path.join(self.model_dir, "churn_bank_model.joblib")
+        model_path = os.path.join(self.model_dir, "customer_churn_bank_model.joblib")
         fe_name_path = os.path.join(self.model_dir, 'fe_pipeline_name.txt')
         feature_cols_path = os.path.join(self.model_dir, 'feature_columns.joblib')
 
@@ -221,7 +221,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="銀行客戶流失預測 - SHAP 分析腳本")
     
     default_root = os.path.dirname(os.path.abspath(__file__))
-    default_train_path = os.path.join(default_root, "churn_bank_train.csv") 
+    default_train_path = os.path.join(default_root, "customer_churn_bank_train.csv") 
 
     parser.add_argument("--train_file", type=str, default=default_train_path, help="訓練數據文件路徑")
     

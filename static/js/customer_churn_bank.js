@@ -15,8 +15,8 @@ const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.locatio
     ? 'http://127.0.0.1:5000' 
     : 'https://ai-churn-prediction-system.onrender.com';
 
-const API_PREDICT_ENDPOINT = '/api/churn_bank/predict';
-const API_BATCH_ENDPOINT = '/api/churn_bank/predict_batch';
+const API_PREDICT_ENDPOINT = '/api/customer_churn_bank/predict';
+const API_BATCH_ENDPOINT = '/api/customer_churn_bank/predict_batch';
 
 // ★★★ 全域變數用來儲存批次資料和排序狀態 (已移除 missing_count) ★★★
 let globalBatchData = [];       // 儲存當前篩選和排序後的數據 (用於渲染分頁)

@@ -26,11 +26,12 @@ python app.py
 服務將預設在 https://www.google.com/search?q=http://127.0.0.1:5000/ 運行。
 
 如果模型首次放入 需要訓練拿到權重
-cd C:\Users\user\Desktop\Web_Model_Prediction\projects\Churn_Bank_code
-python churn_bank_train.py
-python churn_bank_shap.py
 
-這是 churn_bank 所需要的重要欄位
+cd C:\Users\user\Desktop\Web_Model_Prediction\projects\customer_churn_bank_code
+python customer_churn_bank_train.py
+python customer_churn_bank_shap.py
+
+這是 customer_churn_bank 所需要的重要欄位
 id CreditScore	Geography	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary
 
 幫我更改 給我完整程式碼
