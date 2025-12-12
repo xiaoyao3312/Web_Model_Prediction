@@ -61,118 +61,105 @@
                 <h6 class="bank-card-title hint">上傳包含客戶資料的 CSV 檔案進行批次預測。</h6>
             </div>
 
-            <div class="bank-card bank-input-feature-panel ">
+            <div class="bank-card bank-input-feature-panel">
                 <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M256.1 312C322.4 312 376.1 258.3 376.1 192C376.1 125.7 322.4 72 256.1 72C189.8 72 136.1 125.7 136.1 192C136.1 258.3 189.8 312 256.1 312zM226.4 368C127.9 368 48.1 447.8 48.1 546.3C48.1 562.7 61.4 576 77.8 576L274.3 576L285.2 521.5C289.5 499.8 300.2 479.9 315.8 464.3L383.1 397C355.1 378.7 321.7 368.1 285.7 368.1L226.3 368.1zM332.3 530.9L320.4 590.5C320.2 591.4 320.1 592.4 320.1 593.4C320.1 601.4 326.6 608 334.7 608C335.7 608 336.6 607.9 337.6 607.7L397.2 595.8C409.6 593.3 421 587.2 429.9 578.3L548.8 459.4L468.8 379.4L349.9 498.3C341 507.2 334.9 518.6 332.4 531zM600.1 407.9C622.2 385.8 622.2 350 600.1 327.9C578 305.8 542.2 305.8 520.1 327.9L491.3 356.7L571.3 436.7L600.1 407.9z"/></svg>單筆客戶特徵輸入 (10 項)</h3>
-                
 
-                <div class="input-section">
                     
-                    <div id="inputForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
-                        <div class="input-field-container">
-                            <label>1. 信用分數 ( 350 - 850 )</label>
-                            <input type="number" id="input_CreditScore" data-feature-name="CreditScore" value="700" step="1" class="bank-input-field">
-                        </div>
-                        <div class="input-field-container">
-                            <label>2. 年齡 ( 18 - 100 歲 )</label>
-                            <input type="number" id="input_Age" data-feature-name="Age" value="35" step="1" class="bank-input-field">
-                        </div>
-                        <div class="input-field-container">
-                            <label>3. 服務年限 ( 0 - 10 年 )</label>
-                            <input type="number" id="input_Tenure" data-feature-name="Tenure" value="8" step="1" class="bank-input-field">
-                        </div>
-                        <div class="input-field-container">
-                            <label>4. 餘額 ( 0-300000 $ )</label>
-                            <input type="number" id="input_Balance" data-feature-name="Balance" value="150000" class="bank-input-field">
-                        </div>
-                        
-                        <div class="input-field-container dropdown-container" data-dropdown-id="NumOfProducts">
-                            <label>5. 產品數量 ( 1 - 4 )</label>
-                            <input type="text" id="input_NumOfProducts" data-feature-name="NumOfProducts" data-value="2" value="2" readonly class="bank-input-field dropdown-input" placeholder="選擇產品數量">
-                            <div class="dropdown-list hidden">
-                                <div class="dropdown-item" data-value="1">1</div>
-                                <div class="dropdown-item" data-value="2">2</div>
-                                <div class="dropdown-item" data-value="3">3</div>
-                                <div class="dropdown-item" data-value="4">4</div>
-                            </div>
-                        </div>
-                        
-                        <div class="input-field-container dropdown-container" data-dropdown-id="HasCrbank-card">
-                            <label>6. 持有信用卡 ( 0 : 否 / 1 : 是 )</label>
-                            <input type="text" id="input_HasCrbank-card" data-feature-name="HasCrbank-card" data-value="1" value="1 (是)" readonly class="bank-input-field dropdown-input" placeholder="選擇是否持有信用卡">
-                            <div class="dropdown-list hidden">
-                                <div class="dropdown-item" data-value="0">0 (否)</div>
-                                <div class="dropdown-item" data-value="1">1 (是)</div>
-                            </div>
-                        </div>
-                        
-                        <div class="input-field-container dropdown-container" data-dropdown-id="IsActiveMember">
-                            <label>7. 活躍會員 ( 0 : 否 / 1 : 是 )</label>
-                            <input type="text" id="input_IsActiveMember" data-feature-name="IsActiveMember" data-value="1" value="1 (是)" readonly class="bank-input-field dropdown-input" placeholder="選擇是否為活躍會員">
-                            <div class="dropdown-list hidden">
-                                <div class="dropdown-item" data-value="0">0 (否)</div>
-                                <div class="dropdown-item" data-value="1">1 (是)</div>
-                            </div>
-                        </div>
-                        
-                        <div class="input-field-container">
-                            <label>8. 估計薪資 ( 0 - 200000 $ )</label>
-                            <input type="number" id="input_EstimatedSalary" data-feature-name="EstimatedSalary" value="100000" class="bank-input-field">
-                        </div>
-
-                        <div class="input-field-container dropdown-container" data-dropdown-id="Geography">
-                            <label>9. 國家/地區 ( 0 : 法國 1 : 西班牙 2 : 德國 )</label>
-                            <input type="text" id="input_Geography" data-feature-name="Geography" data-value="2" value="2 (德國)" readonly class="bank-input-field dropdown-input" placeholder="選擇國家/地區">
-                            <div class="dropdown-list hidden">
-                                <div class="dropdown-item" data-value="0">0 (法國)</div>
-                                <div class="dropdown-item" data-value="1">1 (西班牙)</div>
-                                <div class="dropdown-item" data-value="2">2 (德國)</div>
-                            </div>
-                        </div>
-                        
-                        <div class="input-field-container dropdown-container" data-dropdown-id="Gender">
-                            <label>10. 性別 ( 0 : 男 / 1 : 女 )</label>
-                            <input type="text" id="input_Gender" data-feature-name="Gender" data-value="1" value="1 (女)" readonly class="bank-input-field dropdown-input" placeholder="選擇性別">
-                            <div class="dropdown-list hidden">
-                                <div class="dropdown-item" data-value="0">0 (男)</div>
-                                <div class="dropdown-item" data-value="1">1 (女)</div>
-                            </div>
+                <div id="inputForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                    <div class="input-field-container">
+                        <label>1. 信用分數 ( 350 - 850 )</label>
+                        <input type="number" id="input_CreditScore" data-feature-name="CreditScore" value="700" step="1" class="bank-input-field">
+                    </div>
+                    <div class="input-field-container">
+                        <label>2. 年齡 ( 18 - 100 歲 )</label>
+                        <input type="number" id="input_Age" data-feature-name="Age" value="35" step="1" class="bank-input-field">
+                    </div>
+                    <div class="input-field-container">
+                        <label>3. 服務年限 ( 0 - 10 年 )</label>
+                        <input type="number" id="input_Tenure" data-feature-name="Tenure" value="8" step="1" class="bank-input-field">
+                    </div>
+                    <div class="input-field-container">
+                        <label>4. 餘額 ( 0-300000 $ )</label>
+                        <input type="number" id="input_Balance" data-feature-name="Balance" value="150000" class="bank-input-field">
+                    </div>
+                    
+                    <div class="input-field-container dropdown-container" data-dropdown-id="NumOfProducts">
+                        <label>5. 產品數量 ( 1 - 4 )</label>
+                        <input type="text" id="input_NumOfProducts" data-feature-name="NumOfProducts" data-value="2" value="2" readonly class="bank-input-field dropdown-input" placeholder="選擇產品數量">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="1">1</div>
+                            <div class="dropdown-item" data-value="2">2</div>
+                            <div class="dropdown-item" data-value="3">3</div>
+                            <div class="dropdown-item" data-value="4">4</div>
                         </div>
                     </div>
-
-                    <div class="action-buttons-container flex flex-col sm:flex-row gap-3 mt-4">
-                        
-                        <button id="predictOnlyBtn" class="bank-analyze-btn flex-grow">
-                            <i class="fas fa-chart-line mr-1"></i>
-                            <span>僅執行模型預測</span>
-                        </button>
+                    
+                    <div class="input-field-container dropdown-container" data-dropdown-id="HasCrbank-card">
+                        <label>6. 持有信用卡 ( 0 : 否 / 1 : 是 )</label>
+                        <input type="text" id="input_HasCrbank-card" data-feature-name="HasCrbank-card" data-value="1" value="1 (是)" readonly class="bank-input-field dropdown-input" placeholder="選擇是否持有信用卡">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (否)</div>
+                            <div class="dropdown-item" data-value="1">1 (是)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-field-container dropdown-container" data-dropdown-id="IsActiveMember">
+                        <label>7. 活躍會員 ( 0 : 否 / 1 : 是 )</label>
+                        <input type="text" id="input_IsActiveMember" data-feature-name="IsActiveMember" data-value="1" value="1 (是)" readonly class="bank-input-field dropdown-input" placeholder="選擇是否為活躍會員">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (否)</div>
+                            <div class="dropdown-item" data-value="1">1 (是)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-field-container">
+                        <label>8. 估計薪資 ( 0 - 200000 $ )</label>
+                        <input type="number" id="input_EstimatedSalary" data-feature-name="EstimatedSalary" value="100000" class="bank-input-field">
                     </div>
 
+                    <div class="input-field-container dropdown-container" data-dropdown-id="Geography">
+                        <label>9. 國家/地區 ( 0 : 法國 1 : 西班牙 2 : 德國 )</label>
+                        <input type="text" id="input_Geography" data-feature-name="Geography" data-value="2" value="2 (德國)" readonly class="bank-input-field dropdown-input" placeholder="選擇國家/地區">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (法國)</div>
+                            <div class="dropdown-item" data-value="1">1 (西班牙)</div>
+                            <div class="dropdown-item" data-value="2">2 (德國)</div>
+                        </div>
+                    </div>
+                    
+                    <div class="input-field-container dropdown-container" data-dropdown-id="Gender">
+                        <label>10. 性別 ( 0 : 男 / 1 : 女 )</label>
+                        <input type="text" id="input_Gender" data-feature-name="Gender" data-value="1" value="1 (女)" readonly class="bank-input-field dropdown-input" placeholder="選擇性別">
+                        <div class="dropdown-list hidden">
+                            <div class="dropdown-item" data-value="0">0 (男)</div>
+                            <div class="dropdown-item" data-value="1">1 (女)</div>
+                        </div>
+                    </div>
                 </div>
 
-                <hr class="bank-card-divider">
+
+                <div class="bank-input-feature-container"> 
+                    <button class="bank-analyze-btn" id="predictOnlyBtn"><svg class="bank-card-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M128 128C128 110.3 113.7 96 96 96C78.3 96 64 110.3 64 128L64 464C64 508.2 99.8 544 144 544L544 544C561.7 544 576 529.7 576 512C576 494.3 561.7 480 544 480L144 480C135.2 480 128 472.8 128 464L128 128zM534.6 214.6C547.1 202.1 547.1 181.8 534.6 169.3C522.1 156.8 501.8 156.8 489.3 169.3L384 274.7L326.6 217.4C314.1 204.9 293.8 204.9 281.3 217.4L185.3 313.4C172.8 325.9 172.8 346.2 185.3 358.7C197.8 371.2 218.1 371.2 230.6 358.7L304 285.3L361.4 342.7C373.9 355.2 394.2 355.2 406.7 342.7L534.7 214.7z"/></svg><span>僅執行模型預測</span></button>
+                </div>   
+
+
+                <h6 class="bank-card-title hint">請填寫客戶屬性以計算流失風險。</h6>
             </div>
 
             <div class="bank-card bank-ai-prompt-panel ">
-                <div class="prompt-section">
-                        <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M320 544C461.4 544 576 436.5 576 304C576 171.5 461.4 64 320 64C178.6 64 64 171.5 64 304C64 358.3 83.2 408.3 115.6 448.5L66.8 540.8C62 549.8 63.5 560.8 70.4 568.3C77.3 575.8 88.2 578.1 97.5 574.1L215.9 523.4C247.7 536.6 282.9 544 320 544zM192 272C209.7 272 224 286.3 224 304C224 321.7 209.7 336 192 336C174.3 336 160 321.7 160 304C160 286.3 174.3 272 192 272zM320 272C337.7 272 352 286.3 352 304C352 321.7 337.7 336 320 336C302.3 336 288 321.7 288 304C288 286.3 302.3 272 320 272zM416 304C416 286.3 430.3 272 448 272C465.7 272 480 286.3 480 304C480 321.7 465.7 336 448 336C430.3 336 416 321.7 416 304z"/></svg>AI 解釋/行動建議 指令</h3>
-                        
-                        <div class="input-field-container">
-                            <label>請輸入您希望 AI 如何解釋預測結果：</label>
-                            <textarea id="aiPrompt" 
-                                        rows="5" 
-                                        class="bank-input-field"
-                                        placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">請作為一名資產管理顧問，根據客戶的流失機率和輸入特徵，提供一份專業的風險分析報告，包含：1. 風險評估等級。2. 主要風險點。3. 建議採取的客戶留存行動。請使用條列式呈現並且簡單扼要，約500個Tokens內。</textarea>
-                        </div>
-                        
-                        <div class="action-buttons-container flex flex-col sm:flex-row gap-3 mt-4">
-                            <button id="AiAnalyzeButton" class="bank-analyze-btn" disabled>
-                                <i class="fas fa-robot mr-1"></i>
-                                <span>執行模型預測並取得 AI 解釋</span>
-                            </button>
-                            
-                        </div>
-                    <p id="errorMsg" class="text-sm mt-3 text-red-500 hidden"></p> 
+                <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M320 544C461.4 544 576 436.5 576 304C576 171.5 461.4 64 320 64C178.6 64 64 171.5 64 304C64 358.3 83.2 408.3 115.6 448.5L66.8 540.8C62 549.8 63.5 560.8 70.4 568.3C77.3 575.8 88.2 578.1 97.5 574.1L215.9 523.4C247.7 536.6 282.9 544 320 544zM192 272C209.7 272 224 286.3 224 304C224 321.7 209.7 336 192 336C174.3 336 160 321.7 160 304C160 286.3 174.3 272 192 272zM320 272C337.7 272 352 286.3 352 304C352 321.7 337.7 336 320 336C302.3 336 288 321.7 288 304C288 286.3 302.3 272 320 272zM416 304C416 286.3 430.3 272 448 272C465.7 272 480 286.3 480 304C480 321.7 465.7 336 448 336C430.3 336 416 321.7 416 304z"/></svg>AI 解釋/行動建議 指令</h3>
+                
+                <div class="input-field-container">
+                    <textarea class="bank-input-field" id="aiPrompt" rows="5" 
+                        placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">請作為一名資產管理顧問，根據客戶的流失機率和輸入特徵，提供一份專業的風險分析報告，包含：1. 風險評估等級。2. 主要風險點。3. 建議採取的客戶留存行動。請使用條列式呈現並且簡單扼要，約500個Tokens內。
+                    </textarea>
                 </div>
+                
+                <div class="bank-ai-prompt-container"> 
+                    <button id="AiAnalyzeButton" class="bank-analyze-btn" disabled><svg class="bank-card-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M352 64C352 46.3 337.7 32 320 32C302.3 32 288 46.3 288 64L288 128L192 128C139 128 96 171 96 224L96 448C96 501 139 544 192 544L448 544C501 544 544 501 544 448L544 224C544 171 501 128 448 128L352 128L352 64zM160 432C160 418.7 170.7 408 184 408L216 408C229.3 408 240 418.7 240 432C240 445.3 229.3 456 216 456L184 456C170.7 456 160 445.3 160 432zM280 432C280 418.7 290.7 408 304 408L336 408C349.3 408 360 418.7 360 432C360 445.3 349.3 456 336 456L304 456C290.7 456 280 445.3 280 432zM400 432C400 418.7 410.7 408 424 408L456 408C469.3 408 480 418.7 480 432C480 445.3 469.3 456 456 456L424 456C410.7 456 400 445.3 400 432zM224 240C250.5 240 272 261.5 272 288C272 314.5 250.5 336 224 336C197.5 336 176 314.5 176 288C176 261.5 197.5 240 224 240zM368 288C368 261.5 389.5 240 416 240C442.5 240 464 261.5 464 288C464 314.5 442.5 336 416 336C389.5 336 368 314.5 368 288zM64 288C64 270.3 49.7 256 32 256C14.3 256 0 270.3 0 288L0 384C0 401.7 14.3 416 32 416C49.7 416 64 401.7 64 384L64 288zM608 256C590.3 256 576 270.3 576 288L576 384C576 401.7 590.3 416 608 416C625.7 416 640 401.7 640 384L640 288C640 270.3 625.7 256 608 256z"/></svg><span>執行模型預測並取得 AI 解釋</span></button>
+                </div>
+                <p id="errorMsg" class="text-sm mt-3 text-red-500 hidden"></p> 
+                <h6 class="bank-card-title hint">請在上方輸入您希望 AI 如何解釋預測結果。</h6>
             </div>
 
             <div class="bank-ai-explanation-panel bank-card">
@@ -186,9 +173,10 @@
             <div class="bank-card bank-chart-panel">
                 <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M96 96C113.7 96 128 110.3 128 128L128 464C128 472.8 135.2 480 144 480L544 480C561.7 480 576 494.3 576 512C576 529.7 561.7 544 544 544L144 544C99.8 544 64 508.2 64 464L64 128C64 110.3 78.3 96 96 96zM304 160C310.7 160 317.1 162.8 321.7 167.8L392.8 245.3L439 199C448.4 189.6 463.6 189.6 472.9 199L536.9 263C541.4 267.5 543.9 273.6 543.9 280L543.9 392C543.9 405.3 533.2 416 519.9 416L215.9 416C202.6 416 191.9 405.3 191.9 392L191.9 280C191.9 274 194.2 268.2 198.2 263.8L286.2 167.8C290.7 162.8 297.2 160 303.9 160z"/></svg>模型內建輸出圖表顯示區</h3>
                 
-                <div id="chartDisplay" class="chart-display grid grid-cols-1  gap-4">
-                    <div class="chart-placeholder flex items-center justify-center">圖表 1: **單一客戶局部 SHAP 影響力**</div>
-                    <div class="chart-placeholder flex items-center justify-center">圖表 2: **模型全局 SHAP 摘要圖**</div>
+                <div class="chart-display" id="chartDisplay">
+                    <div class="chart-placeholder ">圖表 1: **模型全局 SHAP 摘要圖**</div>
+                    <div class="chart-placeholder ">圖表 2: **單一客戶局部 SHAP 影響力**</div>
+                    
                 </div>
             </div>
         </div>
@@ -245,7 +233,7 @@
                 <span id="pageInfo" class="text-gray-700"> / ?</span>
                 <button id="nextPageBtn" class="bank-analyze-btn text-sm">下一頁 <i class="fas fa-chevron-right"></i></button>
             </div>
-            
+            <h6 class="bank-card-title hint"></h6>
         </div>
     </div>
     

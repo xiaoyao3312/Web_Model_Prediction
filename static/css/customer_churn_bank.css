@@ -186,7 +186,11 @@
     overflow:  hidden;
 }
 #customerChurnBank .bank-api-key-panel .bank-api-key-container,
-#customerChurnBank .bank-batch-upload-panel .bank-batch-upload-container {
+#customerChurnBank .bank-batch-upload-panel .bank-batch-upload-container,
+#customerChurnBank .bank-input-feature-panel .bank-input-feature-container,
+#customerChurnBank .bank-ai-prompt-panel .bank-ai-prompt-container {
+    margin-top:  10px;
+    margin-bottom:  10px;
     display:        flex;
     gap:            10px;
     align-items:    center;
@@ -280,9 +284,9 @@
     display:               grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
     
-    
     /* 間距 */
-    gap: 1rem;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
 /* 2.5 篩選控制 Flex 佈局 */
@@ -310,13 +314,8 @@
 /* 2.6 圖表佔位符 */
 #customerChurnBank .chart-placeholder {
     /* 尺寸與定位 */
-    height:         300px;
-    display:        flex;
-    flex-direction: column;
-    align-items:    center; 
-    justify-content: center; 
-    text-align:     center;
-    
+    width: auto;
+    height:         auto;
     
     /* 顏色與背景 */
     background-color:   color-mix(in srgb, var(--fabColorControl-panel-bg-color) 80%, var(--global-bg-color));
@@ -719,8 +718,6 @@
 #customerChurnBank .items-center { align-items: center; }
 #customerChurnBank .justify-center { justify-content: center; }
 #customerChurnBank .whitespace-nowrap { white-space: nowrap; }
-#customerChurnBank .grid { display: grid; }
-#customerChurnBank .grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
 #customerChurnBank .w-32 { width: 8rem; }
 #customerChurnBank .w-60px { width: 60px; }
 #customerChurnBank .text-sm { font-size: 0.875rem; }
@@ -743,17 +740,8 @@
     #customerChurnBank .bank-batch-upload-panel .bank-batch-upload-container {
         flex-direction: row;
     }
-    #customerChurnBank .action-buttons-container { 
-        flex-direction: row;
-    }
 }
 
-/* 8.2 螢幕寬度 >= 768px (Medium Breakpoint) */
-@media (min-width: 768px) {
-    #customerChurnBank .chart-display { 
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-}
 
 /* 8.3 螢幕寬度 >= 1024px (Large Breakpoint) - 啟用 Grid 佈局 */
 @media (min-width: 1024px) {
@@ -800,10 +788,7 @@
         overflow-y: visible;
         min-height: unset; 
     }
-    
-    #customerChurnBank .chart-display {
-        grid-template-columns: repeat(1, minmax(0, 1fr));
-    }
+
 
     /* 篩選控制切換為垂直堆疊 */
     #customerChurnBank .filter-controls {
@@ -834,10 +819,6 @@
         
     }
     
-    /* 按鈕容器切換為垂直堆疊 */
-    #customerChurnBank .action-buttons-container { 
-        flex-direction: column;
-    }
     
     /* 批次檔案上傳控制切換為垂直堆疊 */
     #customerChurnBank .batch-upload-area > .flex { 

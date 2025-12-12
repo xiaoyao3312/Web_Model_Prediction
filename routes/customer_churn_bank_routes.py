@@ -290,20 +290,20 @@ def predict_churn():
                 f"Individual SHAP Local Influence (Churn Probability: {proba_churn:.4f})"
             )
             
-            # 4. 組裝局部圖表結果
-            if chart_base64_local:
-                final_charts.append({
-                    "type": "image/png", 
-                    "base64_data": chart_base64_local,
-                    "title": f"單一客戶局部 SHAP 影響力分析 ( 流失機率 : {proba_churn:.4f} )"
-                })
-
-            # 5. 加入全局 SHAP 圖表 (如果已載入)
+            # 4. 加入全局 SHAP 圖表 (如果已載入)
             if GLOBAL_SHAP_BASE64:
                 final_charts.append({
                     "type": "image/png", 
                     "base64_data": GLOBAL_SHAP_BASE64,
-                    "title": "模型全局 SHAP 摘要圖 (整體特徵重要性)"
+                    "title": "模型全局 SHAP 特徵圖 (整體特徵重要性)"
+                })
+
+            # 5. 組裝局部圖表結果
+            if chart_base64_local:
+                final_charts.append({
+                    "type": "image/png", 
+                    "base64_data": chart_base64_local,
+                    "title": f"單筆客戶 SHAP 特徵分析 流失機率 : {proba_churn:.4f}"
                 })
                 
             # 6. 處理可讀性輸出
