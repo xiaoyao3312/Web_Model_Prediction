@@ -6,10 +6,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>銀行客戶流失預測 - 客戶流失預測平台</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_churn_bank.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar_menu.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/fab_color_control.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/general.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/topbar_menu.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/customer_churn_bank.css') }}">
 </head>
 <body>
 
@@ -23,13 +23,13 @@
         </div>
         <div class="topbar-nav-links">
             <a class="topbar-nav-item {% if request.path == url_for('index') %} active {% endif %}" href="{{ url_for('index') }}" >
-                <button class="topbar-nav-button">
+                <button class="topbar-nav-button" title="首頁">
                     <svg class="topbar-nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M298.2 72.6C310.5 61.2 329.5 61.2 341.7 72.6L432 156.3L432 144C432 126.3 446.3 112 464 112L496 112C513.7 112 528 126.3 528 144L528 245.5L565.8 280.6C575.4 289.6 578.6 303.5 573.8 315.7C569 327.9 557.2 336 544 336L528 336L528 512C528 547.3 499.3 576 464 576L176 576C140.7 576 112 547.3 112 512L112 336L96 336C82.8 336 71 327.9 66.2 315.7C61.4 303.5 64.6 289.5 74.2 280.6L298.2 72.6zM304 384C277.5 384 256 405.5 256 432L256 528L384 528L384 432C384 405.5 362.5 384 336 384L304 384z"/></svg>
                     <span class="topbar-nav-text">首頁</span>
                 </button>
             </a>
             <a class="topbar-nav-item {% if request.path == url_for('customer_churn_bank_page') %} active {% endif %}" href="{{ url_for('customer_churn_bank_page') }}" >
-                <button class="topbar-nav-button">
+                <button class="topbar-nav-button" title="銀行客戶流失 - 預測分析模型">
                     <svg class="topbar-nav-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path path fill="currentColor" d="M335.9 84.2C326.1 78.6 314 78.6 304.1 84.2L80.1 212.2C67.5 219.4 61.3 234.2 65 248.2C68.7 262.2 81.5 272 96 272L128 272L128 480L128 480L76.8 518.4C68.7 524.4 64 533.9 64 544C64 561.7 78.3 576 96 576L544 576C561.7 576 576 561.7 576 544C576 533.9 571.3 524.4 563.2 518.4L512 480L512 272L544 272C558.5 272 571.2 262.2 574.9 248.2C578.6 234.2 572.4 219.4 559.8 212.2L335.8 84.2zM464 272L464 480L400 480L400 272L464 272zM352 272L352 480L288 480L288 272L352 272zM240 272L240 480L176 480L176 272L240 272zM320 160C337.7 160 352 174.3 352 192C352 209.7 337.7 224 320 224C302.3 224 288 209.7 288 192C288 174.3 302.3 160 320 160z"/></svg>
                     <span class="topbar-nav-text">客戶流失 銀行</span>
                 </button>
@@ -40,33 +40,29 @@
     <div class="topbar-content-gap" id="topbarContentGap"></div>
 
     <div id="customerChurnBank">
-        <h2 class="bank-h2">銀行客戶流失 - 預測分析模型</h2>
-        
-        <div class="bank-panel-grid">
+        <h2>銀行客戶流失 - 預測分析模型</h2>
+        <div class="bank-card-panel-grid">
             
-            <div class="api-key-panel card">
-                <h2 class="card-title"><i class="fas fa-key mr-2"></i> Gemini API 啟用</h2>
-                <div class="api-key-container">
-                    <input type="password" id="apiKey" placeholder="請輸入 Gemini API Key..." class="theme-input-field" title="在此輸入您的 Gemini API Key">
-                    <button id="saveApiKeyBtn" class="analyze-btn analyze-predict-only" title="啟用 Gemini AI 功能">
-                        <i class="fas fa-check"></i>
-                        <span class="key-status-text">尚未啟用</span>
-                    </button>
+            <div class="bank-card bank-api-key-panel">
+                <h4 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path path fill="currentColor" d="M400 416C497.2 416 576 337.2 576 240C576 142.8 497.2 64 400 64C302.8 64 224 142.8 224 240C224 258.7 226.9 276.8 232.3 293.7L71 455C66.5 459.5 64 465.6 64 472L64 552C64 565.3 74.7 576 88 576L168 576C181.3 576 192 565.3 192 552L192 512L232 512C245.3 512 256 501.3 256 488L256 448L296 448C302.4 448 308.5 445.5 313 441L346.3 407.7C363.2 413.1 381.3 416 400 416zM440 160C462.1 160 480 177.9 480 200C480 222.1 462.1 240 440 240C417.9 240 400 222.1 400 200C400 177.9 417.9 160 440 160z"/></svg>Gemini API 啟用</h4>
+                <div class="bank-api-key-container">
+                    <input class="bank-input-field" type="password" id="bankApiKey" placeholder="請輸入 Gemini API Key..." title="在此輸入您的 Gemini API Key">
+                    <button class="bank-analyze-btn" id="saveApiKeyBtn"  title="啟用 Gemini AI 功能"><svg class="bank-card-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path path fill="currentColor" d="M184 120C184 89.1 209.1 64 240 64L264 64C281.7 64 296 78.3 296 96L296 544C296 561.7 281.7 576 264 576L232 576C202.2 576 177.1 555.6 170 528C169.3 528 168.7 528 168 528C123.8 528 88 492.2 88 448C88 430 94 413.4 104 400C84.6 385.4 72 362.2 72 336C72 305.1 89.6 278.2 115.2 264.9C108.1 252.9 104 238.9 104 224C104 179.8 139.8 144 184 144L184 120zM456 120L456 144C500.2 144 536 179.8 536 224C536 239 531.9 253 524.8 264.9C550.5 278.2 568 305 568 336C568 362.2 555.4 385.4 536 400C546 413.4 552 430 552 448C552 492.2 516.2 528 472 528C471.3 528 470.7 528 470 528C462.9 555.6 437.8 576 408 576L376 576C358.3 576 344 561.7 344 544L344 96C344 78.3 358.3 64 376 64L400 64C430.9 64 456 89.1 456 120z"/></svg><span class="bank-api-key-status">尚未啟用</span></button>
                 </div>
-                <p id="apiStatusMsg" class="text-sm mt-2 text-red-500">請輸入 Key 以啟用 AI 解釋功能。</p>
+                <p class="bank-card-title" id="apiStatusMsg" >請輸入 Key 以啟用 AI 解釋功能。</p>
             </div>
 
-            <div class="input-and-prompt-panel card">
+            <div class="input-and-prompt-panel bank-card">
                 
                 <div class="batch-upload-container">
-                    <h2 class="card-title"><i class="fas fa-upload mr-2"></i> 批次 CSV 分析/客戶單筆輸入</h2>
-                    <hr class="card-divider">
+                    <h2 class="bank-card-title"><i class="fas fa-upload mr-2"></i> 批次 CSV 分析/客戶單筆輸入</h2>
+                    <hr class="bank-card-divider">
                     <div class="batch-upload-area">
-                        <h3 class="card-title text-base font-semibold" style="margin-bottom: 0.5rem;"><i class="fas fa-file-csv mr-1"></i> 批次 CSV 分析</h3>
+                        <h3 class="bank-card-title text-base font-semibold" style="margin-bottom: 0.5rem;"><i class="fas fa-file-csv mr-1"></i> 批次 CSV 分析</h3>
                         <p class="text-sm text-gray-500 mb-4">上傳包含客戶資料的 CSV 檔案進行批次預測。</p>
                         <div class="flex flex-col sm:flex-row gap-3">
-                            <input type="file" id="csvFileInput" accept=".csv" class="theme-input-field flex-grow cursor-pointer" style="max-width: unset;">
-                            <button id="uploadBatchBtn" class="analyze-btn analyze-predict-only">
+                            <input type="file" id="csvFileInput" accept=".csv" class="bank-input-field flex-grow cursor-pointer" style="max-width: unset;">
+                            <button id="uploadBatchBtn" class="bank-analyze-btn">
                                 <i class="fas fa-upload mr-1"></i>
                                 <span>上傳並批次預測</span>
                             </button>
@@ -74,31 +70,31 @@
                     </div>
                 </div>
 
-                <hr class="card-divider">
+                <hr class="bank-card-divider">
 
                 <div class="input-section">
-                    <h2 class="card-title"><i class="fas fa-user-edit mr-2"></i> 單筆客戶特徵輸入 (10 項)</h2>
+                    <h2 class="bank-card-title"><i class="fas fa-user-edit mr-2"></i> 單筆客戶特徵輸入 (10 項)</h2>
                     <div id="inputForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
                         <div class="input-field-container">
                             <label>1. 信用分數 ( 350 - 850 )</label>
-                            <input type="number" id="input_CreditScore" data-feature-name="CreditScore" value="700" step="1" class="theme-input-field">
+                            <input type="number" id="input_CreditScore" data-feature-name="CreditScore" value="700" step="1" class="bank-input-field">
                         </div>
                         <div class="input-field-container">
                             <label>2. 年齡 ( 18 - 100 歲 )</label>
-                            <input type="number" id="input_Age" data-feature-name="Age" value="35" step="1" class="theme-input-field">
+                            <input type="number" id="input_Age" data-feature-name="Age" value="35" step="1" class="bank-input-field">
                         </div>
                         <div class="input-field-container">
                             <label>3. 服務年限 ( 0 - 10 年 )</label>
-                            <input type="number" id="input_Tenure" data-feature-name="Tenure" value="8" step="1" class="theme-input-field">
+                            <input type="number" id="input_Tenure" data-feature-name="Tenure" value="8" step="1" class="bank-input-field">
                         </div>
                         <div class="input-field-container">
                             <label>4. 餘額 ( 0-300000 $ )</label>
-                            <input type="number" id="input_Balance" data-feature-name="Balance" value="150000" class="theme-input-field">
+                            <input type="number" id="input_Balance" data-feature-name="Balance" value="150000" class="bank-input-field">
                         </div>
                         
                         <div class="input-field-container dropdown-container" data-dropdown-id="NumOfProducts">
                             <label>5. 產品數量 ( 1 - 4 )</label>
-                            <input type="text" id="input_NumOfProducts" data-feature-name="NumOfProducts" data-value="2" value="2" readonly class="theme-input-field dropdown-input" placeholder="選擇產品數量">
+                            <input type="text" id="input_NumOfProducts" data-feature-name="NumOfProducts" data-value="2" value="2" readonly class="bank-input-field dropdown-input" placeholder="選擇產品數量">
                             <div class="dropdown-list hidden">
                                 <div class="dropdown-item" data-value="1">1</div>
                                 <div class="dropdown-item" data-value="2">2</div>
@@ -107,9 +103,9 @@
                             </div>
                         </div>
                         
-                        <div class="input-field-container dropdown-container" data-dropdown-id="HasCrCard">
+                        <div class="input-field-container dropdown-container" data-dropdown-id="HasCrbank-card">
                             <label>6. 持有信用卡 ( 0 : 否 / 1 : 是 )</label>
-                            <input type="text" id="input_HasCrCard" data-feature-name="HasCrCard" data-value="1" value="1 (是)" readonly class="theme-input-field dropdown-input" placeholder="選擇是否持有信用卡">
+                            <input type="text" id="input_HasCrbank-card" data-feature-name="HasCrbank-card" data-value="1" value="1 (是)" readonly class="bank-input-field dropdown-input" placeholder="選擇是否持有信用卡">
                             <div class="dropdown-list hidden">
                                 <div class="dropdown-item" data-value="0">0 (否)</div>
                                 <div class="dropdown-item" data-value="1">1 (是)</div>
@@ -118,7 +114,7 @@
                         
                         <div class="input-field-container dropdown-container" data-dropdown-id="IsActiveMember">
                             <label>7. 活躍會員 ( 0 : 否 / 1 : 是 )</label>
-                            <input type="text" id="input_IsActiveMember" data-feature-name="IsActiveMember" data-value="1" value="1 (是)" readonly class="theme-input-field dropdown-input" placeholder="選擇是否為活躍會員">
+                            <input type="text" id="input_IsActiveMember" data-feature-name="IsActiveMember" data-value="1" value="1 (是)" readonly class="bank-input-field dropdown-input" placeholder="選擇是否為活躍會員">
                             <div class="dropdown-list hidden">
                                 <div class="dropdown-item" data-value="0">0 (否)</div>
                                 <div class="dropdown-item" data-value="1">1 (是)</div>
@@ -127,12 +123,12 @@
                         
                         <div class="input-field-container">
                             <label>8. 估計薪資 ( 0 - 200000 $ )</label>
-                            <input type="number" id="input_EstimatedSalary" data-feature-name="EstimatedSalary" value="100000" class="theme-input-field">
+                            <input type="number" id="input_EstimatedSalary" data-feature-name="EstimatedSalary" value="100000" class="bank-input-field">
                         </div>
 
                         <div class="input-field-container dropdown-container" data-dropdown-id="Geography">
                             <label>9. 國家/地區 ( 0 : 法國 1 : 西班牙 2 : 德國 )</label>
-                            <input type="text" id="input_Geography" data-feature-name="Geography" data-value="2" value="2 (德國)" readonly class="theme-input-field dropdown-input" placeholder="選擇國家/地區">
+                            <input type="text" id="input_Geography" data-feature-name="Geography" data-value="2" value="2 (德國)" readonly class="bank-input-field dropdown-input" placeholder="選擇國家/地區">
                             <div class="dropdown-list hidden">
                                 <div class="dropdown-item" data-value="0">0 (法國)</div>
                                 <div class="dropdown-item" data-value="1">1 (西班牙)</div>
@@ -142,7 +138,7 @@
                         
                         <div class="input-field-container dropdown-container" data-dropdown-id="Gender">
                             <label>10. 性別 ( 0 : 男 / 1 : 女 )</label>
-                            <input type="text" id="input_Gender" data-feature-name="Gender" data-value="1" value="1 (女)" readonly class="theme-input-field dropdown-input" placeholder="選擇性別">
+                            <input type="text" id="input_Gender" data-feature-name="Gender" data-value="1" value="1 (女)" readonly class="bank-input-field dropdown-input" placeholder="選擇性別">
                             <div class="dropdown-list hidden">
                                 <div class="dropdown-item" data-value="0">0 (男)</div>
                                 <div class="dropdown-item" data-value="1">1 (女)</div>
@@ -151,25 +147,25 @@
                     </div>
                 </div>
 
-                <hr class="card-divider">
+                <hr class="bank-card-divider">
 
                 <div class="prompt-section">
-                    <h2 class="card-title"><i class="fas fa-comment-dots mr-2"></i> AI 解釋/行動建議 指令</h2>
+                    <h2 class="bank-card-title"><i class="fas fa-comment-dots mr-2"></i> AI 解釋/行動建議 指令</h2>
                     <div class="input-field-container">
                         <label>請輸入您希望 AI 如何解釋預測結果：</label>
                         <textarea id="aiPrompt" 
                                     rows="5" 
-                                    class="theme-input-field"
+                                    class="bank-input-field"
                                     placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">請作為一名資產管理顧問，根據客戶的流失機率和輸入特徵，提供一份專業的風險分析報告，包含：1. 風險評估等級。2. 主要風險點。3. 建議採取的客戶留存行動。請使用條列式呈現並且簡單扼要，約500個Tokens內。</textarea>
                     </div>
                     
                     <div class="action-buttons-container flex flex-col sm:flex-row gap-3 mt-4">
-                        <button id="analyzeBtn" class="analyze-btn analyze-full flex-grow" disabled>
+                        <button id="AiAnalyzeButton" class="bank-analyze-btn" disabled>
                             <i class="fas fa-robot mr-1"></i>
                             <span>執行模型預測並取得 AI 解釋</span>
                         </button>
                         
-                        <button id="predictOnlyBtn" class="analyze-btn analyze-predict-only flex-grow">
+                        <button id="predictOnlyBtn" class="bank-analyze-btn flex-grow">
                             <i class="fas fa-chart-line mr-1"></i>
                             <span>僅執行模型預測</span>
                         </button>
@@ -178,15 +174,15 @@
                 </div>
             </div>
 
-            <div class="explanation-panel card">
-                <h2 class="card-title"><i class="fas fa-lightbulb mr-2"></i> AI 解釋與行動建議</h2>
+            <div class="explanation-panel bank-card">
+                <h2 class="bank-card-title"><i class="fas fa-lightbulb mr-2"></i> AI 解釋與行動建議</h2>
                 <div id="explanationOutput" class="output-content">
                     <p id="initialMessage" class="initial-message">請先在上方輸入並**啟用**您的 Gemini API Key，然後輸入參數和指令，才能執行分析。</p>
                 </div>
             </div>
 
-            <div class="chart-panel card">
-                <h2 class="card-title"><i class="fas fa-chart-area mr-2"></i> 模型內建輸出圖表顯示區</h2>
+            <div class="chart-panel bank-card">
+                <h2 class="bank-card-title"><i class="fas fa-chart-area mr-2"></i> 模型內建輸出圖表顯示區</h2>
                 <div id="chartDisplay" class="chart-display grid grid-cols-1  gap-4">
                     <div class="chart-placeholder flex items-center justify-center">圖表 1: **單一客戶局部 SHAP 影響力**</div>
                     <div class="chart-placeholder flex items-center justify-center">圖表 2: **模型全局 SHAP 摘要圖**</div>
@@ -194,22 +190,22 @@
             </div>
         </div>
 
-        <hr class="card-divider mt-8">
-        <div id="batch-result-panel" class="card mt-6">
-            <h2 class="card-title"><i class="fas fa-table mr-2"></i> 批次分析結果列表</h2>
+        <hr class="bank-card-divider mt-8">
+        <div id="batch-result-panel" class="bank-card mt-6">
+            <h2 class="bank-card-title"><i class="fas fa-table mr-2"></i> 批次分析結果列表</h2>
             
             <div class="filter-controls">
                 
                 <div class="flex items-center gap-2">
                     <label for="idSearchInput" class="font-bold whitespace-nowrap text-gray-700">ID 搜索:</label>
-                    <input type="text" id="idSearchInput" placeholder="輸入 ID 快速搜索..." class="theme-input-field w-32">
+                    <input type="text" id="idSearchInput" placeholder="輸入 ID 快速搜索..." class="bank-input-field w-32">
                 </div>
                 
                 <div class="flex items-center gap-2">
                     <label for="thresholdInput" class="whitespace-nowrap text-gray-700">篩選流失機率大於：</label>
-                    <input type="number" id="thresholdInput" value="50" min="0" max="100" step="1" class="theme-input-field text-center" style="width: 70px;">
+                    <input type="number" id="thresholdInput" value="50" min="0" max="100" step="1" class="bank-input-field text-center" style="width: 70px;">
                     <span class="whitespace-nowrap">%</span>
-                    <button id="filterDataBtn" class="analyze-btn analyze-predict-only text-sm">
+                    <button id="filterDataBtn" class="bank-analyze-btn text-sm">
                         <i class="fas fa-filter mr-1"></i> 執行篩選
                     </button>
                 </div>
@@ -240,11 +236,11 @@
             </div>
 
             <div class="pagination-controls" id="paginationControls" style="display: flex; justify-content: center; align-items: center; gap: 10px; margin-top: 1rem;">
-                <button id="prevPageBtn" class="analyze-btn analyze-predict-only text-sm"><i class="fas fa-chevron-left"></i> 上一頁</button>
+                <button id="prevPageBtn" class="bank-analyze-btn text-sm"><i class="fas fa-chevron-left"></i> 上一頁</button>
                 <label for="pageInput" class="text-gray-700">前往:</label>
-                <input type="number" id="pageInput" value="1" min="1" class="theme-input-field text-center" style="width: 60px;">
+                <input type="number" id="pageInput" value="1" min="1" class="bank-input-field text-center" style="width: 60px;">
                 <span id="pageInfo" class="text-gray-700"> / ?</span>
-                <button id="nextPageBtn" class="analyze-btn analyze-predict-only text-sm">下一頁 <i class="fas fa-chevron-right"></i></button>
+                <button id="nextPageBtn" class="bank-analyze-btn text-sm">下一頁 <i class="fas fa-chevron-right"></i></button>
             </div>
             
         </div>

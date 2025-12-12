@@ -33,10 +33,10 @@ let currentFilteredData = []; // 儲存當前篩選後、未分頁的數據 (用
 // DOMContentLoaded: 初始化與事件綁定
 // =========================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    const apiKeyInput = document.getElementById('apiKey');
+    const bankApiKeyInput = document.getElementById('bankApiKey');
     const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
     const apiStatusMsg = document.getElementById('apiStatusMsg');
-    const analyzeBtn = document.getElementById('analyzeBtn');
+    const AiAnalyzeButton = document.getElementById('AiAnalyzeButton');
     const initialMessage = document.getElementById('initialMessage');
     const uploadBatchBtn = document.getElementById('uploadBatchBtn');
     const filterDataBtn = document.getElementById('filterDataBtn');
@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- API Key 初始化 ---
     const storedApiKey = storage.getItem(API_KEY_STORAGE_KEY);
     if (storedApiKey) {
-        apiKeyInput.value = storedApiKey;
+        bankApiKeyInput.value = storedApiKey;
         handleApiKeyActivation(storedApiKey);
     } else {
         handleApiKeyDeactivation();
@@ -61,7 +61,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 事件綁定 ---
     if (saveApiKeyBtn) {
         saveApiKeyBtn.addEventListener('click', () => {
-            const key = apiKeyInput.value.trim();
+            const key = bankApiKeyInput.value.trim();
             if (isApiKeyActive) {
                 handleApiKeyDeactivation();
             } else if (key) {
@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // 單筆預測按鈕
-    if (analyzeBtn) analyzeBtn.addEventListener('click', runPredictionAndExplain);
+    if (AiAnalyzeButton) AiAnalyzeButton.addEventListener('click', runPredictionAndExplain);
     const predictOnlyBtn = document.getElementById('predictOnlyBtn');
     if (predictOnlyBtn) predictOnlyBtn.addEventListener('click', runPredictionOnly);
 
@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleApiKeyActivation(key) {
         geminiApiKey = key;
         isApiKeyActive = true;
-        apiKeyInput.disabled = true;
-        saveApiKeyBtn.querySelector('.key-status-text').textContent = '已啟用 AI';
+        bankApiKeyInput.disabled = true;
+        saveApiKeyBtn.querySelector('.bank-api-key-status').textContent = '已啟用 AI';
         saveApiKeyBtn.title = '點擊可清除 Key 並禁用 AI';
         apiStatusMsg.textContent = '✅ AI 功能已啟用。請執行分析。';
         apiStatusMsg.style.color = 'var(--primary-color)';
@@ -124,9 +124,9 @@ document.addEventListener('DOMContentLoaded', () => {
         storage.removeItem(API_KEY_STORAGE_KEY);
         geminiApiKey = null;
         isApiKeyActive = false;
-        apiKeyInput.disabled = false;
-        apiKeyInput.value = '';
-        saveApiKeyBtn.querySelector('.key-status-text').textContent = '尚未啟用 AI';
+        bankApiKeyInput.disabled = false;
+        bankApiKeyInput.value = '';
+        saveApiKeyBtn.querySelector('.bank-api-key-status').textContent = '尚未啟用 AI';
         saveApiKeyBtn.title = '在此輸入您的 Gemini API Key';
         apiStatusMsg.textContent = '❌ AI 功能已禁用！請輸入 Key。';
         apiStatusMsg.style.color = 'red';
@@ -134,8 +134,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function updateUIState(isEnabled) {
-        if (!analyzeBtn || !initialMessage) return;
-        analyzeBtn.disabled = !isEnabled;
+        if (!AiAnalyzeButton || !initialMessage) return;
+        AiAnalyzeButton.disabled = !isEnabled;
 
         if (isEnabled) {
             initialMessage.innerHTML = '<p class="initial-message">AI 功能已啟用。請調整輸入值與指令，然後點擊按鈕執行分析。</p>';
@@ -254,13 +254,13 @@ async function runPredictionAndExplain() {
         return;
     }
 
-    const analyzeBtn = document.getElementById('analyzeBtn');
+    const AiAnalyzeButton = document.getElementById('AiAnalyzeButton');
     const predictOnlyBtn = document.getElementById('predictOnlyBtn');
     const errorMsg = document.getElementById('errorMsg');
     const explanationOutput = document.getElementById('explanationOutput');
     const chartDisplay = document.getElementById('chartDisplay');
 
-    analyzeBtn.disabled = true;
+    AiAnalyzeButton.disabled = true;
     predictOnlyBtn.disabled = true;
     errorMsg.classList.add('hidden');
 
@@ -327,7 +327,7 @@ async function runPredictionAndExplain() {
         explanationOutput.innerHTML = '<p class="error-message">預測或 AI 解釋失敗。</p>';
         chartDisplay.innerHTML = '<p class="error-message">圖表生成失敗。</p>';
     } finally {
-        analyzeBtn.disabled = !isApiKeyActive;
+        AiAnalyzeButton.disabled = !isApiKeyActive;
         predictOnlyBtn.disabled = false;
     }
 }
@@ -721,13 +721,13 @@ function handlePageInput() {
 // 執行模型預測（不含 AI 解釋） (保留不變)
 // =========================================================================
 async function runPredictionOnly() {
-    const analyzeBtn = document.getElementById('analyzeBtn');
+    const AiAnalyzeButton = document.getElementById('AiAnalyzeButton');
     const predictOnlyBtn = document.getElementById('predictOnlyBtn');
     const errorMsg = document.getElementById('errorMsg');
     const explanationOutput = document.getElementById('explanationOutput');
     const chartDisplay = document.getElementById('chartDisplay');
 
-    analyzeBtn.disabled = true;
+    AiAnalyzeButton.disabled = true;
     predictOnlyBtn.disabled = true;
     errorMsg.classList.add('hidden');
 
@@ -775,7 +775,7 @@ async function runPredictionOnly() {
 
     } finally {
         predictOnlyBtn.disabled = false;
-        analyzeBtn.disabled = !isApiKeyActive;
+        AiAnalyzeButton.disabled = !isApiKeyActive;
     }
 }
 
