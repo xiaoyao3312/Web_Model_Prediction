@@ -116,7 +116,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saveApiKeyBtn.querySelector('.bank-api-key-status').textContent = '已啟用 AI';
         saveApiKeyBtn.title = '點擊可清除 Key 並禁用 AI';
         apiStatusMsg.textContent = '✅ AI 功能已啟用。請執行分析。';
-        apiStatusMsg.style.color = 'var(--primary-color)';
+        apiStatusMsg.style.color = 'var(--success-color)';
+        apiStatusMsg.style.fontWeight = '--font-weight-900';          
+        apiStatusMsg.style.fontSize = 'var(--h6-font-size)';
         updateUIState(true);
     }
 
@@ -129,7 +131,9 @@ document.addEventListener('DOMContentLoaded', () => {
         saveApiKeyBtn.querySelector('.bank-api-key-status').textContent = '尚未啟用 AI';
         saveApiKeyBtn.title = '在此輸入您的 Gemini API Key';
         apiStatusMsg.textContent = '❌ AI 功能已禁用！請輸入 Key。';
-        apiStatusMsg.style.color = 'red';
+        apiStatusMsg.style.color = 'var(--error-color)';
+        apiStatusMsg.style.fontWeight = '--font-weight-900';          
+        apiStatusMsg.style.fontSize = 'var(--h6-font-size)';
         updateUIState(false);
     }
 
@@ -337,17 +341,17 @@ async function runPredictionAndExplain() {
 // 批次 CSV 預測（已更新 colspan）
 // =========================================================================
 async function uploadAndPredictBatch() {
-    const csvFileInput = document.getElementById('csvFileInput');
+    const bankCsvFileInput = document.getElementById('bankCsvFileInput');
     const uploadBatchBtn = document.getElementById('uploadBatchBtn');
     const batchResultPanel = document.getElementById('batch-result-panel');
     const filterStats = document.getElementById('filterStats');
 
-    if (csvFileInput.files.length === 0) {
+    if (bankCsvFileInput.files.length === 0) {
         alert("請先選擇一個 CSV 檔案！");
         return;
     }
 
-    const file = csvFileInput.files[0];
+    const file = bankCsvFileInput.files[0];
     const formData = new FormData();
     formData.append('file', file);
 
@@ -459,7 +463,7 @@ async function uploadAndPredictBatch() {
     } finally {
         uploadBatchBtn.innerHTML = originalText;
         uploadBatchBtn.disabled = false;
-        csvFileInput.value = ''; // 清空檔案輸入欄
+        bankCsvFileInput.value = ''; // 清空檔案輸入欄
     }
 }
 
