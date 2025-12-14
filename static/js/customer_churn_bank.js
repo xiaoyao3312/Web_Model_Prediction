@@ -144,9 +144,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (initialMessage) {
             if (isEnabled) {
-                initialMessage.innerHTML = '<p>AI 功能已啟用。請調整輸入值與指令，然後點擊按鈕執行分析。</p>';
+                initialMessage.innerHTML = '<h6 c>AI 功能已啟用。請輸入指令，然後點擊按鈕執行分析。</h6>';
             } else {
-                initialMessage.innerHTML = '<p class="error-message">AI 功能已禁用！請在上方輸入 API Key 並點擊啟用按鈕。</p>';
+                initialMessage.innerHTML = '<h6 class="bank-card-title hint">AI 功能已禁用！請在上方輸入 API Key 並點擊啟用按鈕。</h6>';
             }
         }
     }
@@ -275,10 +275,10 @@ async function runPredictionAndExplain() {
     if (errorMsg) errorMsg.classList.add('hidden');
 
     if (predictionOutput) {
-        predictionOutput.innerHTML = '<p class="initial-message">AI 分析運行中。結果將在下方專家解釋區顯示。</p>';
+        predictionOutput.innerHTML = '<h6 class="initial-message">AI 分析運行中。結果將在下方專家解釋區顯示。</h6>';
     }
 
-    if (chartDisplay) chartDisplay.innerHTML = '<p class="chart-footer-message">圖表正在生成中...</p>';
+    if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title hint">圖表正在生成中...</h6>';
     
     try {
         const inputData = collectInputData();
@@ -308,12 +308,12 @@ async function runPredictionAndExplain() {
             `關鍵特徵影響因素分析:\n${predictResult.explanation_prompt}\n\n` +
             `請根據以上資訊，並遵循以下使用者指令，提供結構化解釋和行動建議：\n\n【使用者指令】\n${aiPrompt}`;
 
-        const predictionHtml = `<p>流失機率:<span class="prob-value ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span>(${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'})</p>`;
+        const predictionHtml = `<h6 class="bank-card-title hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </h6>`;
         if (predictionOutput) {
             predictionOutput.innerHTML = predictionHtml;
         }
         
-        if (explanationOutput) explanationOutput.innerHTML = `<p class="loading-message">正在生成 AI 解釋與行動建議...</p>`;
+        if (explanationOutput) explanationOutput.innerHTML = `<h6 class="loading-message">正在生成 AI 解釋與行動建議...</h6>`;
         
 
         const explanation = await getAiExplanation(fullPrompt, geminiApiKey);
@@ -335,9 +335,9 @@ async function runPredictionAndExplain() {
             errorMsg.classList.remove('hidden');
         }
 
-        if (explanationOutput) explanationOutput.innerHTML = '<p class="error-message">預測或 AI 解釋失敗。</p>';
-        if (chartDisplay) chartDisplay.innerHTML = '<p class="error-message">圖表生成失敗。</p>';
-        if (predictionOutput) predictionOutput.innerHTML = '<p class="error-message">預測或 AI 解釋失敗。</p>';
+        if (explanationOutput) explanationOutput.innerHTML = '<h6 class="bank-card-title hint">預測或 AI 解釋失敗。</h6>';
+        if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title hint">圖表生成失敗。</h6>';
+        if (predictionOutput) predictionOutput.innerHTML = '<h6 class="bank-card-title hint">預測或 AI 解釋失敗。</h6>';
         
     } finally {
         if (AiAnalyzeButton) AiAnalyzeButton.disabled = !isApiKeyActive;
@@ -369,9 +369,9 @@ async function uploadAndPredictBatch() {
     uploadBatchBtn.disabled = true;
 
     // 重置單筆分析區塊
-    document.getElementById('explanationOutput').innerHTML = '<p class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</p>';
-    document.getElementById('chartDisplay').innerHTML = '<p class="chart-footer-message">批次預測結果圖表不在此區塊顯示。</p>';
-    document.getElementById('predictionOutput').innerHTML = '<p class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</p>'; 
+    document.getElementById('explanationOutput').innerHTML = '<h6 class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</h6>';
+    document.getElementById('chartDisplay').innerHTML = '<h6 class="bank-card-title hint">批次預測結果圖表不在此區塊顯示。</h6>';
+    document.getElementById('predictionOutput').innerHTML = '<h6 class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</ph6'; 
     
     if (filterStats) filterStats.innerHTML = '';
     if (batchResultBody) batchResultBody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
@@ -741,9 +741,9 @@ async function runPredictionOnly() {
     if (errorMsg) errorMsg.classList.add('hidden');
 
     // ✨ 修改點 2: 更新顯示等待訊息的元素
-    if (predictionOutput) predictionOutput.innerHTML = '<p class="initial-message">正在運行模型預測，請稍候...</p>';
-    if (chartDisplay) chartDisplay.innerHTML = '<p class="chart-footer-message">圖表正在生成中...</p>';
-    if (explanationOutput) explanationOutput.innerHTML = '<p class="initial-message">請點擊「執行模型預測並取得 AI 解釋」以生成解釋內容。</p>'; // 清空 AI 解釋區
+    if (predictionOutput) predictionOutput.innerHTML = '<h6 class="initial-message">正在運行模型預測，請稍候...</h6>';
+    if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title hint">圖表正在生成中...</h6>';
+    if (explanationOutput) explanationOutput.innerHTML = '<h6 class="initial-message">請點擊「執行模型預測並取得 AI 解釋」以生成解釋內容。</h6>';
 
     try {
         const inputData = collectInputData();
@@ -765,9 +765,7 @@ async function runPredictionOnly() {
 
         // ✨ 修改點 3: 將結果輸出到 predictionOutput
         if (predictionOutput) {
-            predictionOutput.innerHTML = `
-                <p ">流失機率:<span class="prob-value ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span>(${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'})</p>
-            `;
+            predictionOutput.innerHTML = `<h6 class="bank-card-title hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(2)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <h6>`;
         }
 
         renderChartsFromBase64(charts);
@@ -779,9 +777,9 @@ async function runPredictionOnly() {
         }
 
         // ✨ 修改點 4: 錯誤訊息輸出到 predictionOutput 和 explanationOutput
-        if (predictionOutput) predictionOutput.innerHTML = '<p class="error-message">模型預測失敗。</p>';
-        if (chartDisplay) chartDisplay.innerHTML = '<p class="error-message">圖表生成失敗。</p>';
-        if (explanationOutput) explanationOutput.innerHTML = '<p class="error-message">模型預測失敗。</p>';
+        if (predictionOutput) predictionOutput.innerHTML = '<h6 class="bank-card-title hint">模型預測失敗。</h6>';
+        if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title hint">圖表生成失敗。</h6>';
+        if (explanationOutput) explanationOutput.innerHTML = '<h6 class="bank-card-title hint">模型預測失敗。</h6>';
 
     } finally {
         if (predictOnlyBtn) predictOnlyBtn.disabled = false;
@@ -843,7 +841,7 @@ function renderChartsFromBase64(charts) {
 
     const hasChartData = charts.some(chart => chart.base64_data);
     if (charts.length === 0 || !hasChartData) {
-        chartContainer.innerHTML = '<p class="chart-footer-message">後端沒有產生圖表或圖表生成失敗。</p>';
+        chartContainer.innerHTML = '<h6 class="bank-card-title hint">後端沒有產生圖表或圖表生成失敗。</h6>';
         return;
     }
 
