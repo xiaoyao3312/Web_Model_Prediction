@@ -147,7 +147,7 @@
             </div>
 
             <div class="bank-card bank-ai-prompt-panel ">
-                <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M320 544C461.4 544 576 436.5 576 304C576 171.5 461.4 64 320 64C178.6 64 64 171.5 64 304C64 358.3 83.2 408.3 115.6 448.5L66.8 540.8C62 549.8 63.5 560.8 70.4 568.3C77.3 575.8 88.2 578.1 97.5 574.1L215.9 523.4C247.7 536.6 282.9 544 320 544zM192 272C209.7 272 224 286.3 224 304C224 321.7 209.7 336 192 336C174.3 336 160 321.7 160 304C160 286.3 174.3 272 192 272zM320 272C337.7 272 352 286.3 352 304C352 321.7 337.7 336 320 336C302.3 336 288 321.7 288 304C288 286.3 302.3 272 320 272zM416 304C416 286.3 430.3 272 448 272C465.7 272 480 286.3 480 304C480 321.7 465.7 336 448 336C430.3 336 416 321.7 416 304z"/></svg>AI 解釋/行動建議 指令</h3>
+                <h3 class="bank-card-title">AI 解釋/行動建議 指令</h3>
                 
                 <div class="input-field-container">
                     <textarea class="bank-input-field" id="aiPrompt" rows="5" 
@@ -156,17 +156,26 @@
                 </div>
                 
                 <div class="bank-ai-prompt-container"> 
-                    <button id="AiAnalyzeButton" class="bank-analyze-btn" disabled><svg class="bank-card-button-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M352 64C352 46.3 337.7 32 320 32C302.3 32 288 46.3 288 64L288 128L192 128C139 128 96 171 96 224L96 448C96 501 139 544 192 544L448 544C501 544 544 501 544 448L544 224C544 171 501 128 448 128L352 128L352 64zM160 432C160 418.7 170.7 408 184 408L216 408C229.3 408 240 418.7 240 432C240 445.3 229.3 456 216 456L184 456C170.7 456 160 445.3 160 432zM280 432C280 418.7 290.7 408 304 408L336 408C349.3 408 360 418.7 360 432C360 445.3 349.3 456 336 456L304 456C290.7 456 280 445.3 280 432zM400 432C400 418.7 410.7 408 424 408L456 408C469.3 408 480 418.7 480 432C480 445.3 469.3 456 456 456L424 456C410.7 456 400 445.3 400 432zM224 240C250.5 240 272 261.5 272 288C272 314.5 250.5 336 224 336C197.5 336 176 314.5 176 288C176 261.5 197.5 240 224 240zM368 288C368 261.5 389.5 240 416 240C442.5 240 464 261.5 464 288C464 314.5 442.5 336 416 336C389.5 336 368 314.5 368 288zM64 288C64 270.3 49.7 256 32 256C14.3 256 0 270.3 0 288L0 384C0 401.7 14.3 416 32 416C49.7 416 64 401.7 64 384L64 288zM608 256C590.3 256 576 270.3 576 288L576 384C576 401.7 590.3 416 608 416C625.7 416 640 401.7 640 384L640 288C640 270.3 625.7 256 608 256z"/></svg><span>執行模型預測並取得 AI 解釋</span></button>
+                    <button id="AiAnalyzeButton" class="bank-analyze-btn" disabled><span>執行模型預測並取得 AI 解釋</span></button>
                 </div>
                 <p id="errorMsg" class="text-sm mt-3 text-red-500 hidden"></p> 
                 <h6 class="bank-card-title hint">請在上方輸入您希望 AI 如何解釋預測結果。</h6>
-            </div>
 
-            <div class="bank-ai-explanation-panel bank-card">
-                <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M420.9 448C428.2 425.7 442.8 405.5 459.3 388.1C492 353.7 512 307.2 512 256C512 150 426 64 320 64C214 64 128 150 128 256C128 307.2 148 353.7 180.7 388.1C197.2 405.5 211.9 425.7 219.1 448L420.8 448zM416 496L224 496L224 512C224 556.2 259.8 592 304 592L336 592C380.2 592 416 556.2 416 512L416 496zM312 176C272.2 176 240 208.2 240 248C240 261.3 229.3 272 216 272C202.7 272 192 261.3 192 248C192 181.7 245.7 128 312 128C325.3 128 336 138.7 336 152C336 165.3 325.3 176 312 176z"/></svg>AI 解釋與行動建議</h3>
+                
+                <h3 class="bank-card-title">AI 解釋與行動建議</h3>
                 
                 <div id="explanationOutput" class="output-content">
                     <p id="initialMessage" class="initial-message">請先在上方輸入並**啟用**您的 Gemini API Key，然後輸入參數和指令，才能執行分析。</p>
+                </div>
+            </div>
+
+            
+
+            <div class="bank-result-panel bank-card">
+                <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M420.9 448C428.2 425.7 442.8 405.5 459.3 388.1C492 353.7 512 307.2 512 256C512 150 426 64 320 64C214 64 128 150 128 256C128 307.2 148 353.7 180.7 388.1C197.2 405.5 211.9 425.7 219.1 448L420.8 448zM416 496L224 496L224 512C224 556.2 259.8 592 304 592L336 592C380.2 592 416 556.2 416 512L416 496zM312 176C272.2 176 240 208.2 240 248C240 261.3 229.3 272 216 272C202.7 272 192 261.3 192 248C192 181.7 245.7 128 312 128C325.3 128 336 138.7 336 152C336 165.3 325.3 176 312 176z"/></svg>模型預測結果</h3>
+                
+                <div id="predictionOutput" class="output-content">
+                    <p class="initial-message">點擊「僅執行模型預測」後結果將顯示於此。</p>
                 </div>
             </div>
 
@@ -179,9 +188,11 @@
                     
                 </div>
             </div>
+
         </div>
 
         <hr class="bank-card-divider mt-8">
+
         <div id="batch-result-panel" class="bank-card mt-6">
             <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M352 224L352 320L480 320L480 224L352 224zM288 224L160 224L160 320L288 320L288 224zM96 384L96 160C96 124.7 124.7 96 160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 384zM480 384L352 384L352 480L480 480L480 384zM288 480L288 384L160 384L160 480L288 480z"/></svg>批次分析結果列表</h3>
             

@@ -164,14 +164,12 @@
     /* 佈局方式與結構 */
     display:               grid;
     grid-template-columns: 1fr 1fr; /* 左側/右側 (50%/50%) */
-    grid-template-rows:    auto auto auto auto auto 1fr; 
+    grid-template-rows:    auto auto auto auto 1fr; 
     grid-template-areas:
-        "api_key chart_panel"
+        "api_key result_panel"
         "batch_upload chart_panel"
         "input_feature chart_panel"
-        "ai_prompt chart_panel"
-        "ai_explanation chart_panel";
-    
+        "ai_prompt chart_panel";
     
     /* 尺寸與間距 */
     min-height:     80vh; 
@@ -249,22 +247,22 @@
 #customerChurnBank .bank-ai-prompt-panel {
     grid-area:      ai_prompt;
     overflow-y:     auto;
-    min-height:     200px; 
-    padding-bottom: 1rem;
-}
-
-#customerChurnBank .bank-ai-explanation-panel {
-    grid-area:      ai_explanation;
-    overflow-y:     auto;
-    min-height:     200px; 
-    padding-bottom: 1rem;
+    height:         auto;
 }
 
 #customerChurnBank .bank-chart-panel {
     grid-area:      chart_panel;
-    grid-row-end:   span 5; /* 佔用右側五個區域的高度 */
+    grid-row-end:   span 3; 
     overflow-y:     auto; 
+    height:         auto;
 }
+
+#customerChurnBank .bank-result-panel {
+    grid-area:      result_panel;
+    overflow-y:     auto; 
+    height:         auto;
+}
+
 
 /* 2.3 輸入表單 Grid 佈局 */
 #customerChurnBank #inputForm {
