@@ -11,8 +11,6 @@
     --customerChurnBank-global-transition: var(--fabColorControl-global-transition);
 
     /* --- 功能性顏色 --- */
-    --fixed-primary-color:      #008080;         /* 主色：水鴨綠 (Teal) */
-    --secondary-color:          #3b82f6;         /* 次要色：藍色 */
     --success-color:            rgba(0, 128, 0, 1);    /* 成功/低風險：綠色 */
     --error-color:              rgba(128, 0, 0, 1);    /* 錯誤/高風險：紅色 */
     --warning-color:            #f59e0b;         /* 警告/中風險：橘黃色 */
@@ -73,14 +71,18 @@
     
     
     /* 間距與邊框 */
-    padding-left:       var(--customerChurnBank-20px);
-    padding-right:      var(--customerChurnBank-20px);
+    padding-left:       3%;
+    padding-right:      3%;
+    padding-bottom:     2%;
     border-radius:      var(--customerChurnBank-border-radius);
     box-shadow:         var(--customerChurnBank-box-shadow);
     border:             var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color);
-    
-    
     /* 動畫 */
+    transition:         var(--customerChurnBank-global-transition);
+}
+
+#customerChurnBank .bank-card:hover {
+    box-shadow:         var(--customerChurnBank-box-shadow-hover);
     transition:         var(--customerChurnBank-global-transition);
 }
 
@@ -94,8 +96,6 @@
     border-bottom:  var(--customerChurnBank-2px) solid var(--customerChurnBank-global-font-color); 
     margin-bottom:  var(--customerChurnBank-10px);
     padding-bottom: var(--customerChurnBank-10px);
-    
-    
     /* 動畫 */
     transition:     var(--customerChurnBank-global-transition);
 }
@@ -127,21 +127,11 @@
     color:      var(--customerChurnBank-global-font-color);
     transition: var(--customerChurnBank-global-transition);
 }
-
-
-#customerChurnBank .hint{
-    margin-top:  var(--customerChurnBank-10px);
-}
 /* 1.6 卡片分隔線 (.bank-card-divider) */
 #customerChurnBank .bank-card-divider {
-    /* 尺寸與邊框 */
-    border:         0;
-    height:         1px;
-    border-top:     1px solid #e5e7eb;
-    /* 顏色與背景 */
-    background-color: var(--customerChurnBank-global-font-color);
-    /* 間距 */
-    margin: 1.5rem 0;
+    border-radius:      var(--customerChurnBank-border-radius);
+    border-top:     3px solid var(--customerChurnBank-global-font-color);
+    margin-bottom:  40px;
 }
 #customerChurnBank hr.mt-8 { margin-top: 2rem; }
 #customerChurnBank hr.mb-4 { margin-bottom: var(--customerChurnBank-1rem); }
@@ -208,7 +198,7 @@
     box-sizing:     border-box;
     resize:         vertical;
     /* 字體與顏色 */
-    background-color:   var(--fabColorControl-panel-bg-color);
+    background-color:   var(--customerChurnBank-panel-bg-color);
     color:              var(--customerChurnBank-global-font-color);
     /* 間距與邊框 */
     padding:        var(--customerChurnBank-10px) var(--customerChurnBank-10px); 
@@ -493,7 +483,7 @@
     
     
     /* 顏色與背景 */
-    background-color:   var(--fabColorControl-panel-bg-color);
+    background-color:   var(--customerChurnBank-panel-bg-color);
     border:             1px solid var(--success-color);
     border-top:         none;
     
@@ -538,7 +528,7 @@
     /* 字體與顏色 */
     font-size:          0.9em;
     font-weight:        var(--font-weight-900);
-    background-color:   var(--fabColorControl-panel-bg-color);
+    background-color:   var(--customerChurnBank-panel-bg-color);
     
     
     /* 邊框與動畫 */
@@ -578,7 +568,7 @@
 
 /* 6.5 表格列樣式 */
 #customerChurnBank .fl-table tr:nth-child(even) {
-    background: color-mix(in srgb, var(--fabColorControl-panel-bg-color) 95%, black);
+    background: color-mix(in srgb, var(--customerChurnBank-panel-bg-color) 95%, black);
 }
 #customerChurnBank .fl-table tbody tr:hover {
     background-color: color-mix(in srgb, var(--success-color) 10%, transparent);
