@@ -655,8 +655,47 @@ function filterAndRenderBatchResults() {
         return;
     }
     
+    // 8. 渲染數據
+    if (finalData.length === 0) {
+        let message = totalCount === 0 
+            ? '沒有符合篩選條件 (機率/ID) 的客戶' 
+            : '找不到當前頁面數據 (可能是分頁錯誤)';
+        
+        if (tbody) tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">${message}</td></tr>`;
+        // 無論是否有數據，都清空詳情面板
+        displayFeatureDetails(null); 
+        return;
+    }
+
+    // 關鍵修改：添加行點擊事件
     finalData.forEach(row => {
         const tr = document.createElement('tr');
+        
+        // --- 新增：行點擊事件處理 START ---
+        // 1. 儲存完整的行數據 (包含特徵) 到 DOM 元素上
+        tr.dataset.rowData = JSON.stringify(row); 
+        
+        // 2. 添加點擊事件監聽器
+        tr.addEventListener('click', function() {
+            // A. 移除所有行上的選中標記
+            document.querySelectorAll('#batchResultBody tr').forEach(rowEl => {
+                rowEl.classList.remove('selected-row');
+            });
+
+            // B. 為當前點擊的行添加選中標記 (CSS 會改變樣式)
+            this.classList.add('selected-row');
+
+            // C. 解析並顯示詳情
+            try {
+                // 從 dataset 中解析完整的行數據 (包含 10 個特徵)
+                const rowData = JSON.parse(this.dataset.rowData);
+                displayFeatureDetails(rowData);
+            } catch (e) {
+                console.error("解析行數據失敗:", e);
+                displayFeatureDetails(null); // 清空詳情面板
+            }
+        });
+        // --- 新增：行點擊事件處理 END ---
         
         let probability = row.probability;
         if (typeof probability !== 'number' || isNaN(probability)) {
@@ -722,6 +761,39 @@ function handlePageInput() {
         // 確保輸入框的值是正確的
         pageInput.value = currentPage; 
     }
+}
+
+// =========================================================================
+// 批次結果視圖重置 (例如：新檔案上傳後)
+// =========================================================================
+function resetBatchView() {
+    // 重設分頁和篩選數據
+    currentPage = 1;
+    // 重新從原始數據開始
+    currentFilteredData = originalBatchData; 
+    totalPages = Math.ceil(currentFilteredData.length / ITEMS_PER_PAGE);
+    
+    // 重設篩選欄位
+    const idSearchInput = document.getElementById('idSearchInput');
+    const thresholdInput = document.getElementById('thresholdInput');
+    if (idSearchInput) idSearchInput.value = '';
+    // 將流失機率門檻值重設為 50
+    if (thresholdInput) thresholdInput.value = '50';
+    
+    // --- 關鍵新增：清空特徵詳情面板 START ---
+    const grid = document.getElementById('featureGrid');
+    const placeholder = document.getElementById('featureDetailsPlaceholder');
+    
+    if (grid && placeholder) {
+        // 清空內容，並顯示佔位符
+        grid.innerHTML = '';
+        grid.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+    }
+    // --- 關鍵新增：清空特徵詳情面板 END ---
+    
+    // 重新執行篩選與渲染 (由於篩選欄位已重設，這將顯示第一頁的原始數據)
+    filterAndRenderBatchResults(); 
 }
 
 // =========================================================================
@@ -863,5 +935,84 @@ function renderChartsFromBase64(charts) {
         div.appendChild(title);
         div.appendChild(img);
         chartContainer.appendChild(div);
+    });
+}
+
+// --- 單筆特徵詳情相關變數和函式 ---
+
+// 定義要顯示的特徵及其中文名稱和順序 (共 10 個核心特徵)
+const FEATURE_DISPLAY_MAP = {
+    'CreditScore': '信用分數',
+    'Geography': '所在國家',
+    'Gender': '性別',
+    'Age': '客戶年齡 (歲)', // 使用者要求
+    'Tenure': '服務年限 (年)', // 使用者要求
+    'Balance': '帳戶餘額 (NT$)',
+    'NumOfProducts': '產品數量',
+    'HasCrCard': '持有信用卡',
+    'IsActiveMember': '活躍客戶',
+    'EstimatedSalary': '預估薪資 (NT$)'
+};
+
+const FEATURE_DISPLAY_ORDER = [
+    'CreditScore', 'Geography', 'Gender', 'Age', 'Tenure', 
+    'Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember', 'EstimatedSalary'
+];
+
+
+/**
+ * 渲染單筆客戶的特徵詳情到指定面板
+ * @param {Object} data - 包含客戶特徵的單筆數據物件
+ */
+function displayFeatureDetails(data) {
+    const grid = document.getElementById('featureGrid');
+    const placeholder = document.getElementById('featureDetailsPlaceholder');
+
+    if (!data) {
+        grid.classList.add('hidden');
+        placeholder.classList.remove('hidden');
+        return;
+    }
+    
+    // 顯示網格，隱藏佔位符
+    placeholder.classList.add('hidden');
+    grid.classList.remove('hidden');
+    grid.innerHTML = ''; // 清空舊內容
+
+    // 依序渲染 10 個特徵
+    FEATURE_DISPLAY_ORDER.forEach(key => {
+        const label = FEATURE_DISPLAY_MAP[key];
+        let value = data[key];
+        
+        // 數值格式化處理
+        if (key === 'Balance' || key === 'EstimatedSalary') {
+            // 格式化為貨幣，顯示兩位小數
+            value = new Intl.NumberFormat('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            }).format(value);
+        } else if (key === 'HasCrCard' || key === 'IsActiveMember') {
+            // 0/1 轉換為 是/否
+            value = value === 1 ? '是' : '否';
+        } else if (typeof value === 'number') {
+             // 其他數字特徵（如年齡、信用分數）取整
+             value = Math.round(value); 
+        }
+
+        // 建立特徵顯示元素
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'feature-item border border-gray-200 rounded-md p-3'; // 使用 CSS class
+
+        const labelP = document.createElement('p');
+        labelP.className = 'font-bold whitespace-nowrap text-gray-700 text-sm mb-1';
+        labelP.textContent = label;
+
+        const valueSpan = document.createElement('span');
+        valueSpan.className = 'text-lg text-blue-600 font-semibold block';
+        valueSpan.textContent = value;
+        
+        itemDiv.appendChild(labelP);
+        itemDiv.appendChild(valueSpan);
+        grid.appendChild(itemDiv);
     });
 }

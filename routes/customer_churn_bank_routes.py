@@ -429,18 +429,32 @@ def predict_batch():
         
         # 5. 準備 JSON 回應
         
-        # 這裡只需要 'id' 和 'probability'
-        result_df_cleaned = pd.DataFrame({
-            'id': input_df_processed['id'], 
-            'probability': result_df['Exited_Probability'],
-        })
+        # 選擇要返回的原始特徵欄位
+        # 包含 10 個核心特徵 + id (共 11 個欄位)
+        feature_cols_to_return = [
+            'id', 'CreditScore', 'Geography', 'Gender', 'Age', 'Tenure', 
+            'Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember', 'EstimatedSalary'
+        ]
         
-        # 關鍵：處理 NaN 值，避免 JSON 序列化錯誤
-        result_df_cleaned['id'] = result_df_cleaned['id'].fillna(0).astype(int)
-        result_df_cleaned['probability'] = result_df_cleaned['probability'].fillna(0.0).astype(float)
+        # 確保只有在 CSV 檔中存在的欄位被選取
+        available_cols = [col for col in feature_cols_to_return if col in input_df_processed.columns]
+        
+        # 合併原始特徵和預測結果
+        result_df_full = input_df_processed[available_cols].copy()
+        result_df_full['probability'] = result_df['Exited_Probability']
+        
+        # 關鍵：處理 NaN 值、四捨五入和資料類型轉換，避免 JSON 序列化錯誤
+        for col in ['id', 'NumOfProducts', 'HasCrCard', 'IsActiveMember']:
+             if col in result_df_full.columns:
+                 result_df_full[col] = result_df_full[col].fillna(0).astype(int)
+
+        for col in ['CreditScore', 'Age', 'Tenure', 'Balance', 'EstimatedSalary', 'probability']:
+             if col in result_df_full.columns:
+                 # 保留小數點後兩位，並處理 NaN
+                 result_df_full[col] = result_df_full[col].fillna(0.0).astype(float).round(2) 
         
         # 轉換為前端所需的 JSON 列表格式
-        result_list = result_df_cleaned.to_dict('records')
+        result_list = result_df_full.to_dict('records')
         
         # 6. 返回結果
         return jsonify({
