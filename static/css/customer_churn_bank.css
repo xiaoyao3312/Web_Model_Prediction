@@ -494,7 +494,8 @@
 /* 6.2 主要表格樣式 */
 #customerChurnBank .fl-table {
     /* 尺寸與定位 */
-    border-collapse:    collapse;
+    border-collapse: separate; /* 讓單元格邊框獨立 */
+    border-spacing: 0; /* 消除瀏覽器預設間距 */
     width:              100%;
     max-width:          100%;
     white-space:        nowrap;
@@ -517,6 +518,7 @@
     text-align: center;
     padding:    var(--customerChurnBank-10px);
     cursor: pointer;
+    border: var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color); 
 }
 
 /* 6.6 表格圓角與邊框處理 */
@@ -610,46 +612,6 @@
     text-align: center;
 }
 
-
-
-
-/* ====================================== */
-/* --- . 特徵詳情與批次表格選中樣式 --- */
-/* ====================================== */
-
-/* 批次結果表格選中列的樣式 */
-#customerChurnBank .fl-table tbody tr.selected-row {
-    background-color: var(--customerChurnBank-global-bg-color); 
-    color: var(--customerChurnBank-global-font-color); 
-    border: var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color); 
-    box-shadow: var(--customerChurnBank-box-shadow)
-}
-
-/* 特徵詳情網格的樣式 (用於響應式佈局) */
-#featureGrid {
-    grid-template-columns: repeat(2, minmax(0, 1fr)); /* 預設 2 欄 */
-}
-
-/* 單個特徵項目的樣式 */
-#customerChurnBank .feature-item {
-    transition: all 0.3s ease;
-    background-color: var(--customerChurnBank-panel-bg-color); /* 卡片背景色 */
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-}
-
-/* 特徵名稱 */
-#customerChurnBank .feature-item p {
-    font-size: 0.875rem; /* text-sm */
-    margin-bottom: 0.25rem;
-    color: var(--customerChurnBank-global-font-color);
-}
-
-/* 特徵數值 */
-#customerChurnBank .feature-item span {
-    font-size: 1.125rem; /* text-lg */
-    font-weight: 700; /* Extra bold */
-}
-
 /* ====================================== */
 /* --- . 特徵詳情與批次表格選中樣式 --- */
 /* ====================================== */
@@ -662,10 +624,6 @@
     box-shadow: var(--customerChurnBank-box-shadow)
 }
 
-/* -------------------------------------- */
-/* 新增特徵網格佈局樣式 */
-/* -------------------------------------- */
-
 /* 1. 特徵網格容器 (featureGrid) */
 #featureGrid {
     display: grid;
@@ -673,19 +631,6 @@
     grid-template-columns: repeat(2, minmax(0, 1fr)); 
     gap: var(--customerChurnBank-10px); /* 網格間距 */
 }
-/* 媒體查詢用於切換欄數 */
-@media (min-width: 640px) {
-    #featureGrid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-@media (min-width: 1024px) {
-    #featureGrid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
-
-
 /* 2. 單個特徵項目 (.feature-item) */
 #customerChurnBank .feature-item {
     /* 樣式對應: border border-gray-200 rounded-md p-3 */
@@ -714,6 +659,19 @@
     font-weight: 700; /* font-semibold */
     color: var(--success-color); /* 模擬 text-blue-600 */
     display: block;
+}
+
+/* 特徵名稱 */
+#customerChurnBank .feature-item p {
+    font-size: 0.875rem; /* text-sm */
+    margin-bottom: 0.25rem;
+    color: var(--customerChurnBank-global-font-color);
+}
+
+/* 特徵數值 */
+#customerChurnBank .feature-item span {
+    font-size: 1.125rem; /* text-lg */
+    font-weight: 700; /* Extra bold */
 }
 
 /* 初始狀態類別 */
@@ -861,5 +819,4 @@
     #featureGrid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
-
 }
