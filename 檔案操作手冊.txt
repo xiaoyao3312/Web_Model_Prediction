@@ -3,7 +3,7 @@ Web_Learning_Model 專案操作手冊
 更新專案到 GitHub
 git status                                # 1️⃣ 檢查狀態
 git add .                                 # 2️⃣ 暫存修改
-git commit -m "你的描述"                   # 3️⃣ Commit
+git commit -m ""                          # 3️⃣ Commit
 git push                                  # 4️⃣ 推送到 GitHub
 
 背景顏色調整小工具(color_bg_control) 使用方法（任意頁面）

@@ -5,6 +5,7 @@ import logging
 import joblib
 import shap
 import os
+import sys  # 🚨 導入 sys 用於強制打印到 stderr
 
 from typing import Dict, Any, List, Callable
 
@@ -16,6 +17,7 @@ logger.setLevel(logging.INFO)
 
 class CustomerChurnBankService:
     def __init__(self, model_path: str, model_dir: str):
+        # 🚨 _load_model 裡面現在有強制錯誤處理
         self.model = self._load_model(model_path)
         self.model_dir = model_dir
         
@@ -40,6 +42,10 @@ class CustomerChurnBankService:
         feature_cols_path = os.path.join(model_dir, 'feature_columns.joblib')
         fe_name_path = os.path.join(model_dir, 'fe_pipeline_name.txt')
         
+        # 🚨 強制打印路徑，確保這些檔案工件路徑也沒問題
+        print(f"DEBUG: 嘗試載入特徵欄位路徑: {feature_cols_path}", file=sys.stderr)
+        print(f"DEBUG: 嘗試載入 FE 名稱路徑: {fe_name_path}", file=sys.stderr)
+        
         if not os.path.exists(feature_cols_path) or not os.path.exists(fe_name_path):
             logger.warning(f"模型工件 (feature_columns/fe_pipeline_name) 未找到於 {model_dir}")
             return [], "" # 返回空列表和空字符串，以便後續使用模擬預測
@@ -51,21 +57,29 @@ class CustomerChurnBankService:
             logger.info(f"特徵列 ({len(feature_cols)}) 和 FE 管道名稱 ({fe_pipeline_name}) 載入成功。")
             return feature_cols, fe_pipeline_name
         except Exception as e:
-            logger.error(f"載入模型工件失敗: {e}")
-            return [], ""
+            logger.error(f"載入模型工件失敗: {e}", exc_info=True)
+            # 🚨 遇到錯誤，強制拋出
+            raise RuntimeError(f"模型工件載入致命錯誤. 原因: {e}") from e
 
     def _load_model(self, model_path: str) -> Any:
         """載入預訓練的機器學習模型。"""
+        # 🚨 強制打印路徑，確保即使是 Worker Process 也能將此信息輸出到 Render 日誌
+        print(f"DEBUG: 嘗試載入模型路徑: {model_path}", file=sys.stderr) 
+
         if not os.path.exists(model_path):
-            logger.warning(f"模型檔案未找到: {model_path}")
-            return None
+            logger.error(f"!!! 嚴重錯誤 !!! 模型檔案未找到: {model_path}")
+            # 🚨 遇到錯誤，強制拋出 FileNotFoundError
+            raise FileNotFoundError(f"模型檔案不存在於指定路徑: {model_path}")
+        
         try:
             model = joblib.load(model_path)
             logger.info(f"模型 {model_path} 載入成功。")
             return model
         except Exception as e:
-            logger.error(f"載入模型失敗: {e}")
-            return None
+            logger.error(f"!!! 嚴重錯誤 !!! 載入模型失敗: {e}", exc_info=True)
+            # 🚨 遇到錯誤，強制拋出 RuntimeError
+            raise RuntimeError(f"模型載入致命錯誤: {model_path} 載入失敗. 原因: {e}") from e
+
 
     def _align_features(self, df_processed: pd.DataFrame) -> pd.DataFrame:
         """根據訓練時的特徵列表進行 OHE 和欄位對齊。"""
