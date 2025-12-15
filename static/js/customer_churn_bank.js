@@ -228,9 +228,9 @@ function initializeDropdowns() {
 
         input.addEventListener('click', (e) => {
             document.querySelectorAll('.dropdown-list').forEach(l => {
-                if (l !== list) l.classList.add('hidden');
+                if (l !== list) l.classList.add('bank-hidden');
             });
-            list.classList.toggle('hidden');
+            list.classList.toggle('bank-hidden');
             e.stopPropagation();
         });
 
@@ -238,13 +238,13 @@ function initializeDropdowns() {
             item.addEventListener('click', () => {
                 input.value = item.textContent.trim();
                 input.setAttribute('data-value', item.getAttribute('data-value'));
-                list.classList.add('hidden');
+                list.classList.add('bank-hidden');
             });
         });
     });
 
     document.addEventListener('click', () => {
-        document.querySelectorAll('.dropdown-list').forEach(l => l.classList.add('hidden'));
+        document.querySelectorAll('.dropdown-list').forEach(l => l.classList.add('bank-hidden'));
     });
 }
 
@@ -272,7 +272,7 @@ async function runPredictionAndExplain() {
 
     AiAnalyzeButton.disabled = true;
     if (predictOnlyBtn) predictOnlyBtn.disabled = true;
-    if (errorMsg) errorMsg.classList.add('hidden');
+    if (errorMsg) errorMsg.classList.add('bank-hidden');
 
     if (predictionOutput) {
         predictionOutput.innerHTML = '<h6 class="initial-message">AI 分析運行中。結果將在下方專家解釋區顯示。</h6>';
@@ -308,7 +308,7 @@ async function runPredictionAndExplain() {
             `關鍵特徵影響因素分析:\n${predictResult.explanation_prompt}\n\n` +
             `請根據以上資訊，並遵循以下使用者指令，提供結構化解釋和行動建議：\n\n【使用者指令】\n${aiPrompt}`;
 
-        const predictionHtml = `<h6 class="bank-card-title"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </h6>`;
+        const predictionHtml = `<h6 class="bank-card-title"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(3)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </h6>`;
         if (predictionOutput) {
             predictionOutput.innerHTML = predictionHtml;
         }
@@ -332,7 +332,7 @@ async function runPredictionAndExplain() {
         console.error("預測或解釋失敗:", error);
         if (errorMsg) {
             errorMsg.innerHTML = `錯誤: <br>${error.message.replace(/\n/g, '<br>')}`;
-            errorMsg.classList.remove('hidden');
+            errorMsg.classList.remove('bank-hidden');
         }
 
         if (explanationOutput) explanationOutput.innerHTML = '<h6 class="bank-card-title">預測或 AI 解釋失敗。</h6>';
@@ -374,7 +374,7 @@ async function uploadAndPredictBatch() {
     document.getElementById('predictionOutput').innerHTML = '<h6 class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</ph6'; 
     
     if (filterStats) filterStats.innerHTML = '';
-    if (batchResultBody) batchResultBody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
+    if (batchResultBody) batchResultBody.innerHTML = '<tr><td colspan="3" class="bank-card-title"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
 
 
     try {
@@ -452,7 +452,7 @@ async function uploadAndPredictBatch() {
         console.error("批次預測失敗:", error);
         
         if (batchResultBody) batchResultBody.innerHTML = 
-            `<tr><td colspan="3" class="error-message" style="text-align:center; padding:20px;">
+            `<tr><td colspan="3" class="error-message">
                 ❌ 批次預測失敗:<br> ${error.message.replace(/\n/g, '<br>')}
             </td></tr>`;
         
@@ -575,7 +575,7 @@ function filterAndRenderBatchResults() {
 
     if (originalBatchData.length === 0) { 
         if (statsDiv) statsDiv.innerHTML = '請先上傳 CSV 檔案進行批次分析。';
-        if (tbody) tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">請上傳 CSV 檔案進行批次分析</td></tr>';
+        if (tbody) tbody.innerHTML = '<tr><td colspan="3" class="bank-card-title">請上傳 CSV 檔案進行批次分析</td></tr>';
         if (pageInput) pageInput.value = 1;
         if (pageInfo) pageInfo.textContent = ' / 1';
         if (prevPageBtn) prevPageBtn.disabled = true;
@@ -631,7 +631,7 @@ function filterAndRenderBatchResults() {
         statsDiv.innerHTML = `
             <strong>總筆數</strong>: ${originalBatchData.length} &nbsp; | &nbsp; 
             <strong>篩選後符合條件客戶數</strong>: 
-            <span class="prob-value high-risk">${currentFilteredData.length}</span> 位
+            <span class="high-risk">${currentFilteredData.length}</span> 位
             (機率 > ${thresholdPercent}%)
         `;
         statsDiv.style.fontWeight = '500';
@@ -705,7 +705,7 @@ function filterAndRenderBatchResults() {
         const probPercent = (probability * 100).toFixed(2) + '%';
         const isHighRisk = probability > 0.5; 
         
-        const riskClass = isHighRisk ? 'high-risk-tag' : 'low-risk-tag';
+        const riskClass = isHighRisk ? 'high-risk' : 'low-risk';
         const riskLabel = isHighRisk ? '高風險' : '低風險';
 
         // 渲染 3 個欄位 (ID, 流失機率, 風險等級)
@@ -787,8 +787,8 @@ function resetBatchView() {
     if (grid && placeholder) {
         // 清空內容，並顯示佔位符
         grid.innerHTML = '';
-        grid.classList.add('hidden');
-        placeholder.classList.remove('hidden');
+        grid.classList.add('bank-hidden');
+        placeholder.classList.remove('bank-hidden');
     }
     // --- 關鍵新增：清空特徵詳情面板 END ---
     
@@ -810,7 +810,7 @@ async function runPredictionOnly() {
 
     if (AiAnalyzeButton) AiAnalyzeButton.disabled = true;
     if (predictOnlyBtn) predictOnlyBtn.disabled = true;
-    if (errorMsg) errorMsg.classList.add('hidden');
+    if (errorMsg) errorMsg.classList.add('bank-hidden');
 
     // ✨ 修改點 2: 更新顯示等待訊息的元素
     if (predictionOutput) predictionOutput.innerHTML = '<h6 class="initial-message">正在運行模型預測，請稍候...</h6>';
@@ -837,7 +837,7 @@ async function runPredictionOnly() {
 
         // ✨ 修改點 3: 將結果輸出到 predictionOutput
         if (predictionOutput) {
-            predictionOutput.innerHTML = `<h6 class="bank-card-title"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(2)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <h6>`;
+            predictionOutput.innerHTML = `<h6 class="bank-card-title"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(3)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <h6>`;
         }
 
         renderChartsFromBase64(charts);
@@ -845,7 +845,7 @@ async function runPredictionOnly() {
     } catch (error) {
         if (errorMsg) {
             errorMsg.innerHTML = `錯誤:<br>${error.message.replace(/\n/g, '<br>')}`;
-            errorMsg.classList.remove('hidden');
+            errorMsg.classList.remove('bank-hidden');
         }
 
         // ✨ 修改點 4: 錯誤訊息輸出到 predictionOutput 和 explanationOutput
@@ -969,14 +969,18 @@ function displayFeatureDetails(data) {
     const placeholder = document.getElementById('featureDetailsPlaceholder');
 
     if (!data) {
-        grid.classList.add('hidden');
-        placeholder.classList.remove('hidden');
+        // 沒有數據時：顯示佔位符，隱藏網格
+        grid.classList.add('bank-hidden');
+        placeholder.classList.remove('bank-hidden');
         return;
     }
     
     // 顯示網格，隱藏佔位符
-    placeholder.classList.add('hidden');
-    grid.classList.remove('hidden');
+    placeholder.classList.add('bank-hidden');
+    grid.classList.remove('bank-hidden');
+    // 移除初始佔位符類別（可選，但保持狀態整潔）
+    grid.classList.remove('initial-feature-grid'); 
+
     grid.innerHTML = ''; // 清空舊內容
 
     // 依序渲染 10 個特徵
@@ -984,7 +988,7 @@ function displayFeatureDetails(data) {
         const label = FEATURE_DISPLAY_MAP[key];
         let value = data[key];
         
-        // 數值格式化處理
+        // 數值格式化處理 (邏輯不變)
         if (key === 'Balance' || key === 'EstimatedSalary') {
             // 格式化為貨幣，顯示兩位小數
             value = new Intl.NumberFormat('en-US', {
@@ -1001,14 +1005,17 @@ function displayFeatureDetails(data) {
 
         // 建立特徵顯示元素
         const itemDiv = document.createElement('div');
-        itemDiv.className = 'feature-item border border-gray-200 rounded-md p-3'; // 使用 CSS class
+        // 應用新的 CSS 類別，移除所有 Tailwind 類別
+        itemDiv.className = 'feature-item'; 
 
         const labelP = document.createElement('p');
-        labelP.className = 'font-bold whitespace-nowrap text-gray-700 text-sm mb-1';
+        // 應用新的 CSS 類別
+        labelP.className = 'feature-item-label';
         labelP.textContent = label;
 
         const valueSpan = document.createElement('span');
-        valueSpan.className = 'text-lg text-blue-600 font-semibold block';
+        // 應用新的 CSS 類別
+        valueSpan.className = 'feature-item-value';
         valueSpan.textContent = value;
         
         itemDiv.appendChild(labelP);
