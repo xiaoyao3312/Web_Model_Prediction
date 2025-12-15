@@ -19,23 +19,32 @@ class CustomerChurnBankService:
     def __init__(self, model_path: str, model_dir: str):
         # 🚨 _load_model 裡面現在有強制錯誤處理
         self.model = self._load_model(model_path)
+        # 🚨 [新增] 如果模型成功載入，打印成功訊息
+        if self.model is not None:
+            logger.info("模型載入成功，準備初始化 SHAP Explainer。") # 🚨 新增
         self.model_dir = model_dir
         
         # 載入訓練時保存的特徵列表和 FE 管道名稱
         self.feature_cols, self.fe_pipeline_name = self._load_model_artifacts(model_dir)
         
         # 建立 SHAP Explainer (在服務啟動時一次性完成)
-        # 僅當模型成功載入時才初始化 Explainer
         if self.model:
             try:
-                # 假設模型是 XGBoost，使用 TreeExplainer
-                self.explainer = shap.TreeExplainer(self.model)
+                # 🚨 [修改] 暫時註釋掉 SHAP 初始化，以確認載入是否成功
+                self.explainer = shap.TreeExplainer(self.model) 
                 logger.info("SHAP TreeExplainer 成功初始化。")
+                
+                # # 🚨 [新增] 臨時設定 Explainer 為 None，並打印跳過訊息
+                # self.explainer = None
+                # logger.warning("!!! SHAP 初始化暫時跳過，用於模型載入測試 !!!") 
+            
             except Exception as e:
-                logger.warning(f"初始化 SHAP TreeExplainer 失敗: {e}")
-                self.explainer = None
+                # 🚨 【重要】如果 SHAP 失敗，打印嚴重錯誤
+                print(f"!!! 嚴重錯誤 !!! SHAP 初始化失敗: {e}", file=sys.stderr) 
+                raise RuntimeError(f"SHAP 初始化失敗，服務無法啟動: {e}") 
         else:
-            self.explainer = None
+            # 這應該在 _load_model 裡面已經處理，但作為最終保障
+            raise RuntimeError("模型載入失敗，無法初始化服務。")
 
     def _load_model_artifacts(self, model_dir: str) -> tuple[List[str], str]:
         """載入訓練腳本產生的特徵列表和 FE 管道名稱。"""
