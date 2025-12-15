@@ -216,6 +216,11 @@ CUSTOMER_CHURN_BANK_SERVICE = None
 GLOBAL_SHAP_BASE64 = "" # 用於儲存預先載入的全局 SHAP 圖
 
 try:
+    # 打印路徑信息
+    logger.info(f"模型路徑: {MODEL_PATH_FULL}")
+    logger.info(f"模型目錄: {MODEL_DIR}")
+    logger.info(f"全局 SHAP 路徑: {GLOBAL_SHAP_FILE}")
+
     # 1. 初始化模型服務
     CUSTOMER_CHURN_BANK_SERVICE = CustomerChurnBankService(
         model_path=MODEL_PATH_FULL,
@@ -232,7 +237,20 @@ try:
         logger.warning(f"全局 SHAP 圖表檔案未找到: {GLOBAL_SHAP_FILE}。無法提供全局解釋圖。")
 
 except Exception as e:
-    logger.error(f"初始化服務或載入全局資源失敗: {e}")
+    # 這裡是最關鍵的修正：不僅記錄錯誤，還將錯誤信息打印出來
+    error_message = f"!!! 嚴重錯誤 !!! 初始化服務或載入全局資源失敗: {e}"
+    logger.error(error_message, exc_info=True)
+    
+    # 為了確保錯誤訊息能被捕捉，我們在這裡強制讓應用程式啟動失敗，並打印錯誤路徑
+    # 這一行在 Production 中應該避免，但在診斷時非常有用
+    # 檢查是否為FileNotFoundError
+    if isinstance(e, FileNotFoundError):
+        logger.error(f"路徑錯誤：模型或資源檔案未找到。檢查路徑：{MODEL_PATH_FULL} 或 {GLOBAL_SHAP_FILE}")
+        # 為了讓 Gunicorn/Render 捕捉到錯誤，重新拋出異常
+        raise RuntimeError(f"模型初始化失敗，檔案路徑錯誤：{e}") from e
+    
+    # 對其他錯誤也強制拋出
+    raise RuntimeError(f"模型初始化失敗：{e}") from e
 
 # --- Blueprint 定義 ---
 customer_churn_bank_blueprint = Blueprint('customer_churn_bank_blueprint', __name__)

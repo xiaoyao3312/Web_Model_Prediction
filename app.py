@@ -29,11 +29,7 @@ def customer_churn_bank_page():
     return render_template('customer_churn_bank.html')
 
 # --- 啟動服務 (Gunicorn 會忽略此區塊，但保留供本地開發使用) ---
-# if __name__ == '__main__':
-#     print("服務器啟動...")
-#     # host='0.0.0.0' 允許伺服器監聽所有網路接口
-#     app.run(host='0.0.0.0', port=5000)
-
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
-    app.run(host='0.0.0.0', port=port, debug=True)
+    print("服務器啟動...")
+    # host='0.0.0.0' 允許伺服器監聽所有網路接口
+    app.run(host='0.0.0.0', port=5000)
