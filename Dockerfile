@@ -3,14 +3,21 @@
 # 使用穩定的 Python 3.11 版本作為基礎映像檔
 FROM python:3.11-slim
 
-# --- 標準基礎套件安裝 (僅保留標準 Linux 依賴，移除中文字體和 fc-cache) ---
+# --- 標準基礎套件安裝 ---
 # 1. 更新套件列表
 RUN apt-get update && \
 # 2. 安裝繪圖所需的基礎函式庫 (用於 Matplotlib 穩定運行，非中文字體)
-    apt-get install -y libgirepository1.0-dev libcairo2 libpango-1.0-0 libpangocairo-1.0-0 libgdk-pixbuf2.0-0 libffi-dev shared-mime-info && \
+    apt-get install -y \
+        libgirepository1.0-dev \
+        libcairo2 \
+        libpango-1.0-0 \
+        libpangocairo-1.0-0 \
+        # 🚨 【關鍵修正點】將 libgdk-pixbuf2.0-0 替換為以下套件
+        libgdk-pixbuf-xlib-2.0-0 \
+        libffi-dev \
+        shared-mime-info && \
 # 3. 清理以減小映像檔大小
     rm -rf /var/lib/apt/lists/*
-# ------------------------------------------------------------------------
     
 # 設置容器內的工作目錄
 WORKDIR /app
