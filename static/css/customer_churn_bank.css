@@ -111,8 +111,8 @@
     /* 間距與邊框 (下邊線) */
     border-bottom:  var(--customerChurnBank-2px) solid var(--customerChurnBank-global-font-color); 
     margin-top:     var(--customerChurnBank-10px);
-    margin-bottom:  var(--customerChurnBank-10px);
-    padding-bottom: var(--customerChurnBank-10px);
+    margin-bottom:  var(--customerChurnBank-5px);
+    padding-bottom: var(--customerChurnBank-5px);
     /* 動畫 */
     transition:     var(--customerChurnBank-global-transition);
 }
@@ -303,8 +303,8 @@
     
     
     /* 字體與間距 */
-    font-size:  clamp(0.75rem, 2vw, var(--customerChurnBank-1rem));
-    gap:        0.25rem;
+    font-size:  var(--h6-font-size);
+    gap:        var(--customerChurnBank-5px);
 }
 
 /* 3.4 標籤樣式 */
