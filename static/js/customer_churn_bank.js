@@ -112,8 +112,8 @@ document.addEventListener('DOMContentLoaded', () => {
         apiStatusMsg.textContent = '✅ AI 功能已啟用。請執行分析。';
         apiStatusMsg.style.color = 'var(--success-color)';
         // 這裡修正了使用變數的方式，但假設 --font-weight-900 和 --h6-font-size 已經被定義
-        apiStatusMsg.style.fontWeight = 'bold'; // 避免未定義變數錯誤
-        apiStatusMsg.style.fontSize = '1em';    // 避免未定義變數錯誤
+        apiStatusMsg.style.fontWeight = 'var(--font-weight-900)'; // 避免未定義變數錯誤
+        apiStatusMsg.style.fontSize = 'var(--h6-font-size)';    // 避免未定義變數錯誤
         updateUIState(true);
     }
 
@@ -128,8 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
         apiStatusMsg.textContent = '❌ AI 功能已禁用！請輸入 Key。';
         apiStatusMsg.style.color = 'var(--error-color)';
         // 這裡修正了使用變數的方式，但假設 --font-weight-900 和 --h6-font-size 已經被定義
-        apiStatusMsg.style.fontWeight = 'bold'; // 避免未定義變數錯誤
-        apiStatusMsg.style.fontSize = '1em';    // 避免未定義變數錯誤
+        apiStatusMsg.style.fontWeight = 'var(--font-weight-900)'; // 避免未定義變數錯誤
+        apiStatusMsg.style.fontSize = 'var(--h6-font-size)';    // 避免未定義變數錯誤
         updateUIState(false);
     }
 
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (initialMessage) {
             if (isEnabled) {
-                initialMessage.innerHTML = '<h6 c>AI 功能已啟用。請輸入指令，然後點擊按鈕執行分析。</h6>';
+                initialMessage.innerHTML = '<h6 class="bank-card-title">AI 功能已啟用。請輸入指令，然後點擊按鈕執行分析。</h6>';
             } else {
                 initialMessage.innerHTML = '<h6 class="bank-card-title">AI 功能已禁用！請在上方輸入 API Key 並點擊啟用按鈕。</h6>';
             }

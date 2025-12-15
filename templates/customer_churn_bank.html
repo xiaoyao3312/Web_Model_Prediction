@@ -165,7 +165,7 @@
                 <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M420.9 448C428.2 425.7 442.8 405.5 459.3 388.1C492 353.7 512 307.2 512 256C512 150 426 64 320 64C214 64 128 150 128 256C128 307.2 148 353.7 180.7 388.1C197.2 405.5 211.9 425.7 219.1 448L420.8 448zM416 496L224 496L224 512C224 556.2 259.8 592 304 592L336 592C380.2 592 416 556.2 416 512L416 496zM312 176C272.2 176 240 208.2 240 248C240 261.3 229.3 272 216 272C202.7 272 192 261.3 192 248C192 181.7 245.7 128 312 128C325.3 128 336 138.7 336 152C336 165.3 325.3 176 312 176z"/></svg>AI 報告解釋區</h3>
                 
                 <div id="explanationOutput" class="output-content">
-                    <p id="initialMessage" class="initial-message">請先在上方輸入並**啟用**您的 Gemini API Key，然後輸入參數和指令，才能執行分析。</p>
+                    <h6 id="initialMessage" class="initial-message">請先在上方輸入並**啟用**您的 Gemini API Key，然後輸入參數和指令，才能執行分析。</h6>
                 </div>
             </div>
 
@@ -193,7 +193,9 @@
 
         <hr class="bank-card-divider mt-8">
 
-        <div id="batch-result-panel" class="bank-card mt-6">
+        <div class="bank-card-batch-panel-grid">
+
+        <div class="bank-card bank-batch-result-panel">
             <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M352 224L352 320L480 320L480 224L352 224zM288 224L160 224L160 320L288 320L288 224zM96 384L96 160C96 124.7 124.7 96 160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 384zM480 384L352 384L352 480L480 480L480 384zM288 480L288 384L160 384L160 480L288 480z"/></svg>批次分析結果列表</h3>
             
             <div class="filter-controls">
@@ -247,12 +249,13 @@
             <h6 class="bank-card-title"></h6>
         </div>
 
-        <div class="bank-card">
-            <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M352 224L352 320L480 320L480 224L352 224zM288 224L160 224L160 320L288 320L288 224zM96 384L96 160C96 124.7 124.7 96 160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 384zM480 384L352 384L352 480L480 480L480 384zM288 480L288 384L160 384L160 480L288 480z"/></svg>批次分析結果列表 單筆客戶特徵詳情</h3>
+        <div class="bank-card bank-batch-feature-panel">
+            <h3 class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M352 224L352 320L480 320L480 224L352 224zM288 224L160 224L160 320L288 320L288 224zM96 384L96 160C96 124.7 124.7 96 160 96L480 96C515.3 96 544 124.7 544 160L544 480C544 515.3 515.3 544 480 544L160 544C124.7 544 96 515.3 96 480L96 384zM480 384L352 384L352 480L480 480L480 384zM288 480L288 384L160 384L160 480L288 480z"/></svg>批次分析單筆客戶特徵</h3>
             <div id="featureDetailsPanel" class="p-4 border border-gray-200 rounded-lg bg-gray-50" style="min-height: 200px;">
                 <p id="featureDetailsPlaceholder" class="text-center text-gray-500 p-8">請點擊上方的客戶結果列表中的任一列，以查看詳細特徵。</p>
                 <div id="featureGrid" class="grid grid-cols-2 gap-4 hidden"></div>
             </div>
+        </div>
         </div>
     </div>
     
