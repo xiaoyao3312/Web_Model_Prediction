@@ -34,10 +34,12 @@ logger.info("Matplotlib font cache cleanup logic has been removed for stability.
 plt.rcParams['axes.unicode_minus'] = False # 確保負號正常顯示
 
 # --- 模型與資源路徑定義 ---
-MODEL_PATH_RELATIVE = Config.MODEL_BANK_PATH
-MODEL_DIR = os.path.join(PROJECT_ROOT, os.path.dirname(MODEL_PATH_RELATIVE))
+# 直接從 Config 類別中獲取已計算好的絕對路徑
+MODEL_PATH_FULL = Config.MODEL_BANK_PATH
 
-MODEL_PATH_FULL = os.path.join(PROJECT_ROOT, MODEL_PATH_RELATIVE)
+# MODEL_DIR 應該是模型檔案所在的目錄
+MODEL_DIR = os.path.dirname(MODEL_PATH_FULL)
+
 # 全局 SHAP 摘要圖路徑，用於載入預先計算的全局特徵重要性圖
 GLOBAL_SHAP_FILE = os.path.join(MODEL_DIR, "shap_summary_plot.png")
 
