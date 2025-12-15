@@ -65,7 +65,7 @@ def ensure_required_columns(df: pd.DataFrame, required_cols: List[str]) -> pd.Da
     檢查並補齊 DataFrame 中缺失的輔助欄位 ('CustomerId', 'Surname', 'RowNumber')。
     
     【注意】: 核心欄位 ('id' 和 REQUIRED_PREDICT_COLUMNS) 的缺失性檢查已在 predict_batch 中完成，
-             一旦發現缺失會立即拋出錯誤，不會進入這裡。
+    一旦發現缺失會立即拋出錯誤，不會進入這裡。
     """
     df_copy = df.copy()
     
@@ -468,10 +468,21 @@ def predict_batch():
              if col in result_df_full.columns:
                  result_df_full[col] = result_df_full[col].fillna(0).astype(int)
 
-        for col in ['CreditScore', 'Age', 'Tenure', 'Balance', 'EstimatedSalary', 'probability']:
+        # 處理一般數值欄位 (保留兩位小數並四捨五入，除了 probability)
+        for col in ['CreditScore', 'Age', 'Tenure', 'Balance', 'EstimatedSalary']:
              if col in result_df_full.columns:
-                 # 保留小數點後兩位，並處理 NaN
-                 result_df_full[col] = result_df_full[col].fillna(0.0).astype(float).round(2) 
+                 # 保留小數點後兩位，並處理 NaN (使用四捨五入)
+                 result_df_full[col] = result_df_full[col].fillna(0.0).astype(float).round(2)
+        
+        # --- 【關鍵修改】處理 'probability'，使用截斷 (Truncation) 到小數點後四位 ---
+        if 'probability' in result_df_full.columns:
+            n_decimals = 4 # ✅ 修改為截斷到四位小數 (例如 0.12345 -> 0.1234)
+            # 實施截斷: (P * 10^4) 的地板函數 / 10^4
+            result_df_full['probability'] = (
+                result_df_full['probability'].fillna(0.0) * (10**n_decimals)
+            ).apply(np.floor) / (10**n_decimals)
+            result_df_full['probability'] = result_df_full['probability'].astype(float) # 確保資料類型正確
+        # -------------------------------------------------------------------
         
         # 轉換為前端所需的 JSON 列表格式
         result_list = result_df_full.to_dict('records')

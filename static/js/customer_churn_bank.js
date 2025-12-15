@@ -702,7 +702,7 @@ function filterAndRenderBatchResults() {
             probability = 0; 
         }
 
-        const probPercent = (probability * 100).toFixed(1) + '%';
+        const probPercent = (probability * 100).toFixed(2) + '%';
         const isHighRisk = probability > 0.5; 
         
         const riskClass = isHighRisk ? 'high-risk-tag' : 'low-risk-tag';
