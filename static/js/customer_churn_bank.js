@@ -87,6 +87,22 @@ document.addEventListener('DOMContentLoaded', () => {
         header.addEventListener('click', handleSort);
     });
 
+    // 🌟🌟🌟 新增：單筆輸入欄位的即時驗證 🌟🌟🌟
+    const allInputFields = document.querySelectorAll('#inputForm input[data-feature-name]');
+    allInputFields.forEach(input => {
+        // 僅對數字輸入欄位進行即時範圍檢查
+        if (input.type === 'number') {
+            // 使用 'input' 事件進行即時檢查
+            input.addEventListener('input', () => {
+                validateInputRealTime(input);
+            });
+            // 使用 'change' 事件進行最終檢查 (例如：使用者從輸入框移開焦點時)
+            input.addEventListener('change', () => {
+                validateInputRealTime(input);
+            });
+        }
+    });
+
     // 分頁事件綁定
     if (prevPageBtn) prevPageBtn.addEventListener('click', () => handlePagination(-1));
     if (nextPageBtn) nextPageBtn.addEventListener('click', () => handlePagination(1));
@@ -166,6 +182,25 @@ const VALIDATION_RULES = {
     'Gender': { min: 0, max: 1, integer: true, msg: "生理性別 只能輸入 0 (男) 或 1 (女)。" },
 };
 
+// 定義要顯示的特徵及其中文名稱和順序 (共 10 個核心特徵)
+const FEATURE_DISPLAY_MAP = {
+    'CreditScore': '信用分數',
+    'Geography': '所在國家',
+    'Gender': '性別',
+    'Age': '客戶年齡 (歲)', // 使用者要求
+    'Tenure': '服務年限 (年)', // 使用者要求
+    'Balance': '帳戶餘額 (NT$)',
+    'NumOfProducts': '產品數量',
+    'HasCrCard': '持有信用卡',
+    'IsActiveMember': '活躍客戶',
+    'EstimatedSalary': '預估薪資 (NT$)'
+};
+
+const FEATURE_DISPLAY_ORDER = [
+    'CreditScore', 'Geography', 'Gender', 'Age', 'Tenure', 
+    'Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember', 'EstimatedSalary'
+];
+
 /**
  * 收集單筆表單輸入數據
  */
@@ -211,6 +246,63 @@ function collectInputData() {
     }
 
     return data;
+}
+
+/**
+ * 實時驗證單個輸入欄位，並顯示錯誤訊息
+ * @param {HTMLElement} inputElement - 要驗證的 input 元素
+ * @returns {boolean} - 驗證是否成功 (true) 或失敗 (false)
+ */
+function validateInputRealTime(inputElement) {
+    const featureName = inputElement.getAttribute('data-feature-name');
+    const rule = VALIDATION_RULES[featureName];
+    // 使用已經定義的 FEATURE_DISPLAY_MAP
+    const displayTitle = FEATURE_DISPLAY_MAP[featureName] || featureName; 
+    const errorElement = document.getElementById(`error_${featureName}`);
+
+    if (!rule || !errorElement) {
+        return true;
+    }
+
+    const value = inputElement.value.trim();
+    
+    // 如果欄位為空 (在即時驗證中允許，除非 collectInputData 階段強制檢查)
+    if (value === '') {
+        errorElement.classList.add('bank-hidden');
+        return true; 
+    }
+    
+    const numericValue = parseFloat(value);
+    let isValid = true;
+    let errorMessage = '';
+
+    // 1. 檢查是否為有效的數字 (這是最優先的檢查)
+    if (isNaN(numericValue)) {
+        isValid = false;
+        errorMessage = `必須為有效的數字。`;
+    } 
+    // 2. 檢查整數要求
+    else if (rule.integer && !Number.isInteger(numericValue)) {
+        isValid = false;
+        errorMessage = `必須為整數。`;
+    } 
+    // 3. 檢查範圍
+    else if (numericValue < rule.min || numericValue > rule.max) {
+        isValid = false;
+        errorMessage = `值必須介於 ${rule.min} 到 ${rule.max} 之間。`;
+    }
+    
+
+    // 顯示或隱藏錯誤訊息
+    if (!isValid) {
+        errorElement.textContent = `⚠️ ${displayTitle}：${errorMessage}`;
+        errorElement.classList.remove('bank-hidden');
+    } else {
+        errorElement.classList.add('bank-hidden');
+    }
+    
+    // 返回當前狀態
+    return isValid;
 }
 
 // =========================================================================
@@ -929,24 +1021,6 @@ function renderChartsFromBase64(charts) {
 
 // --- 單筆特徵詳情相關變數和函式 ---
 
-// 定義要顯示的特徵及其中文名稱和順序 (共 10 個核心特徵)
-const FEATURE_DISPLAY_MAP = {
-    'CreditScore': '信用分數',
-    'Geography': '所在國家',
-    'Gender': '性別',
-    'Age': '客戶年齡 (歲)', // 使用者要求
-    'Tenure': '服務年限 (年)', // 使用者要求
-    'Balance': '帳戶餘額 (NT$)',
-    'NumOfProducts': '產品數量',
-    'HasCrCard': '持有信用卡',
-    'IsActiveMember': '活躍客戶',
-    'EstimatedSalary': '預估薪資 (NT$)'
-};
-
-const FEATURE_DISPLAY_ORDER = [
-    'CreditScore', 'Geography', 'Gender', 'Age', 'Tenure', 
-    'Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember', 'EstimatedSalary'
-];
 
 
 /**
