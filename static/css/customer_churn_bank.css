@@ -8,36 +8,40 @@
     --customerChurnBank-global-font-color: var(--fabColorControl-global-font-color);
     --customerChurnBank-global-bg-color:   var(--fabColorControl-global-bg-color);
     --customerChurnBank-panel-bg-color:    var(--fabColorControl-panel-bg-color);
-    --customerChurnBank-global-transition: var(--fabColorControl-global-transition);
+    --customerChurnBank-global-transition: background-color 0.5s linear, color 0.5s linear;
 
     /* --- 功能性顏色 --- */
-    --success-color:            rgba(0, 128, 0, 1);
-    --success-bg-color:            rgba(200, 255, 225, 1);    /* 成功/低風險：綠色 */
-    --error-color:              rgba(128, 0, 0, 1);    /* 錯誤/高風險：紅色 */
-    --error-bg-color:              rgba(255, 200, 200, 1);
-    --warning-color:            #f59e0b;         /* 警告/中風險：橘黃色 */
-    
+    --success-color:                       rgba(0, 128, 0, 1);
+    --success-bg-color:                    rgba(200, 255, 225, 1);
+    --error-color:                         rgba(128, 0, 0, 1);
+    --error-bg-color:                      rgba(255, 200, 200, 1);
+    --warning-color:                       #f59e0b;
+
     /* --- 陰影變數 --- */
-    --customerChurnBank-box-shadow:         0px 0px 5px 2px rgba(0, 0, 0, 0.5);
-    --customerChurnBank-box-shadow-hover:   0px 0px 10px 5px rgba(0, 0, 0, 0.5);
-    
+    --customerChurnBank-box-shadow:        0px 0px 5px 2px rgba(0, 0, 0, 0.5);
+    --customerChurnBank-box-shadow-hover:  0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+
     /* --- 尺寸與間距變數 --- */
-    --customerChurnBank-width:          auto;
-    --customerChurnBank-heigth:         auto;
-    --customerChurnBank-100px:          100px;
-    --customerChurnBank-30px:           30px;
-    --customerChurnBank-20px:           20px;
-    --customerChurnBank-15px:           15px;         /* gap */
-    --customerChurnBank-10px:           10px;         /* border-radius, lift */
-    --customerChurnBank-5px:           5px;
-    --customerChurnBank-2px:            2px;
-    --customerChurnBank-1px:            1px;
-    --customerChurnBank-1em:            1em;
-    --customerChurnBank-border-radius:  10px;         /* 通用圓角 */
-    
-    --customerChurnBank-1rem:           1rem;
+    --customerChurnBank-font-weight-900:   900;
+    --customerChurnBank-border-radius:     10px;
+
+    --h1-font-size:                        clamp(34px, 6.0vw, 38px);
+    --h2-font-size:                        clamp(30px, 4.8vw, 34px);
+    --h3-font-size:                        clamp(26px, 3.6vw, 30px);
+    --h4-font-size:                        clamp(22px, 2.4vw, 26px);
+    --h5-font-size:                        clamp(18px, 1.8vw, 22px);
+    --h6-font-size:                        clamp(14px, 1.2vw, 18px);
+    --li-font-size:                        clamp(12px, 1.0vw, 14px);
+    --p-font-size:                         clamp(12px, 1.0vw, 14px);
 }
 
+body {
+    font-family:      Cambria, Palatino, 'Palatino Linotype', 'Book Antiqua', serif;
+    font-weight:      var(--customerChurnBank-font-weight-900);
+    background-color: var(--customerChurnBank-global-bg-color);
+    color:            var(--customerChurnBank-global-font-color);
+    transition:       var(--customerChurnBank-global-transition);
+}
 
 /* ====================================== */
 /* --- 1. 主容器與卡片通用樣式 --- */
@@ -45,129 +49,114 @@
 
 /* 1.1 頁面主容器樣式 */
 #customerChurnBank {
-    /* 尺寸與定位 */
-    width: var(--customerChurnBank-width);
-    
-    
-    /* 顏色與背景 */
-    background-color:   var(--customerChurnBank-global-bg-color);
-    color:              var(--customerChurnBank-global-font-color);
-    
-    
-    /* 間距與邊框 */
-    padding-bottom:     var(--customerChurnBank-20px);
-    padding-left:       var(--customerChurnBank-20px);
-    padding-right:      var(--customerChurnBank-20px);
-    border:             var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color);
-    box-shadow:         var(--customerChurnBank-box-shadow);
-    
-    
-    /* 動畫 */
-    transition:         var(--customerChurnBank-global-transition);
+    width:   auto;
+    height:  auto;
+    padding: 20px
 }
-
 
 #customerChurnBank .bank-hidden { display: none; }
 
 #customerChurnBank .bank-title {
-    /* 顏色 */
-    font-size: var(--h2-font-size);
-    color: var(--customerChurnBank-global-font-color);
-    /* 間距與邊框 (下邊線) */
-    border-bottom:  var(--customerChurnBank-5px) solid var(--customerChurnBank-global-font-color); 
-    margin: var(--customerChurnBank-20px);
-    margin-bottom:  var(--customerChurnBank-10px);
-    
-    padding-bottom: var(--customerChurnBank-10px);
-    /* 動畫 */
-    transition:     var(--customerChurnBank-global-transition);
+    font-size:      var(--h2-font-size);
+    margin-bottom:  10px;
+    margin-left:    10px;
+    margin-right:   10px;
+    padding-bottom: 10px;
+    border-bottom:  3px solid var(--customerChurnBank-global-font-color);
 }
 
 /* 1.2 通用卡片容器 (.bank-card) */
 #customerChurnBank .bank-card {
     /* 顏色與背景 */
-    background-color:   var(--customerChurnBank-panel-bg-color);
-    color:              var(--customerChurnBank-global-font-color);
-    
-    
-    /* 間距與邊框 */
-    padding-left:       var(--customerChurnBank-10px);
-    padding-right:      var(--customerChurnBank-10px);
-    padding-bottom:     var(--customerChurnBank-10px);
-    border-radius:      var(--customerChurnBank-border-radius);
-    box-shadow:         var(--customerChurnBank-box-shadow);
-    border:             var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color);
-    /* 動畫 */
-    transition:         var(--customerChurnBank-global-transition);
-    margin: var(--customerChurnBank-10px);
+    background-color: var(--customerChurnBank-panel-bg-color);
+    color:            var(--customerChurnBank-global-font-color);
+    margin:           10px;
+    padding-left:     20px;
+    padding-right:    20px;
+    padding-bottom:   20px;
+    border-radius:    var(--customerChurnBank-border-radius);
+    box-shadow:       var(--customerChurnBank-box-shadow);
+    border:           1px solid var(--customerChurnBank-global-font-color);
+    transition:       var(--customerChurnBank-global-transition);
 }
 
 #customerChurnBank .bank-card:hover {
-    box-shadow:         var(--customerChurnBank-box-shadow-hover);
-    transition:         var(--customerChurnBank-global-transition);
+    box-shadow: var(--customerChurnBank-box-shadow-hover);
 }
 
 /* 1.3 卡片標題樣式 (.bank-card-title) */
 #customerChurnBank .bank-card-title {
-    /* 顏色 */
-    color: var(--customerChurnBank-global-font-color);
-    
-    
-    /* 間距與邊框 (下邊線) */
-    border-bottom:  var(--customerChurnBank-2px) solid var(--customerChurnBank-global-font-color); 
-    margin-top:     var(--customerChurnBank-10px);
-    margin-bottom:  var(--customerChurnBank-5px);
-    padding-bottom: var(--customerChurnBank-5px);
-    /* 動畫 */
+    font-size:      var(--h4-font-size);
+    color:          var(--customerChurnBank-global-font-color);
+    margin-top:     10px;
+    margin-bottom:  10px;
+    padding-bottom: 10px;
+    border-bottom:  2px solid var(--customerChurnBank-global-font-color);
     transition:     var(--customerChurnBank-global-transition);
 }
 
 /* 1.4 卡片標題圖標樣式 (.bank-card-title-icon) */
 #customerChurnBank .bank-card-title-icon {
-    /* 尺寸 */
-    width:          var(--h2-font-size);
-    height:         var(--h2-font-size);
-    /* 間距與對齊 */
-    margin-bottom:  -5px;            
-    margin-right:   5px; 
-    /* 顏色與動畫 */
-    color:      var(--customerChurnBank-global-font-color);
-    transition: var(--customerChurnBank-global-transition);
+    width:         var(--h2-font-size);
+    margin-bottom: -5px;
+    margin-right:  5px;
+}
+
+#customerChurnBank .bank-card-hint {
+    font-size:      var(--h6-font-size);
+    color:          var(--customerChurnBank-global-font-color);
+    margin-top:     10px;
+    margin-bottom:  10px;
+    padding-bottom: 10px;
+    border-bottom:  1px solid var(--customerChurnBank-global-font-color);
+    transition:     var(--customerChurnBank-global-transition);
+}
+
+#customerChurnBank .bank-card-hint-hidden {
+    font-size:      var(--h6-font-size);
+    color:          var(--customerChurnBank-global-font-color);
+    padding-bottom: 10px;
+    border-bottom:  1px solid var(--customerChurnBank-global-font-color);
+    transition:     var(--customerChurnBank-global-transition);
 }
 
 /* 1.5 卡片按鈕圖標樣式 (.bank-card-button-icon) */
 #customerChurnBank .bank-card-button-icon {
     /* 尺寸 */
-    width:  var(--h5-font-size);
-    height: var(--h5-font-size);
-    
+    width:      var(--h5-font-size);
+    height:     var(--h5-font-size);
+
     /* 間距 */
-    margin-right: var(--customerChurnBank-5px); 
-    
-    
+    margin-right: 5px;
+
     /* 顏色與動畫 */
     color:      var(--customerChurnBank-global-font-color);
     transition: var(--customerChurnBank-global-transition);
 }
 
 /* 1.6 卡片分隔線 (.bank-card-divider) */
-#customerChurnBank .bank-card-divider {
-    border-radius:      var(--customerChurnBank-border-radius);
-    border-top:     3px solid var(--customerChurnBank-global-font-color);
-    margin-top: 20px;
-    margin-bottom:  20px;
+#customerChurnBank .bank-panel-divider {
+    border-radius:   var(--customerChurnBank-border-radius);
+    border-top:      3px solid var(--customerChurnBank-global-font-color);
+    margin-top:      20px;
+    margin-bottom:   20px;
 }
 
+#customerChurnBank .bank-card-divider {
+    border-radius:   var(--customerChurnBank-border-radius);
+    border-top:      2px solid var(--customerChurnBank-global-font-color);
+    margin-top:      5px;
+    margin-bottom:   5px;
+}
 /* ====================================== */
 /* --- 2. 佈局結構 (Grid & Flex) --- */
 /* ====================================== */
 
 /* 2.1 大視窗 Grid 佈局定義 */
 #customerChurnBank .bank-card-panel-grid {
-    /* 佈局方式與結構 */
     display:               grid;
-    grid-template-columns: 1fr 1fr; /* 左側/右側 (50%/50%) */
-    grid-template-rows:    auto 1fr; 
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows:    auto 1fr;
     grid-template-areas:
         "input_feature chart_panel"
         "ai_prompt chart_panel";
@@ -176,38 +165,37 @@
 #customerChurnBank .bank-card-batch-panel-grid {
     /* 佈局方式與結構 */
     display:               grid;
-    grid-template-columns: 1fr 1fr; /* 左側/右側 (50%/50%) */
-    grid-template-rows:    auto 1fr; 
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows:    auto 1fr;
     grid-template-areas:
         "batch_upload batch_result"
         "batch_feature batch_result";
-    
+
 }
 
 /* 2.2 Grid 區域分配與尺寸 */
 #customerChurnBank .bank-input-feature-panel { grid-area: input_feature; }
-#customerChurnBank .bank-ai-prompt-panel { grid-area: ai_prompt; height: 100%; overflow-y: auto; }
-#customerChurnBank .bank-chart-panel { grid-area: chart_panel; height: auto; grid-row: 1 / 3; overflow-y: auto; }
+#customerChurnBank .bank-ai-prompt-panel     { grid-area: ai_prompt;     height: auto; }
+#customerChurnBank .bank-chart-panel         { grid-area: chart_panel;   height: auto; grid-row: 1 / 3; }
 
-#customerChurnBank .bank-batch-upload-panel { grid-area: batch_upload; }
-#customerChurnBank .bank-batch-feature-panel { grid-area: batch_feature; height: 100%; overflow-y: auto; }
-#customerChurnBank .bank-batch-result-panel { grid-area: batch_result; height: auto; grid-row: 1 / 3; overflow-y: auto; }
+#customerChurnBank .bank-batch-upload-panel  { grid-area: batch_upload; }
+#customerChurnBank .bank-batch-feature-panel { grid-area: batch_feature; height: auto; }
+#customerChurnBank .bank-batch-result-panel  { grid-area: batch_result;  height: auto; grid-row: 1 / 3; }
 
 #customerChurnBank .bank-api-key-container,
 #customerChurnBank .bank-input-feature-container,
 #customerChurnBank .bank-ai-prompt-container,
-#customerChurnBank .bank-batch-upload-container, 
-#customerChurnBank .bank-filter-controls-container{
-    display:        flex;
-    align-items:    center;
+#customerChurnBank .bank-batch-upload-container {
+    display:       flex;
+    align-items:   center;
 }
 
 #customerChurnBank .bank-input-form {
     /* 佈局 */
     display:               grid;
-    grid-template-columns: repeat(1, minmax(0, 1fr));
-    gap:        var(--customerChurnBank-10px);
-    margin-top: var(--customerChurnBank-10px);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    margin-bottom:         10px;
+    gap:                   10px;
 }
 
 /* 3.2 輸入欄位容器 (.input-field-container) */
@@ -216,57 +204,52 @@
     display:        flex;
     flex-direction: column;
     position:       relative;
-    
-    /* 字體與間距 */
-    font-size:  var(--h6-font-size);
-    gap:        var(--customerChurnBank-5px);
-}
-
-/* 3.4 標籤樣式 */
-#customerChurnBank .input-field-container label {
-    /* 字體 */
-    font-size:      var(--h6-font-size);
-    font-weight:    var(--font-weight-900);
-    /* 顏色 */
-    color: var(--customerChurnBank-global-font-color);
 }
 
 /* 3.1 通用輸入框 (.bank-input-field) */
 #customerChurnBank .bank-input-field {
     /* 尺寸與定位 */
-    flex-grow:  1;
-    width:  auto;
-    box-sizing:     border-box;
-    resize:         vertical;
-    /* 字體與顏色 */
-
+    flex-grow:          1;
+    font-size:          var(--p-font-size);
+    width:              auto;
+    box-sizing:         border-box;
+    resize:             vertical;
     background-color:   var(--customerChurnBank-panel-bg-color);
     color:              var(--customerChurnBank-global-font-color);
-    /* 間距與邊框 */
-    padding:        var(--customerChurnBank-5px) var(--customerChurnBank-5px); 
-    border:         var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color); 
-    border-radius:  var(--customerChurnBank-border-radius);
-    /* 動畫 */
-    transition:     var(--customerChurnBank-global-transition);
+    padding:            5px;
+    margin-left:        10px;
+    margin-right:       10px;
+    border:             1px solid var(--customerChurnBank-global-font-color);
+    border-radius:      var(--customerChurnBank-border-radius);
+    transition:         var(--customerChurnBank-global-transition);
 }
 
 /* 3.1.1 移除 type="number" 的上/下箭頭 */
 #customerChurnBank .bank-input-field[type="number"] {
-    -moz-appearance:    textfield; 
-    appearance:         textfield;
+    -moz-appearance:  textfield;
+    appearance:       textfield;
 }
 #customerChurnBank .bank-input-field[type="number"]::-webkit-outer-spin-button,
 #customerChurnBank .bank-input-field[type="number"]::-webkit-inner-spin-button {
-    -webkit-appearance: none; 
+    -webkit-appearance: none;
     margin:             0;
 }
 
 /* 3.1.2 輸入框 Focus (聚焦狀態) */
 #customerChurnBank .bank-input-field:focus {
     /* 邊框與陰影 */
-    border-color:   var(--customerChurnBank-global-bg-color);
-    outline:        none;
-    box-shadow:     var(--customerChurnBank-box-shadow);
+    outline:      none;
+    border-color: var(--customerChurnBank-global-bg-color);
+    box-shadow:   var(--customerChurnBank-box-shadow);
+}
+
+#customerChurnBank .bank-input-field-title {
+    /* 尺寸與定位 */
+    flex-grow:      1;
+    font-size:      var(--p-font-size);
+    margin-left:    10px;
+    margin-right:   10px;
+    padding-bottom: 5px;
 }
 
 /* 2.4 圖表顯示 Grid 佈局 */
@@ -274,10 +257,8 @@
     /* 佈局 */
     display:               grid;
     grid-template-columns: repeat(1, minmax(0, 1fr));
-    
-    /* 間距 */
-    gap: 10px;
-    margin-bottom: 10px;
+    margin-top:            10px;
+    margin-bottom:         10px;
 }
 
 /* 2.5 篩選控制 Flex 佈局 */
@@ -287,46 +268,39 @@
     align-items:    stretch;
     display:        flex;
     flex-wrap:      wrap;
-    
+
     /* 間距 */
-    gap:        5px;
-    margin-top: var(--customerChurnBank-1rem);
+    gap:          5px;
+    margin-top:   10px;
 }
-#customerChurnBank .bank-filter-controls > div {
-    display:        flex;
-    align-items:    center;
-    
-    gap:            5px; 
+#customerChurnBank .bank-filter-controls-container {
+    display:     flex;
+    align-items: center;
 }
 
 /* 3.5 分析按鈕 (.bank-analyze-btn) */
 #customerChurnBank .bank-analyze-btn {
-    /* 尺寸與定位 */
-    width:              auto;
-    display:            flex;
-    align-items:        center;
-    justify-content:    center;
-    flex-grow:          1;
-    
-    
-    /* 字體與顏色 */
-    font-size:          var(--p-font-size);
-    font-weight:        var(--font-weight-900);
-    background-color:   var(--customerChurnBank-global-bg-color);
-    color:              var(--customerChurnBank-global-font-color);
-    
-    margin-top: var(--customerChurnBank-10px); 
-    margin-bottom: var(--customerChurnBank-10px); 
+    width:               auto;
+    display:             flex;
+    align-items:         center;
+    justify-content:     center;
+    flex-grow:           1;
+
+    font-size:           var(--p-font-size);
+    background-color:    var(--customerChurnBank-global-bg-color);
+    color:               var(--customerChurnBank-global-font-color);
+
+    margin-top:          10px;
+    margin-bottom:       10px;
     /* 間距與邊框 */
-    padding:            var(--customerChurnBank-5px) var(--customerChurnBank-5px);
-    border-radius:      var(--customerChurnBank-border-radius);
-    border:             none;
-    
-    
+    padding:             10px;
+    border-radius:       var(--customerChurnBank-border-radius);
+    border:              none;
+
     /* 互動與動畫 */
-    cursor:         pointer;
-    text-decoration: none;
-    transition:     background-color 0.3s, opacity 0.3s, transform 0.1s;
+    cursor:            pointer;
+    text-decoration:   none;
+    transition:        background-color 0.5s, opacity 0.3s, transform 0.1s;
 }
 
 #customerChurnBank .bank-analyze-btn:hover {
@@ -335,34 +309,28 @@
     transform:        translateY(-1px);
 }
 #customerChurnBank .bank-analyze-btn:disabled {
-    opacity:    0.5;
-    cursor:     not-allowed;
-    transform:  none;
+    opacity:   0.5;
+    cursor:    not-allowed;
+    transform: none;
 }
 
-#customerChurnBank .bank-analyze-btn label {
-    /* 字體 */
-    font-size:      var(--h6-font-size);
-    font-weight:    var(--font-weight-900);
-    /* 顏色 */
-    color: var(--customerChurnBank-global-font-color);
+#customerChurnBank .bank-margin-left-btn {
+    margin-left: 10px;
 }
 
-#customerChurnBank .bank-csv-btn {
-    width: 50%;
-    overflow-x: hidden;
-    padding-left: var(--customerChurnBank-10px);
+#customerChurnBank .bank-margin-left-btn-640px {
+    margin-left: 10px;
 }
 
 /* 3.6 錯誤/狀態訊息 */
 #customerChurnBank #apiStatusMsg, #errorMsg {
     /* 字體與顏色 */
-    color:      var(--error-color);
-    font-size:  var(--h6-font-size);
+    color:     var(--error-color);
+    font-size: var(--h6-font-size);
     /* 間距 */
     margin-top: 10px;
 }
-#customerChurnBank #errorMsg { margin-top: 0.75rem; }
+#customerChurnBank #errorMsg { margin-top: 10px; }
 
 
 /* ====================================== */
@@ -372,58 +340,64 @@
 /* 4.2 高風險樣式 (.high-risk) */
 #customerChurnBank .high-risk {
     /* 顏色與背景 */
-    width: auto;
-    background-color:   var(--error-bg-color);      
-    color:              var(--error-color);                 
+    width:              auto;
+    background-color:   var(--error-bg-color);
+    color:              var(--error-color);
     border:             1px solid var(--error-color);
-    border-radius:  var(--customerChurnBank-border-radius);
-    padding: var(--customerChurnBank-5px);
+    border-radius:      var(--customerChurnBank-border-radius);
+    padding:            5px;
 }
 
 /* 4.3 低風險樣式 (.low-risk) */
 #customerChurnBank .low-risk {
     /* 顏色與背景 */
-    width: auto;
-    background-color:   var(--success-bg-color);      
-    color:             var(--success-color);                 
+    width:              auto;
+    background-color:   var(--success-bg-color);
+    color:              var(--success-color);
     border:             1px solid var(--success-color);
-    border-radius:  var(--customerChurnBank-border-radius);
-    padding: var(--customerChurnBank-5px);
+    border-radius:      var(--customerChurnBank-border-radius);
+    padding:            5px;
 }
 
 
 /* 4.5 初始訊息 (.initial-message) */
 #customerChurnBank .initial-message {
     /* 顏色與背景 */
-    height: var(--customerChurnBank-heigth);
-    color:          var(--customerChurnBank-global-font-color);
-    border:         var(--customerChurnBank-1px) dashed var(--customerChurnBank-global-font-color);
+    height:             auto;
+    color:              var(--customerChurnBank-global-font-color);
+    border:             1px dashed var(--customerChurnBank-global-font-color);
 
     /* 邊框與定位 */
-    opacity:        1;
-    text-align:     center;
-    border-radius:  var(--customerChurnBank-border-radius);
+    opacity:            1;
+    text-align:         center;
+    border-radius:      var(--customerChurnBank-border-radius);
     /* 間距 */
-    padding: var(--customerChurnBank-10px);
+    padding:            10px;
+
+    font-size:          var(--h6-font-size);
+    margin-top:         10px;
+    margin-bottom:      10px;
+    padding-bottom:     10px;
+    transition:         var(--customerChurnBank-global-transition);
 }
 
 /* 4.6 載入訊息與動畫 */
 #customerChurnBank .loading-message {
     /* 佈局與定位 */
-    display:        flex;
-    align-items:    center;
+    display:       flex;
+    align-items:   center;
     /* 字體與顏色 */
-    color:      var(--customerChurnBank-global-font-color);
-    font-size:  var(--h6-font-size);
+    color:         var(--customerChurnBank-global-font-color);
+    font-size:     var(--h6-font-size);
     /* 間距 */
-    gap: var(--customerChurnBank-10px);
+    gap: 10px;
 }
 #customerChurnBank .loading-message::before {
     /* 載入點動畫 */
-    content:    '...';
-    animation:  pulse-dots 1.5s infinite ease-in-out;
-    color:      var(--customerChurnBank-global-font-color);
-    font-size:  var(--h6-font-size);
+    content:     '...';
+    animation:   pulse-dots 1.5s infinite ease-in-out;
+    color:       var(--customerChurnBank-global-font-color);
+    font-size:   var(--h6-font-size);
     line-height: 0;
 }
 @keyframes pulse-dots {
@@ -433,42 +407,49 @@
 
 #customerChurnBank .dropdown-input {
     /* 互動 */
-    cursor: pointer;
-    
+    cursor:                   pointer;
+
     /* 背景圖標 (箭頭) */
-    background-image:       url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23888" d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>');
-    background-repeat:      no-repeat;
-    background-position:    right var(--customerChurnBank-10px) center;
-    background-size:        auto;
-    overflow-y:     auto;
-    padding-right: var(--customerChurnBank-10px); 
+    background-image:         url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="%23888" d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>');
+    background-repeat:        no-repeat;
+    background-position:      right 10px center;
+    background-size:          auto;
+    overflow-y:               auto;
+    padding-right:            10px;
 }
 #customerChurnBank .dropdown-container {
     position: relative;
 }
 #customerChurnBank .dropdown-list {
     /* 定位與層級 */
-    font-size: var(--p-font-size);
-    position:           absolute;
-    top:                100%; 
-    left:               0;
-    right:              0;
-    z-index:            10;
-    
+    width:               auto;
+
+    font-size:           var(--p-font-size);
+    position:            absolute;
+    top:                 100%;
+    left:                0;
+    right:               0;
+    z-index:             10;
+
     /* 顏色與背景 */
-    background-color:   var(--customerChurnBank-panel-bg-color);
-    border:             1px solid var(--customerChurnBank-global-bg-color);
-    border-top:         none;
-    
+    background-color:    var(--customerChurnBank-panel-bg-color);
+    border:              1px solid var(--customerChurnBank-global-bg-color);
+    border-top:          none;
+
     /* 邊框與尺寸 */
-    border-radius:  var(--customerChurnBank-border-radius);
-    box-shadow:     var(--customerChurnBank-box-shadow);
-    overflow-y:     auto;
+    border-radius:       var(--customerChurnBank-border-radius);
+    box-shadow:          var(--customerChurnBank-box-shadow);
+    overflow-y:          auto;
+
+    /* 尺寸與定位 */
+    padding:             5px;
+    margin-left:         10px;
+    margin-right:        10px;
 }
 #customerChurnBank .dropdown-item {
     /* 互動與間距 */
-    padding:        var(--customerChurnBank-10px);
-    cursor:         pointer;
+    padding:  10px;
+    cursor:   pointer;
 }
 #customerChurnBank .dropdown-item:hover {
     background-color: color-mix(in srgb, var(--customerChurnBank-global-bg-color) 80%, transparent);
@@ -482,29 +463,28 @@
 /* 6.1 表格容器 */
 #customerChurnBank .table-wrapper {
     /* 尺寸與定位 */
-    margin-top:     var(--customerChurnBank-1rem);
-    overflow-x:     auto;
+    margin-top:  10px;
+    overflow-x:  auto;
 }
 
 
 /* 6.2 主要表格樣式 */
 #customerChurnBank .fl-table {
     /* 尺寸與定位 */
-    border-collapse: separate; /* 讓單元格邊框獨立 */
-    border-spacing: 0; /* 消除瀏覽器預設間距 */
-    width:              100%;
-    max-width:          100%;
-    white-space:        nowrap;
-    
+    border-collapse: separate;
+    border-spacing:  0;
+    width:           100%;
+    max-width:       100%;
+    white-space:     nowrap;
+
     /* 字體與顏色 */
-    font-size:          var(--h6-font-size);
-    font-weight:        var(--font-weight-900);
-    background-color:   var(--customerChurnBank-panel-bg-color);
-    
+    font-size:         var(--h6-font-size);
+    background-color:  var(--customerChurnBank-panel-bg-color);
+
     /* 邊框與動畫 */
-    border-radius:      var(--customerChurnBank-border-radius);
-    border:             none;
-    transition:         background-color 0.5s linear;
+    border-radius:     var(--customerChurnBank-border-radius);
+    border:            none;
+    transition:        var(--customerChurnBank-global-transition);
 }
 
 /* 6.3 單元格樣式 */
@@ -512,9 +492,9 @@
 #customerChurnBank .fl-table td {
     color:      var(--customerChurnBank-global-font-color);
     text-align: center;
-    padding:    var(--customerChurnBank-10px);
-    cursor: pointer;
-    border: var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color); 
+    padding:    10px;
+    cursor:     pointer;
+    border:     1px solid var(--customerChurnBank-global-font-color);
 }
 
 /* 6.6 表格圓角與邊框處理 */
@@ -523,7 +503,7 @@
 }
 
 #customerChurnBank .fl-table thead th:last-child {
-    border-top-right-radius:  var(--customerChurnBank-border-radius);
+    border-top-right-radius: var(--customerChurnBank-border-radius);
 }
 
 #customerChurnBank .fl-table tbody tr:last-child td:first-child {
@@ -558,53 +538,51 @@
 #customerChurnBank .fl-table tbody tr td:nth-child(1),
 #customerChurnBank .fl-table tbody tr td:nth-child(2),
 #customerChurnBank .fl-table tbody tr td:nth-child(3) {
-    max-width:      200px;
-    overflow:       hidden;
-    text-overflow:  ellipsis;
+    max-width:       200px;
+    overflow:        hidden;
+    text-overflow:   ellipsis;
 }
 
 /* 6.7 排序圖標 */
 #customerChurnBank th .sort-icon {
-    display: inline-block; 
-    width: var(--h6-font-size); /* 設置固定寬度 */
-    text-align: center; /* 讓內容在容器內居中 */
-    font-weight: var(--font-weight-900); 
+    display:    inline-block;
+    width:      var(--h6-font-size);
+
+    text-align: center;
 }
 
 /* 排序圖標顏色 */
 #customerChurnBank th[data-sort-order="none"] .sort-icon::before {
-    content:    '\21C5';
-    font-weight: var(--font-weight-900);
-    color:      var(--success-color);
+    content: '\21C5';
+    color:   var(--customerChurnBank-global-font-color);
 }
 #customerChurnBank th[data-sort-order="asc"] .sort-icon::before {
-    content:    '▲';
-    color:      var(--success-color);
+    content: '▲';
+    color:   var(--success-color);
 }
 #customerChurnBank th[data-sort-order="desc"] .sort-icon::before {
-    content:    '▼';
-    color:      var(--error-color);
+    content: '▼';
+    color:   var(--error-color);
 }
 
-
-
 /* 6.8 批次結果風險等級顏色 */
-#customerChurnBank .risk-low { color: var(--success-color); font-weight: var(--font-weight-900); }
-#customerChurnBank .risk-medium { color: var(--warning-color); font-weight: var(--font-weight-900); }
-#customerChurnBank .risk-high { color: var(--error-color); font-weight: var(--font-weight-900); }
+#customerChurnBank .risk-low    { color: var(--success-color); }
+#customerChurnBank .risk-medium { color: var(--warning-color); }
+#customerChurnBank .risk-high   { color: var(--error-color); }
 
 /* 6.9 分頁控制 */
 #customerChurnBank .pagination-controls {
     /* 佈局 */
-    display:        flex; 
-    justify-content: center; 
-    align-items:    center; 
+    display:         flex;
+    justify-content: center;
+    align-items:     center;
     /* 間距與尺寸 */
-    gap:        10px; 
-    margin-top: var(--customerChurnBank-1rem);
+    gap:             10px;
+    margin-top:      10px;
 }
+
 #customerChurnBank .pagination-controls .bank-input-field {
-    width:      auto; 
+    width:      60px;
     text-align: center;
 }
 
@@ -614,205 +592,77 @@
 
 /* 批次結果表格選中列的樣式 (保留不變) */
 #customerChurnBank .fl-table tbody tr.selected-row {
-    background-color: var(--customerChurnBank-global-bg-color); 
-    color: var(--customerChurnBank-global-font-color); 
-    border: var(--customerChurnBank-1px) solid var(--customerChurnBank-global-font-color); 
-    box-shadow: var(--customerChurnBank-box-shadow)
+    background-color: var(--customerChurnBank-global-bg-color);
+    color:            var(--customerChurnBank-global-font-color);
+    border:           1px solid var(--customerChurnBank-global-font-color);
+    box-shadow:       var(--customerChurnBank-box-shadow)
+
 }
 
 /* 1. 特徵網格容器 (featureGrid) */
-#featureGrid {
-    display: grid;
-    /* 預設: 小螢幕時為 2 欄 (與 JS 邏輯一致) */
-    grid-template-columns: repeat(2, minmax(0, 1fr)); 
-    gap: var(--customerChurnBank-10px); /* 網格間距 */
+#customerChurnBank #featureGrid {
+    display:               grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height:            150px;
 }
+
 /* 2. 單個特徵項目 (.feature-item) */
 #customerChurnBank .feature-item {
     /* 樣式對應: border border-gray-200 rounded-md p-3 */
-    transition: all 0.3s ease;
-    background-color: var(--customerChurnBank-panel-bg-color); /* 卡片背景色 */
-    border: var(--customerChurnBank-1px) solid color-mix(in srgb, var(--customerChurnBank-panel-bg-color) 80%, rgba(0, 0, 0, 0.5)); /* 模擬 border-gray-200 */
-    border-radius: var(--customerChurnBank-border-radius); 
-    padding: var(--customerChurnBank-15px); /* p-3 (約 12-16px) */
-    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06); /* 輕微陰影 */
+    transition:         all 0.3s ease;
+    background-color:   color-mix(in srgb, var(--customerChurnBank-panel-bg-color) 80%, rgba(0, 0, 0, 0.5));
+    border:             1px solid var(--customerChurnBank-panel-bg-color);
+    border-radius:      var(--customerChurnBank-border-radius);
+    padding:            0px 20px 0px 20px;
+    margin:             10px 10px 5px 10px;
+    box-shadow:         var(--customerChurnBank-box-shadow);
 }
 
-/* 3. 特徵名稱 (.feature-item-label) */
+/* 特徵數值 */
 #customerChurnBank .feature-item-label {
-    /* 樣式對應: font-bold whitespace-nowrap text-gray-700 text-sm mb-1 */
-    font-weight: var(--font-weight-900); /* font-bold */
-    white-space: nowrap;
-    color: var(--customerChurnBank-global-font-color); /* text-gray-700 */
-    font-size: 0.875rem; /* text-sm */
-    margin-bottom: var(--customerChurnBank-5px); /* mb-1 */
+    /* 樣式對應: text-lg text-blue-600 font-semibold block */
+    font-size: var(--h6-font-size);
+    color:     var(--fabColorControl-global-font-color);
+    display:   block;
 }
 
 /* 4. 特徵數值 (.feature-item-value) */
 #customerChurnBank .feature-item-value {
     /* 樣式對應: text-lg text-blue-600 font-semibold block */
-    font-size: 1.125rem; /* text-lg */
-    font-weight: 700; /* font-semibold */
-    color: var(--success-color); /* 模擬 text-blue-600 */
-    display: block;
+    font-size:     var(--h6-font-size);
+    color:         var(--fabColorControl-global-bg-color);
+    margin-bottom: 10px;
+    display:       block;
 }
 
-/* 特徵名稱 */
-#customerChurnBank .feature-item p {
-    font-size: 0.875rem; /* text-sm */
-    margin-bottom: 0.25rem;
-    color: var(--customerChurnBank-global-font-color);
-}
+/* 8.3 螢幕寬度 <= 1023px (Tablet/Mobile) - 堆疊佈局 */
+@media (max-width: 1023px) {
+    #customerChurnBank .bank-card-panel-grid,
+    #customerChurnBank .bank-card-batch-panel-grid {
+        display:        flex;
+        flex-direction: column;
+    }
 
-/* 特徵數值 */
-#customerChurnBank .feature-item span {
-    font-size: 1.125rem; /* text-lg */
-    font-weight: 700; /* Extra bold */
-}
+    #customerChurnBank .bank-api-key-container,
+    #customerChurnBank .bank-batch-upload-container {
+        flex-direction: row;
+    }
 
-/* 初始狀態類別 */
-#customerChurnBank .initial-feature-grid {
-    /* 網格佔位符，確保其顯示 */
-    display: grid; 
-    min-height: 150px; /* 確保在空白時有高度 */
 }
-
-/* ====================================== */
-/* --- 8. 響應式設計 (Media Queries) --- */
-/* ====================================== */
-/* 8.1 螢幕寬度 <= 639px (Mobile Breakpoint) - 單欄佈局 */
 @media (max-width: 639px) {
     /* 輸入群組切換為單欄 */
-    #customerChurnBank .bank-input-form { 
+    #customerChurnBank .bank-input-form {
         grid-template-columns: 1fr;
     }
-    
+
     /* API Key 容器切換為垂直堆疊 */
     #customerChurnBank .bank-api-key-container,
     #customerChurnBank .bank-batch-upload-container {
         flex-direction: column;
         align-items:    stretch;
     }
-    #customerChurnBank .bank-api-key-container .bank-input-field,
-    #customerChurnBank .bank-batch-upload-container .bank-input-field {
-        width:  auto;
-    }
-    
-    /* 批次檔案上傳控制切換為垂直堆疊 */
-    #customerChurnBank .batch-upload-area > .flex { 
-        flex-direction: column;
-        gap: 0.75rem;
-    }
 
-    
-}
-
-/* 8.2 螢幕寬度 >= 640px (Small Breakpoint) */
-@media (min-width: 640px) {
-    #customerChurnBank .bank-input-form { 
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-    #customerChurnBank .bank-api-key-container,
-    #customerChurnBank .bank-batch-upload-container {
-        flex-direction: row;
-    }
-    #customerChurnBank .bank-csv-btn {
-        margin-right: 10px;
-    }
-    #customerChurnBank .bank-api-btn {
-        margin-left: 10px;
-    }
-    #featureGrid {
-        grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-}
-
-/* 8.3 螢幕寬度 <= 1023px (Tablet/Mobile) - 堆疊佈局 */
-@media (max-width: 1023px) {
-    #customerChurnBank .bank-card-panel-grid {
-        /* 佈局 */
-        display:               flex;
-        flex-direction:        column;
-        grid-template-columns: 1fr;
-        grid-template-rows:    unset;
-        grid-template-areas:   none;
-        
-        /* 尺寸與間距 */
-        gap:           var(--customerChurnBank-1rem, 1.5rem);
-        min-height:    unset;
-        margin-bottom: var(--customerChurnBank-1rem);
-    }
-    
-    /* 確保滾動設定解除 */
-    #customerChurnBank .bank-api-key-panel,
-    #customerChurnBank .bank-batch-upload-panel,
-    #customerChurnBank .bank-input-feature-panel,
-    #customerChurnBank .bank-ai-prompt-panel,
-    #customerChurnBank .bank-chart-panel {
-        height:     auto;
-        overflow-y: visible;
-        min-height: unset; 
-    }
-
-    #customerChurnBank .bank-card-batch-panel-grid {
-        display:               flex;
-        flex-direction:        column;
-        grid-template-columns: 1fr;
-        grid-template-rows:    unset;
-        grid-template-areas:   none;
-        
-        /* 尺寸與間距 */
-        gap:           var(--customerChurnBank-1rem, 1.5rem);
-        min-height:    unset;
-        margin-bottom: var(--customerChurnBank-1rem);
-    }
-
-    #customerChurnBank .bank-batch-result-panel,
-    #customerChurnBank .bank-batch-feature-panel {
-        height:     auto;
-        overflow-y: visible;
-        min-height: unset; 
-    }
-
-    /* 篩選控制切換為垂直堆疊 */
-    #customerChurnBank .bank-filter-controls {
-        flex-direction: column;
-        align-items:    stretch;
-    }
-    #customerChurnBank .bank-filter-controls > div {
-        flex-wrap: wrap;
-    }
-}
-
-/* 8.4 螢幕寬度 >= 1024px (Large Breakpoint) - 啟用 Grid 佈局 */
-@media (min-width: 1024px) {
-    #customerChurnBank .bank-card-panel-grid {
-        display:        grid;
-        flex-direction: initial; 
-    }
-    #customerChurnBank .bank-api-key-panel,
-    #customerChurnBank .bank-batch-upload-panel,
-    #customerChurnBank .bank-input-feature-panel,
-    #customerChurnBank .bank-ai-prompt-panel,
-    #customerChurnBank .bank-chart-panel {
-        height:     auto;
-        overflow-y: auto;
-        min-height: unset; 
-    }
-
-    #customerChurnBank .bank-card-batch-panel-grid {
-        display:        grid;
-        flex-direction: initial; 
-    }
-
-    #customerChurnBank .bank-batch-result-panel,
-    #customerChurnBank .bank-batch-feature-panel {
-        height:     auto;
-        overflow-y: auto;
-        min-height: unset; 
-    }
-
-    #featureGrid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
+    #customerChurnBank .bank-margin-left-btn-640px {
+        margin-left: 0px;
     }
 }

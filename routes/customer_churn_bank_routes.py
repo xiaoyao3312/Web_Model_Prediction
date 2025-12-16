@@ -196,7 +196,7 @@ def generate_local_shap_chart(shap_data: Dict[str, float], title: str) -> str:
         ax.axvline(0, color='grey', linestyle='--', linewidth=0.8)
 
         ax.set_xlabel("SHAP Impact (Positive Pushes for Churn / Negative Against)")
-        ax.set_title(title, fontsize=14)
+        ax.set_title(title, fontsize=10)
         ax.invert_yaxis()
 
         # 轉換為 Base64

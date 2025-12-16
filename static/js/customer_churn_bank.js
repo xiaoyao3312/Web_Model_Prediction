@@ -111,7 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveApiKeyBtn.title = '點擊可清除 Key 並禁用 AI';
         apiStatusMsg.textContent = '✅ AI 功能已啟用。請執行分析。';
         apiStatusMsg.style.color = 'var(--success-color)';
-        // 這裡修正了使用變數的方式，但假設 --font-weight-900 和 --h6-font-size 已經被定義
         apiStatusMsg.style.fontWeight = 'var(--font-weight-900)'; // 避免未定義變數錯誤
         apiStatusMsg.style.fontSize = 'var(--h6-font-size)';    // 避免未定義變數錯誤
         updateUIState(true);
@@ -127,7 +126,6 @@ document.addEventListener('DOMContentLoaded', () => {
         saveApiKeyBtn.title = '在此輸入您的 Gemini API Key';
         apiStatusMsg.textContent = '❌ AI 功能已禁用！請輸入 Key。';
         apiStatusMsg.style.color = 'var(--error-color)';
-        // 這裡修正了使用變數的方式，但假設 --font-weight-900 和 --h6-font-size 已經被定義
         apiStatusMsg.style.fontWeight = 'var(--font-weight-900)'; // 避免未定義變數錯誤
         apiStatusMsg.style.fontSize = 'var(--h6-font-size)';    // 避免未定義變數錯誤
         updateUIState(false);
@@ -144,9 +142,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (initialMessage) {
             if (isEnabled) {
-                initialMessage.innerHTML = '<h6 class="bank-card-title">AI 功能已啟用。請輸入指令，然後點擊按鈕執行分析。</h6>';
+                initialMessage.innerHTML = '<div class="bank-card-hint">AI 功能已啟用。請輸入指令，然後點擊按鈕執行分析。</div>';
             } else {
-                initialMessage.innerHTML = '<h6 class="bank-card-title">AI 功能已禁用！請在上方輸入 API Key 並點擊啟用按鈕。</h6>';
+                initialMessage.innerHTML = '<div class="bank-card-hint">AI 功能已禁用！請在上方輸入 API Key 並點擊啟用按鈕。</div>';
             }
         }
     }
@@ -275,10 +273,10 @@ async function runPredictionAndExplain() {
     if (errorMsg) errorMsg.classList.add('bank-hidden');
 
     if (predictionOutput) {
-        predictionOutput.innerHTML = '<h6 class="initial-message">AI 分析運行中。結果將在下方專家解釋區顯示。</h6>';
+        predictionOutput.innerHTML = '<div class="initial-message">AI 分析運行中。結果將在下方專家解釋區顯示。</div>';
     }
 
-    if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title">圖表正在生成中...</h6>';
+    if (chartDisplay) chartDisplay.innerHTML = '<div class="initial-message">圖表正在生成中...</div>';
     
     try {
         const inputData = collectInputData();
@@ -308,12 +306,12 @@ async function runPredictionAndExplain() {
             `關鍵特徵影響因素分析:\n${predictResult.explanation_prompt}\n\n` +
             `請根據以上資訊，並遵循以下使用者指令，提供結構化解釋和行動建議：\n\n【使用者指令】\n${aiPrompt}`;
 
-        const predictionHtml = `<h6 class="bank-card-title"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(3)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </h6>`;
+        const predictionHtml = `<div class="bank-card-hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(3)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
         if (predictionOutput) {
             predictionOutput.innerHTML = predictionHtml;
         }
         
-        if (explanationOutput) explanationOutput.innerHTML = `<h6 class="loading-message">正在生成 AI 解釋與行動建議...</h6>`;
+        if (explanationOutput) explanationOutput.innerHTML = `<div class="initial-message loading-message">正在生成 AI 解釋與行動建議...</div>`;
         
 
         const explanation = await getAiExplanation(fullPrompt, geminiApiKey);
@@ -335,9 +333,9 @@ async function runPredictionAndExplain() {
             errorMsg.classList.remove('bank-hidden');
         }
 
-        if (explanationOutput) explanationOutput.innerHTML = '<h6 class="bank-card-title">預測或 AI 解釋失敗。</h6>';
-        if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title">圖表生成失敗。</h6>';
-        if (predictionOutput) predictionOutput.innerHTML = '<h6 class="bank-card-title">預測或 AI 解釋失敗。</h6>';
+        if (explanationOutput) explanationOutput.innerHTML = '<div class="initial-message">預測或 AI 解釋失敗。</div>';
+        if (chartDisplay) chartDisplay.innerHTML = '<div class="initial-message">圖表生成失敗。</div>';
+        if (predictionOutput) predictionOutput.innerHTML = '<div class="initial-message">預測或 AI 解釋失敗。</div>';
         
     } finally {
         if (AiAnalyzeButton) AiAnalyzeButton.disabled = !isApiKeyActive;
@@ -369,12 +367,12 @@ async function uploadAndPredictBatch() {
     uploadBatchBtn.disabled = true;
 
     // 重置單筆分析區塊
-    document.getElementById('explanationOutput').innerHTML = '<h6 class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</h6>';
-    document.getElementById('chartDisplay').innerHTML = '<h6 class="bank-card-title">批次預測結果圖表不在此區塊顯示。</h6>';
-    document.getElementById('predictionOutput').innerHTML = '<h6 class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</ph6'; 
+    document.getElementById('explanationOutput').innerHTML = '<div class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</div>';
+    document.getElementById('chartDisplay').innerHTML = '<div class="initial-message">批次預測結果圖表不在此區塊顯示。</div>';
+    document.getElementById('predictionOutput').innerHTML = '<div class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</div'; 
     
     if (filterStats) filterStats.innerHTML = '';
-    if (batchResultBody) batchResultBody.innerHTML = '<tr><td colspan="3" class="bank-card-title"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
+    if (batchResultBody) batchResultBody.innerHTML = '<tr><td colspan="3" class="initial-message"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
 
 
     try {
@@ -452,11 +450,11 @@ async function uploadAndPredictBatch() {
         console.error("批次預測失敗:", error);
         
         if (batchResultBody) batchResultBody.innerHTML = 
-            `<tr><td colspan="3" class="error-message">
+            `<tr><td colspan="3" class="bank-card-hint-hidden">
                 ❌ 批次預測失敗:<br> ${error.message.replace(/\n/g, '<br>')}
             </td></tr>`;
         
-        if (filterStats) filterStats.innerHTML = `<span class="error-message">批次分析失敗。</span>`;
+        if (filterStats) filterStats.innerHTML = `<div class="bank-card-hint-hidden">批次分析失敗。</div>`;
         
     } finally {
         uploadBatchBtn.innerHTML = originalText;
@@ -575,7 +573,7 @@ function filterAndRenderBatchResults() {
 
     if (originalBatchData.length === 0) { 
         if (statsDiv) statsDiv.innerHTML = '請先上傳 CSV 檔案進行批次分析。';
-        if (tbody) tbody.innerHTML = '<tr><td colspan="3" class="bank-card-title">請上傳 CSV 檔案進行批次分析</td></tr>';
+        if (tbody) tbody.innerHTML = '<tr><td colspan="3" class="bank-card-hint">請上傳 CSV 檔案進行批次分析</td></tr>';
         if (pageInput) pageInput.value = 1;
         if (pageInfo) pageInfo.textContent = ' / 1';
         if (prevPageBtn) prevPageBtn.disabled = true;
@@ -782,15 +780,6 @@ function resetBatchView() {
     
     // --- 關鍵新增：清空特徵詳情面板 START ---
     const grid = document.getElementById('featureGrid');
-    const placeholder = document.getElementById('featureDetailsPlaceholder');
-    
-    if (grid && placeholder) {
-        // 清空內容，並顯示佔位符
-        grid.innerHTML = '';
-        grid.classList.add('bank-hidden');
-        placeholder.classList.remove('bank-hidden');
-    }
-    // --- 關鍵新增：清空特徵詳情面板 END ---
     
     // 重新執行篩選與渲染 (由於篩選欄位已重設，這將顯示第一頁的原始數據)
     filterAndRenderBatchResults(); 
@@ -813,9 +802,9 @@ async function runPredictionOnly() {
     if (errorMsg) errorMsg.classList.add('bank-hidden');
 
     // ✨ 修改點 2: 更新顯示等待訊息的元素
-    if (predictionOutput) predictionOutput.innerHTML = '<h6 class="initial-message">正在運行模型預測，請稍候...</h6>';
-    if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title">圖表正在生成中...</h6>';
-    if (explanationOutput) explanationOutput.innerHTML = '<h6 class="initial-message">請點擊「執行模型預測並取得 AI 解釋」以生成解釋內容。</h6>';
+    if (predictionOutput) predictionOutput.innerHTML = '<div class="initial-message">正在運行模型預測，請稍候...</div>';
+    if (chartDisplay) chartDisplay.innerHTML = '<div class="initial-message loading-message">圖表正在生成中...</div>';
+    if (explanationOutput) explanationOutput.innerHTML = '<div class="initial-message">請點擊「執行模型預測並取得 AI 解釋」以生成解釋內容。</div>';
 
     try {
         const inputData = collectInputData();
@@ -837,7 +826,7 @@ async function runPredictionOnly() {
 
         // ✨ 修改點 3: 將結果輸出到 predictionOutput
         if (predictionOutput) {
-            predictionOutput.innerHTML = `<h6 class="bank-card-title"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(3)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <h6>`;
+            predictionOutput.innerHTML = `<div class="bank-card-hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(3)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <div>`;
         }
 
         renderChartsFromBase64(charts);
@@ -849,9 +838,9 @@ async function runPredictionOnly() {
         }
 
         // ✨ 修改點 4: 錯誤訊息輸出到 predictionOutput 和 explanationOutput
-        if (predictionOutput) predictionOutput.innerHTML = '<h6 class="bank-card-title">模型預測失敗。</h6>';
-        if (chartDisplay) chartDisplay.innerHTML = '<h6 class="bank-card-title">圖表生成失敗。</h6>';
-        if (explanationOutput) explanationOutput.innerHTML = '<h6 class="bank-card-title">模型預測失敗。</h6>';
+        if (predictionOutput) predictionOutput.innerHTML = '<div class="initial-message">模型預測失敗。</div>';
+        if (chartDisplay) chartDisplay.innerHTML = '<div class="initial-message">圖表生成失敗。</div>';
+        if (explanationOutput) explanationOutput.innerHTML = '<div class="initial-message">模型預測失敗。</div>';
 
     } finally {
         if (predictOnlyBtn) predictOnlyBtn.disabled = false;
@@ -913,7 +902,7 @@ function renderChartsFromBase64(charts) {
 
     const hasChartData = charts.some(chart => chart.base64_data);
     if (charts.length === 0 || !hasChartData) {
-        chartContainer.innerHTML = '<h6 class="bank-card-title">後端沒有產生圖表或圖表生成失敗。</h6>';
+        chartContainer.innerHTML = '<div class="initial-message">後端沒有產生圖表或圖表生成失敗。</div>';
         return;
     }
 
@@ -966,20 +955,6 @@ const FEATURE_DISPLAY_ORDER = [
  */
 function displayFeatureDetails(data) {
     const grid = document.getElementById('featureGrid');
-    const placeholder = document.getElementById('featureDetailsPlaceholder');
-
-    if (!data) {
-        // 沒有數據時：顯示佔位符，隱藏網格
-        grid.classList.add('bank-hidden');
-        placeholder.classList.remove('bank-hidden');
-        return;
-    }
-    
-    // 顯示網格，隱藏佔位符
-    placeholder.classList.add('bank-hidden');
-    grid.classList.remove('bank-hidden');
-    // 移除初始佔位符類別（可選，但保持狀態整潔）
-    grid.classList.remove('initial-feature-grid'); 
 
     grid.innerHTML = ''; // 清空舊內容
 
