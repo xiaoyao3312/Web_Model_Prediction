@@ -154,16 +154,16 @@ document.addEventListener('DOMContentLoaded', () => {
  * 驗證規則定義
  */
 const VALIDATION_RULES = {
-    'CreditScore': { min: 350, max: 850, integer: true, msg: "信用分數必須介於 350 到 850 之間的整數。" },
-    'Age': { min: 18, max: 100, integer: true, msg: "年齡必須介於 18 到 100 之間的整數。" },
-    'Tenure': { min: 0, max: 10, integer: true, msg: "服務年限必須介於 0 到 10 之間的整數。" },
-    'Balance': { min: 0, max: 300000, integer: false, msg: "餘額必須介於 0 到 300000 之間，小數點是允許的。" },
-    'NumOfProducts': { min: 1, max: 4, integer: true, msg: "產品數量只能輸入 1、2、3 或 4。" },
-    'HasCrCard': { min: 0, max: 1, integer: true, msg: "持有信用卡只能輸入 0 (否) 或 1 (是)。" },
-    'IsActiveMember': { min: 0, max: 1, integer: true, msg: "活躍會員只能輸入 0 (否) 或 1 (是)。" },
-    'EstimatedSalary': { min: 0, max: 200000, integer: false, msg: "估計薪資必須介於 0 到 200000 之間，小數點是允許的。" },
-    'Geography': { min: 0, max: 2, integer: true, msg: "國家/地區只能輸入 0 (法國), 1 (西班牙) 或 2 (德國)。" },
-    'Gender': { min: 0, max: 1, integer: true, msg: "性別只能輸入 0 (男) 或 1 (女)。" },
+    'CreditScore': { min: 350, max: 850, integer: true, msg: "信用分數 必須介於 350 到 850 之間的整數。" },
+    'Age': { min: 18, max: 100, integer: true, msg: "客戶年齡 必須介於 18 到 100 之間的整數。" },
+    'Tenure': { min: 0, max: 10, integer: true, msg: "服務年限 必須介於 0 到 10 之間的整數。" },
+    'Balance': { min: 0, max: 300000, integer: false, msg: "帳戶餘額 必須介於 0 到 300000 之間，小數點是允許的。" },
+    'NumOfProducts': { min: 1, max: 4, integer: true, msg: "產品數量 只能輸入 1、2、3 或 4。" },
+    'HasCrCard': { min: 0, max: 1, integer: true, msg: "持有信用卡 只能輸入 0 (否) 或 1 (是)。" },
+    'IsActiveMember': { min: 0, max: 1, integer: true, msg: "活躍會員 只能輸入 0 (否) 或 1 (是)。" },
+    'EstimatedSalary': { min: 0, max: 200000, integer: false, msg: "估計薪資 必須介於 0 到 200000 之間，小數點是允許的。" },
+    'Geography': { min: 0, max: 2, integer: true, msg: "國家 只能輸入 0 (法國), 1 (西班牙) 或 2 (德國)。" },
+    'Gender': { min: 0, max: 1, integer: true, msg: "生理性別 只能輸入 0 (男) 或 1 (女)。" },
 };
 
 /**
@@ -196,9 +196,9 @@ function collectInputData() {
 
         if (rule) {
             if (rule.integer && !Number.isInteger(numericValue)) {
-                errors.push(`"${featureName}" 錯誤：${rule.msg}`);
+                errors.push(`錯誤：${rule.msg}`);
             } else if (numericValue < rule.min || numericValue > rule.max) {
-                errors.push(`"${featureName}" 錯誤：${rule.msg}`);
+                errors.push(`錯誤：${rule.msg}`);
             }
         }
 

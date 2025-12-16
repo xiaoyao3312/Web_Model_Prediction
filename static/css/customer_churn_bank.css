@@ -217,6 +217,7 @@ body {
     background-color:   var(--customerChurnBank-panel-bg-color);
     color:              var(--customerChurnBank-global-font-color);
     padding:            5px;
+    padding-left:       10px;
     margin-left:        10px;
     margin-right:       10px;
     border:             1px solid var(--customerChurnBank-global-font-color);
