@@ -198,7 +198,8 @@ body {
 #customerChurnBank .bank-api-key-container,
 #customerChurnBank .bank-input-feature-container,
 #customerChurnBank .bank-ai-prompt-container,
-#customerChurnBank .bank-batch-upload-container {
+#customerChurnBank .bank-batch-upload-container,
+#customerChurnBank .bank-roi-btn-container {
     display:       flex;
     align-items:   center;
 }
@@ -632,6 +633,11 @@ body {
     box-shadow:         var(--customerChurnBank-box-shadow);
 }
 
+/* 2. 單個特徵項目 (.feature-item) */
+#customerChurnBank .feature-item:hover {
+    box-shadow:       var(--customerChurnBank-box-shadow-hover)
+}
+
 /* 特徵數值 */
 #customerChurnBank .feature-item-label {
     /* 樣式對應: text-lg text-blue-600 font-semibold block */
@@ -708,7 +714,14 @@ body {
     font-size: 1.2rem; /* 稍微大一點 */
 }
 
+#batchResultBody tr:not(.bank-card-hint) {
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
 
+#batchResultBody tr:not(.bank-card-hint):hover {
+    background-color: rgba(0, 0, 0, 0.05);
+}
 
 
 /* 8.3 螢幕寬度 <= 1023px (Tablet/Mobile) - 堆疊佈局 */

@@ -170,35 +170,34 @@ document.addEventListener('DOMContentLoaded', () => {
  * 驗證規則定義
  */
 const VALIDATION_RULES = {
-    'CreditScore': { min: 350, max: 850, integer: true, msg: "信用分數 必須介於 350 到 850 之間的整數。" },
     'Age': { min: 18, max: 100, integer: true, msg: "客戶年齡 必須介於 18 到 100 之間的整數。" },
     'Tenure': { min: 0, max: 10, integer: true, msg: "服務年限 必須介於 0 到 10 之間的整數。" },
     'Balance': { min: 0, max: 300000, integer: false, msg: "帳戶餘額 必須介於 0 到 300000 之間，小數點是允許的。" },
+    'EstimatedSalary': { min: 0, max: 200000, integer: false, msg: "估計薪資 必須介於 0 到 200000 之間，小數點是允許的。" },
+    'CreditScore': { min: 350, max: 850, integer: true, msg: "信用分數 必須介於 350 到 850 之間的整數。" },
+    'Gender': { min: 0, max: 1, integer: true, msg: "生理性別 只能輸入 0 (男) 或 1 (女)。" },
     'NumOfProducts': { min: 1, max: 4, integer: true, msg: "產品數量 只能輸入 1、2、3 或 4。" },
+    'Geography': { min: 0, max: 2, integer: true, msg: "國家 只能輸入 0 (法國), 1 (西班牙) 或 2 (德國)。" },
     'HasCrCard': { min: 0, max: 1, integer: true, msg: "持有信用卡 只能輸入 0 (否) 或 1 (是)。" },
     'IsActiveMember': { min: 0, max: 1, integer: true, msg: "活躍會員 只能輸入 0 (否) 或 1 (是)。" },
-    'EstimatedSalary': { min: 0, max: 200000, integer: false, msg: "估計薪資 必須介於 0 到 200000 之間，小數點是允許的。" },
-    'Geography': { min: 0, max: 2, integer: true, msg: "國家 只能輸入 0 (法國), 1 (西班牙) 或 2 (德國)。" },
-    'Gender': { min: 0, max: 1, integer: true, msg: "生理性別 只能輸入 0 (男) 或 1 (女)。" },
 };
 
 // 定義要顯示的特徵及其中文名稱和順序 (共 10 個核心特徵)
 const FEATURE_DISPLAY_MAP = {
-    'CreditScore': '信用分數',
-    'Geography': '所在國家',
-    'Gender': '性別',
-    'Age': '客戶年齡 (歲)', // 使用者要求
-    'Tenure': '服務年限 (年)', // 使用者要求
+    'Age': '客戶年齡 (歲)',
+    'Tenure': '服務年限 (年)',
     'Balance': '帳戶餘額 (NT$)',
+    'EstimatedSalary': '預估薪資 (NT$)',
+    'CreditScore': '信用分數',
+    'Gender': '性別',
     'NumOfProducts': '產品數量',
+    'Geography': '所在國家',
     'HasCrCard': '持有信用卡',
     'IsActiveMember': '活躍客戶',
-    'EstimatedSalary': '預估薪資 (NT$)'
 };
 
 const FEATURE_DISPLAY_ORDER = [
-    'CreditScore', 'Geography', 'Gender', 'Age', 'Tenure', 
-    'Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember', 'EstimatedSalary'
+    'Age','Tenure','Balance','EstimatedSalary','CreditScore','Gender','NumOfProducts','Geography','HasCrCard','IsActiveMember'
 ];
 
 /**
@@ -515,10 +514,10 @@ async function uploadAndPredictBatch() {
                     if (idSearchInput) idSearchInput.value = ''; 
                     if (result.roi) {
                         renderRoiPanel(result.roi);
+                        updateBatchROI(result.roi);
                     }
                     // 渲染表格
                     filterAndRenderBatchResults();
-                    updateBatchROI(originalBatchData);
                     alert(`批次分析成功！共處理 ${originalBatchData.length} 筆客戶資料。`);
 
                     
@@ -1150,31 +1149,154 @@ function updateSingleROI(churnProb) {
     roiEl.style.color = roi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
 }
 
-function updateBatchROI(batchResults) {
-    const count = batchResults.length;
-    if (!count) return;
+// 修改 customer_churn_bank.js 中的 updateBatchROI 函數
+function updateBatchROI(roiData) {
+    if (!roiData || typeof roiData !== 'object') return;
 
-    const customerValue = 20000;
-    const cost = 800;
+    // 1. 取得數據
+    // 總人數：從全域變數 globalBatchData (原始 CSV 筆數) 取得
+    const totalCount = globalBatchData.length;
+    // 建議挽留人數：從後端計算好的 roi 物件取得
+    const actionableCount = roiData.actionable_count || 0;
+    
+    const totalCost = roiData.retention_cost || 0;
+    const netRoi = roiData.total_net_roi || 0;
+    const expectedReturn = roiData.expected_return || 0;
 
-    const avgProb =
-        batchResults.reduce((s, r) => s + r.probability, 0) / count;
+    // 2. 更新畫面
+    // 填入總人數
+    document.getElementById('roiBatchTotalCount').textContent = totalCount;
+    // 填入建議挽留人數
+    document.getElementById('roiBatchActionableCount').textContent = actionableCount;
 
-    const expectedValue = avgProb * customerValue * count;
-    const totalCost = cost * count;
-    const roi = expectedValue - totalCost;
+    // 計算平均流失機率
+    if (totalCount > 0) {
+        const avgProb = globalBatchData.reduce((s, r) => s + r.probability, 0) / totalCount;
+        document.getElementById('roiBatchProb').textContent = (avgProb * 100).toFixed(2) + ' %';
+    }
 
-    document.getElementById('roiBatchCount').textContent = count;
-    document.getElementById('roiBatchProb').textContent =
-        (avgProb * 100).toFixed(2) + ' %';
+    // 金額部分加上千分位
+    document.getElementById('roiBatchValue').textContent = 
+        'NT$ ' + Math.round(expectedReturn).toLocaleString();
 
-    document.getElementById('roiBatchValue').textContent =
-        'NT$ ' + expectedValue.toFixed(0);
-
-    document.getElementById('roiBatchCost').textContent =
-        'NT$ ' + totalCost.toFixed(0);
+    document.getElementById('roiBatchCost').textContent = 
+        'NT$ ' + Math.round(totalCost).toLocaleString();
 
     const roiEl = document.getElementById('roiBatchResult');
-    roiEl.textContent = 'NT$ ' + roi.toFixed(0);
-    roiEl.style.color = roi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
+    roiEl.textContent = 'NT$ ' + Math.round(netRoi).toLocaleString();
+    roiEl.style.color = netRoi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
 }
+
+// 1. 全域變數定義
+let currentlySelectedCustomer = null;
+
+// 2. 表格渲染函數 (取代舊的)
+function renderBatchTable(page) {
+    const tbody = document.getElementById('batchResultBody');
+    tbody.innerHTML = '';
+
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    const pageData = globalBatchData.slice(start, end);
+
+    pageData.forEach(row => {
+        const tr = document.createElement('tr');
+        if (currentlySelectedCustomer && currentlySelectedCustomer.id === row.id) {
+            tr.classList.add('selected-row');
+        }
+
+        tr.innerHTML = `
+            <td>${row.id}</td>
+            <td>${(row.probability * 100).toFixed(2)}%</td>
+            <td><span class="risk-badge risk-${row.risk.toLowerCase()}">${row.risk}</span></td>
+        `;
+
+        tr.addEventListener('click', () => {
+            document.querySelectorAll('#batchResultBody tr').forEach(r => r.classList.remove('selected-row'));
+            tr.classList.add('selected-row');
+
+            currentlySelectedCustomer = row; 
+
+            // 更新 UI 狀態
+            const fillBtn = document.getElementById('fillSelectedDataBtn');
+            if (fillBtn) fillBtn.disabled = false;
+            
+            const hint = document.getElementById('selectionHint');
+            if (hint) hint.style.display = 'none';
+
+            updateSelectionDetails(row);
+        });
+        tbody.appendChild(tr);
+    });
+
+    renderPagination();
+}
+
+// 3. 更新細節面板 (將資料填入 --- 的地方)
+function updateSelectionDetails(customer) {
+    const detailPanel = document.getElementById('featureGrid'); // 確保 ID 與你 HTML 一致
+    if (!detailPanel) return;
+
+    const sourceSpans = detailPanel.querySelectorAll('[data-target]');
+    
+    sourceSpans.forEach(span => {
+        const key = span.getAttribute('data-target');
+        let val = customer[key.toLowerCase()] || customer[key] || '---';
+
+        // 格式化特定欄位
+        if (key === 'Balance' || key === 'EstimatedSalary') {
+            span.textContent = 'NT$ ' + Number(val).toLocaleString();
+        } else if (key === 'Gender') {
+            span.textContent = (val == 1 || val === 'Female' || val === '女') ? '女' : '男';
+        } else if (key === 'HasCrbank-card' || key === 'IsActiveMember') {
+            span.textContent = (val == 1) ? '是' : '否';
+        } else if (key === 'Geography') {
+            const geoMap = { 'France': '法國', 'Spain': '西班牙', 'Germany': '德國' };
+            span.textContent = geoMap[val] || val;
+        } else {
+            span.textContent = val;
+        }
+    });
+}
+
+// 4. 點擊按鈕：從預覽面板同步到輸入框 (單一出口，最穩健)
+document.getElementById('fillSelectedDataBtn').addEventListener('click', function() {
+    const sourceSpans = document.querySelectorAll('#featureGrid [data-target]');
+    
+    sourceSpans.forEach(span => {
+        const featureKey = span.getAttribute('data-target');
+        const displayValue = span.textContent.trim();
+
+        if (displayValue === '---') return;
+
+        const targetInput = document.querySelector(`#inputForm [data-feature-name="${featureKey}"]`);
+        
+        if (targetInput) {
+            if (targetInput.classList.contains('dropdown-input')) {
+                targetInput.value = displayValue;
+                
+                // 設定 data-value
+                let mappingVal = displayValue;
+                if (displayValue === '是' || displayValue === '女') mappingVal = '1';
+                if (displayValue === '否' || displayValue === '男') mappingVal = '0';
+                if (featureKey === 'Geography') {
+                    const geoMap = { '法國': '0', '西班牙': '1', '德國': '2' };
+                    mappingVal = geoMap[displayValue] || '0';
+                }
+                targetInput.setAttribute('data-value', mappingVal);
+            } else {
+                const numericValue = displayValue.replace(/[NT\$,\s]/g, '');
+                targetInput.value = numericValue;
+            }
+            targetInput.dispatchEvent(new Event('input'));
+            targetInput.dispatchEvent(new Event('change'));
+        }
+    });
+
+    // 平滑捲動
+    const inputPanel = document.querySelector('.bank-input-feature-panel');
+    if (inputPanel) {
+        window.scrollTo({ top: inputPanel.offsetTop - 20, behavior: 'smooth' });
+    }
+    alert("客戶資料已成功同步至輸入表單！");
+});

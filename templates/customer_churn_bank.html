@@ -257,8 +257,13 @@
 
                 <div id="roiBatchContent" class="bank-card-roi-grid">
                     <div class="feature-item">
-                        <p class="feature-item-label">客戶數量</p>
-                        <span id="roiBatchCount" class="feature-item-value">--</span>
+                        <p class="feature-item-label">總客戶人數</p>
+                        <span id="roiBatchTotalCount" class="feature-item-value">--</span>
+                    </div>
+
+                    <div class="feature-item">
+                        <p class="feature-item-label">建議挽留人數</p>
+                        <span id="roiBatchActionableCount" class="feature-item-value">--</span>
                     </div>
                     <div class="feature-item">
                         <p class="feature-item-label">平均流失機率</p>
@@ -345,6 +350,14 @@
                     <button id="nextPageBtn" class="bank-analyze-btn"><label>下一頁</label></button>
                 </div>
 
+
+                <div class="bank-roi-btn-container">
+                    <button id="fillSelectedDataBtn" class="bank-analyze-btn">
+                        <label>帶入選中客戶資料</label>
+                    </button>
+                </div>
+                <p id="selectionHint">請先點擊下方表格選擇一位客戶</p>
+
             </div>
 
             <div class="bank-card bank-batch-feature-panel">
@@ -353,51 +366,48 @@
                 <div class="bank-card-hint">請點擊批次分析結果列表中的任一列，以查看詳細特徵。</div>
                 <div id="featureGrid">
                     <div class="feature-item">
-                        <p class="feature-item-label">客戶 ID</p>
-                        <span class="feature-item-value">---</span>
+                        <p class="feature-item-label">客戶年齡</p>
+                        <span class="feature-item-value" data-target="Age">---</span>
                     </div>
                     <div class="feature-item">
-                        <p class="feature-item-label">年齡</p>
-                        <span class="feature-item-value">---</span>
-                    </div>
-                    <div class="feature-item">
-                        <p class="feature-item-label">信用分數</p>
-                        <span class="feature-item-value">---</span>
-                    </div>
-                    <div class="feature-item">
-                        <p class="feature-item-label">年資</p>
-                        <span class="feature-item-value">---</span>
+                        <p class="feature-item-label">服務年限</p>
+                        <span class="feature-item-value" data-target="Tenure">---</span>
                     </div>
                     <div class="feature-item">
                         <p class="feature-item-label">帳戶餘額</p>
-                        <span class="feature-item-value">---</span>
+                        <span class="feature-item-value" data-target="Balance">---</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">估計薪資</p>
+                        <span class="feature-item-value" data-target="EstimatedSalary">---</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">信用分數</p>
+                        <span class="feature-item-value" data-target="CreditScore">---</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">生理性別</p>
+                        <span class="feature-item-value" data-target="Gender">---</span>
                     </div>
                     <div class="feature-item">
                         <p class="feature-item-label">產品數量</p>
-                        <span class="feature-item-value">---</span>
+                        <span class="feature-item-value" data-target="NumOfProducts">---</span>
                     </div>
                     <div class="feature-item">
-                        <p class="feature-item-label">信用卡</p>
-                        <span class="feature-item-value">---</span>
+                        <p class="feature-item-label">國家</p>
+                        <span class="feature-item-value" data-target="Geography">---</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">持有信用卡</p>
+                        <span class="feature-item-value" data-target="HasCrbank-card">---</span>
                     </div>
                     <div class="feature-item">
                         <p class="feature-item-label">活躍會員</p>
-                        <span class="feature-item-value">---</span>
-                    </div>
-                    <div class="feature-item">
-                        <p class="feature-item-label">預估薪資</p>
-                        <span class="feature-item-value">---</span>
-                    </div>
-                    <div class="feature-item">
-                        <p class="feature-item-label">地理位置</p>
-                        <span class="feature-item-value">---</span>
+                        <span class="feature-item-value" data-target="IsActiveMember">---</span>
                     </div>
                 </div>
             </div>
         </div>
-
-        
-
 
     </div>
 
