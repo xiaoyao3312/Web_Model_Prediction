@@ -511,10 +511,14 @@ async function uploadAndPredictBatch() {
                     currentPage = 1;
                     const idSearchInput = document.getElementById('idSearchInput');
                     if (idSearchInput) idSearchInput.value = ''; 
-                    
+                    if (result.roi) {
+                        renderRoiPanel(result.roi);
+                    }
                     // 渲染表格
-                    filterAndRenderBatchResults(); 
+                    filterAndRenderBatchResults();
                     alert(`批次分析成功！共處理 ${originalBatchData.length} 筆客戶資料。`);
+
+                    
                 } else {
                     let formatErrorMsg = "後端回傳結果格式錯誤或 'data' 欄位不是非空陣列。";
                     if (batchData && Array.isArray(batchData) && batchData.length === 0) {
@@ -873,6 +877,8 @@ function resetBatchView() {
     // --- 關鍵新增：清空特徵詳情面板 START ---
     const grid = document.getElementById('featureGrid');
     
+    const roiPanel = document.getElementById('roiPanel');
+    if (roiPanel) roiPanel.style.display = 'none';
     // 重新執行篩選與渲染 (由於篩選欄位已重設，這將顯示第一頁的原始數據)
     filterAndRenderBatchResults(); 
 }
@@ -1071,4 +1077,49 @@ function displayFeatureDetails(data) {
         itemDiv.appendChild(valueSpan);
         grid.appendChild(itemDiv);
     });
+}
+
+/**
+ * 渲染 ROI 分析面板
+ * @param {Object} roiData - 後端回傳的 ROI 統計物件
+ */
+function renderRoiPanel(roiData) {
+    const roiPanel = document.getElementById('roiPanel');
+    const roiTotalLtv = document.getElementById('roiTotalLtv');
+    const roiActionCount = document.getElementById('roiActionCount');
+    const roiTotalNet = document.getElementById('roiTotalNet');
+    const roiCost = document.getElementById('roiCost');
+    const tbody = document.getElementById('roiTopTargetsBody');
+
+    if (!roiPanel) return;
+
+    // 格式化貨幣
+    const fmtMoney = (num) => new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(num);
+    const fmtNum = (num) => new Intl.NumberFormat('en-US').format(num);
+
+    // 填入統計數據
+    roiTotalLtv.textContent = fmtMoney(roiData.total_ltv);
+    roiActionCount.textContent = fmtNum(roiData.actionable_count) + " 位";
+    roiTotalNet.textContent = fmtMoney(roiData.total_net_roi);
+    roiCost.textContent = fmtMoney(roiData.retention_cost);
+
+    // 填入 Top 5 表格
+    tbody.innerHTML = '';
+    if (roiData.top_targets && roiData.top_targets.length > 0) {
+        roiData.top_targets.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td>${row.id}</td>
+                <td class="high-risk">${(row.Churn_Prob * 100).toFixed(2)}%</td>
+                <td>${fmtMoney(row.LTV)}</td>
+                <td style="font-weight:bold; color:var(--success-color);">${fmtMoney(row.ENR)}</td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } else {
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;">無建議的挽留目標 (ENR <= 0)</td></tr>';
+    }
+
+    // 顯示面板
+    roiPanel.style.display = 'block';
 }

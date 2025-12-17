@@ -296,6 +296,52 @@
                 </div>
             </div>
         </div>
+
+        <hr class="bank-panel-divider">
+
+        <div class="bank-card bank-roi-panel" id="roiPanel">
+            <div class="bank-card-title">
+                <svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M312 24V34.5c6.4 1.2 12.6 2.7 18.2 4.2c12.8 3.4 20.4 16.6 17 29.4s-16.6 20.4-29.4 17c-10.9-2.9-21.1-4.7-30.2-5.6c-7.8-.8-16-1.5-24-1.5c-29 0-53.3 5.8-71.4 21.4c-17.7 15.3-26.2 36.3-26.2 60.5c0 14.3 3.3 27 9.8 38.2c6.4 11 15.5 20.4 27.6 28.5c23.5 15.9 59.8 28.6 111.7 41.5c31 7.7 65.5 17.6 93.3 33.7c31.6 18.3 53.6 47.2 53.6 86.6c0 40.5-13.6 72.8-37.5 96.6c-24.2 24.1-59.3 36.9-105.7 36.9c-14.4 0-26.6-.7-36.8-2.3l0 10.3c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-9.8c-7.9 1.1-16.2 1.7-24.9 1.7c-47.5 0-89-13-118.6-43.5c-6.1-6.3-10.7-13.7-13.6-21.7c-2.8-7.9-2.2-16.5 1.8-24.2s11.3-13.1 19.3-15l.4-.1c12.8-3.1 25.8 4.7 28.9 17.5c6 24.5 32.7 43 78.1 43c10.3 0 20.8-1 30.5-3.3c35.6-8.3 50.8-27.4 50.8-51.5c0-12.2-3.1-22.9-8.9-32.3c-6-9.8-15.1-18.3-28.7-26.3c-23.9-14-58.5-25.2-111.2-38.3c-36.9-9.2-76.3-20.8-105-39.2C13.2 236.4 0 207 0 168.3C0 125.7 14.3 92.2 41.6 67.2c27-24.8 66.8-39.2 118.4-39.2c12.8 0 25.1 1.2 36.6 3.6V24c0-13.3 10.7-24 24-24s24 10.7 24 24z"/></svg>
+                ROI 投資回報分析
+            </div>
+            <div class="bank-card-hint">基於預測結果與利潤排名 (Profit Ranking) 策略的最佳化建議。</div>
+            
+            <div class="roi-stats-grid">
+                <div class="roi-stat-box">
+                    <div class="stat-label">總 LTV (潛在價值)</div>
+                    <div class="stat-value" id="roiTotalLtv">---</div>
+                </div>
+                <div class="roi-stat-box">
+                    <div class="stat-label">建議挽留人數</div>
+                    <div class="stat-value highlight" id="roiActionCount">---</div>
+                </div>
+                <div class="roi-stat-box">
+                    <div class="stat-label">預估總淨利 (ROI)</div>
+                    <div class="stat-value success" id="roiTotalNet">---</div>
+                </div>
+                <div class="roi-stat-box">
+                    <div class="stat-label">預估挽留成本</div>
+                    <div class="stat-value" id="roiCost">---</div>
+                </div>
+            </div>
+
+            <div class="roi-top-targets">
+                <div class="bank-card-hint" style="margin-top: 15px;">🚀 <strong>TOP 5 優先挽留目標 (最高 ENR)</strong></div>
+                <table class="fl-table" style="margin-top: 10px;">
+                    <thead>
+                        <tr>
+                            <th>客戶 ID</th>
+                            <th>流失機率</th>
+                            <th>客戶終身價值 (LTV)</th>
+                            <th>預期淨回報 (ENR)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="roiTopTargetsBody">
+                        </tbody>
+                </table>
+            </div>
+        </div>
+
     </div>
 
     <div id="fabColorControl"> 

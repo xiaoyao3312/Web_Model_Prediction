@@ -256,3 +256,79 @@ class CustomerChurnBankService:
         
         logger.info(f"Service: 批次預測完成，返回筆數: {len(result_df)}")
         return result_df
+    
+
+    def calculate_roi_batch(self, df_with_prob: pd.DataFrame) -> Dict[str, Any]:
+        """
+        基於預測結果計算 LTV 與 ROI (邏輯來自 customer_churn_bank_roi.ipynb)
+        """
+        df = df_with_prob.copy()
+        
+        # --- 1. 定義常數 (來自 Notebook) ---
+        NIM_RATE = 0.02
+        PRODUCT_PROFIT = 50.0
+        ACTIVE_CARD_PROFIT = 30.0
+        L_MAX = 10.0
+        USER_RETENTION_COST = 500.0
+        USER_SUCCESS_RATE = 0.20
+
+        # --- 2. LTV 計算 ---
+        # 確保機率欄位存在 (Route 層傳入時應為 'Exited_Probability' 或 'probability')
+        prob_col = 'Exited_Probability' if 'Exited_Probability' in df.columns else 'probability'
+        if prob_col not in df.columns:
+            return {} # 無法計算
+
+        df['Churn_Prob'] = df[prob_col]
+        
+        # 計算 ActiveCard_Flag
+        df['ActiveCard_Flag'] = ((df['HasCrCard'] == 1) & (df['IsActiveMember'] == 1)).astype(int)
+
+        # 計算年利潤
+        df['Annual_Profit'] = (
+            (df['Balance'] * NIM_RATE) +
+            (df['NumOfProducts'] * PRODUCT_PROFIT) +
+            (df['ActiveCard_Flag'] * ACTIVE_CARD_PROFIT)
+        )
+
+        # 計算預期壽命 (防止除以 0)
+        df['Expected_Lifespan'] = np.minimum(1 / np.maximum(df['Churn_Prob'], 1e-6), L_MAX)
+        
+        # 計算 LTV
+        df['LTV'] = df['Annual_Profit'] * df['Expected_Lifespan']
+
+        # --- 3. ROI 最佳化模型 (Profit Ranking) ---
+        # ENR = LTV * P(churn) * SR - RC
+        df['ENR'] = (df['LTV'] * df['Churn_Prob'] * USER_SUCCESS_RATE) - USER_RETENTION_COST
+        
+        # 篩選出值得挽留的客戶 (ENR > 0)
+        actionable = df[df['ENR'] > 0].copy()
+        actionable = actionable.sort_values(by='ENR', ascending=False)
+
+        # --- 4. 統計結果 ---
+        total_ltv_all = df['LTV'].sum()
+        actionable_count = len(actionable)
+        total_roi = actionable['ENR'].sum() if not actionable.empty else 0.0
+        total_cost = actionable_count * USER_RETENTION_COST
+        total_return = total_roi + total_cost # 預期總收益 (含成本回收?) 或是單純 ROI
+
+        # 準備前 5 名高價值客戶資料供前端顯示
+        top_targets = []
+        if not actionable.empty:
+            top_5 = actionable.head(5)
+            # 轉換為 dict list
+            top_targets = top_5[['id', 'LTV', 'ENR', 'Churn_Prob']].to_dict('records')
+            # 格式化數值
+            for item in top_targets:
+                item['LTV'] = round(item['LTV'], 2)
+                item['ENR'] = round(item['ENR'], 2)
+                item['Churn_Prob'] = round(item['Churn_Prob'], 4)
+
+        return {
+            'total_ltv': total_ltv_all,
+            'actionable_count': actionable_count,
+            'total_net_roi': total_roi,
+            'retention_cost': total_cost,
+            'expected_return': total_roi + total_cost, # 挽留後預期總收益
+            'top_targets': top_targets
+        }
+    

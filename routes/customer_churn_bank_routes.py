@@ -447,6 +447,17 @@ def predict_batch():
             fe_pipeline_func=FeatureEngineerForAPI.run_v2_preprocessing
         )
         
+        # --- 🌟 新增：計算 ROI ---
+        # 將 id 補回 result_df 以便 ROI 函式能回傳 ID
+        result_df['id'] = input_df_processed['id'] if 'id' in input_df_processed.columns else result_df.index
+        # 合併需要的計算欄位 (Balance, etc.) 到 result_df
+        cols_needed = ['Balance', 'NumOfProducts', 'HasCrCard', 'IsActiveMember']
+        for col in cols_needed:
+            result_df[col] = input_df_processed[col]
+
+        roi_stats = CUSTOMER_CHURN_BANK_SERVICE.calculate_roi_batch(result_df)
+        # -----------------------
+
         # 5. 準備 JSON 回應
         
         # 選擇要返回的原始特徵欄位
@@ -491,7 +502,8 @@ def predict_batch():
         return jsonify({
             "status": "success",
             "message": f"成功預測 {len(result_list)} 筆資料。",
-            "data": result_list
+            "data": result_list,
+            "roi": roi_stats  # <--- 將 ROI 統計數據傳回前端
         })
 
     except BadRequest as e:
