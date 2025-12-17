@@ -86,55 +86,51 @@ class FeatureEngineer:
         if 'Geography' in df_copy.columns and df_copy['Geography'].dtype.name != 'object':
              df_copy['Geography'] = df_copy['Geography'].astype(str)
         
-        # 年齡分箱
-        if 'Age' in df_copy.columns:
-            df_copy['Age_bin'] = pd.cut(df_copy['Age'], bins=[0, 25, 35, 45, 60, np.inf],
-                                        labels=['very_young', 'young', 'mid', 'mature', 'senior']).astype(str)
-        else:
-            df_copy['Age_bin'] = 'unknown'
-        
+  
         # 創建基礎特徵旗標 (保持 int 類型)
         # 確保涉及 Balance, IsActiveMember 的欄位存在
-        if 'NumOfProducts' in df_copy.columns:
-            df_copy['Is_two_products'] = (df_copy['NumOfProducts'] == 2)
-        else:
-            df_copy['Is_two_products'] = 0
+  
             
-        if 'Geography' in df_copy.columns and 'Gender' in df_copy.columns:
-            df_copy['Germany_Female'] = ((df_copy['Geography'] == 'Germany') & (df_copy['Gender'] == 1))
+        if 'Geography' in df_copy.columns:
+            df_copy['Geography_Germany'] = (df_copy['Geography'] == 'Germany')
         else:
-            df_copy['Germany_Female'] = 0
+            df_copy['Geography_Germany'] = 0
+        
+        if 'Geography' in df_copy.columns:
+            df_copy['Geography_France'] = (df_copy['Geography'] == 'France')
+        else:
+            df_copy['Geography_France'] = 0
 
-        if 'Geography' in df_copy.columns and 'IsActiveMember' in df_copy.columns:
-            df_copy['Germany_Inactive'] = ((df_copy['Geography'] == 'Germany') & (df_copy['IsActiveMember'] == 0))
+        if 'Geography' in df_copy.columns:
+            df_copy['Geography_Spain'] = (df_copy['Geography'] == 'Spain')
         else:
-            df_copy['Germany_Inactive'] = 0
+            df_copy['Geography_Spain'] = 0
+
             
         if 'Balance' in df_copy.columns:
-            df_copy['Has_Zero_Balance'] = (df_copy['Balance'] == 0)
+            df_copy['Has_Balance'] = (df_copy['Balance'] > 0)
         else:
-            df_copy['Has_Zero_Balance'] = 0
+            df_copy['Has_Balance'] = 0
 
-        # 對 Tenure 進行 Log 轉換 (確保 Tenure 存在)
-        if 'Tenure' in df_copy.columns:
+        if 'Balance' in df_copy.columns:
             # 確保 Tenure 非負
-            df_copy['Tenure_log'] = np.log1p(df_copy['Tenure'].clip(lower=0))
+            df_copy['Balance_log'] = np.log1p(df_copy['Balance'].clip(lower=0))
         else:
-            df_copy['Tenure_log'] = 0.0
+            df_copy['Balance_log'] = 0.0
 
         # 將布林類型轉換為 int
-        for col in ['Is_two_products', 'Germany_Female', 'Germany_Inactive', 'Has_Zero_Balance']:
+        for col in [ 'Has_Balance','Geography_Germany','Geography_France','Geography_Spain']:
             if col in df_copy.columns:
                  df_copy[col] = df_copy[col].astype(int)
 
-        int_cols = ['HasCrCard', 'IsActiveMember', 'NumOfProducts', 'Is_two_products', 'Has_Zero_Balance',
-                    'Germany_Female', 'Germany_Inactive', 'Gender'] # Gender 已經是 0/1
+        int_cols = ['HasCrCard', 'IsActiveMember', 'NumOfProducts', 'Has_Balance','Geography_Germany','Geography_France','Geography_Spain'
+                    , 'Gender'] # Gender 已經是 0/1
 
         df_copy = FeatureEngineer.cast_columns(df_copy, int_cols=int_cols, cat_cols=None) 
 
 
         # 移除不必要的原始欄位
-        cols_to_drop = ['id','CustomerId', 'Tenure','Surname', 'RowNumber' ] 
+        cols_to_drop = ['id','CustomerId','Surname', 'RowNumber' ,'Balance','Geography'] 
         if is_train and 'Exited' in df_copy.columns:
             cols_to_drop.append('Exited') 
 
@@ -148,37 +144,9 @@ class FeatureEngineer:
 
         return df_copy
 
-    @staticmethod
-    def run_v2_preprocessing(df: pd.DataFrame, is_train: bool) -> pd.DataFrame:
-        """
-        版本 2：V1 + 新旗標 is_mature_inactive_transit。
-        """
-        original_df = df.copy() 
-        
-        # 使用 V1 管道作為基礎
-        df_copy = FeatureEngineer.run_v1_preprocessing(original_df.copy(), is_train=is_train)
-
-        # 創建新的交互特徵 (確保 Balance, IsActiveMember, Age 存在)
-        if all(col in original_df.columns for col in ['Balance', 'IsActiveMember', 'Age']):
-            df_copy['is_mature_inactive_transit'] = (
-                                                    (original_df['Balance'] == 0) & 
-                                                    (original_df['IsActiveMember'] == 0) & 
-                                                    (original_df['Age'] > 40)).astype(int)
-        else:
-            df_copy['is_mature_inactive_transit'] = 0 # 缺失則設為 0
-        
-        # 確保新的旗標是 int
-        df_copy['is_mature_inactive_transit'] = df_copy['is_mature_inactive_transit'].astype(int)
-        
-        # 移除目標欄位 (如果它在 V1 處理後仍然存在)
-        if Config.TARGET_COL in df_copy.columns: 
-             df_copy.drop(columns=[Config.TARGET_COL], inplace=True, errors='ignore')
-        
-        return df_copy
     
     # 將所有 FE 管道的名稱對應到函數本身，用於保存 FE 邏輯
     FE_PIPELINES: Dict[str, Callable] = {
-        'run_v2_preprocessing': run_v2_preprocessing,
         'run_v1_preprocessing': run_v1_preprocessing,
     }
 
@@ -427,7 +395,7 @@ class ModelTrainer:
     def _generate_submission(self, filename: str, df_test_id: pd.Series, test_preds: np.ndarray) -> pd.DataFrame:
         """生成提交文件。"""
         # 簡化提交文件名
-        if 'submission_XGBoost_Final_Tuned_run_v2_preprocessing' in filename:
+        if 'submission_XGBoost_Final_Tuned_run_v1_preprocessing' in filename:
              filename = 'submission.csv' 
         
         submission_df = pd.DataFrame({'id': df_test_id, 'Exited': test_preds})
@@ -558,7 +526,7 @@ def main(train_file: str, test_file: str, tune: bool, n_trials: int):
     trainer = ModelTrainer()
     
     # 選擇最佳特徵工程管道
-    best_fe_pipeline = FeatureEngineer.run_v2_preprocessing
+    best_fe_pipeline = FeatureEngineer.run_v1_preprocessing
     FE_PIPELINE_NAME = best_fe_pipeline.__name__
     MODEL_NAME = 'XGBoost_Final_Tuned'
 
@@ -589,20 +557,23 @@ def main(train_file: str, test_file: str, tune: bool, n_trials: int):
         # 使用硬編碼的最佳參數
         logger.info("--- 使用硬編碼的最佳參數 ---")
         final_best_params = {
-            'n_estimators': 2692,
-            'learning_rate': 0.05786197845936901,
-            'max_depth': 3,
-            'reg_lambda': 1.0628185137032307e-08,
-            'reg_alpha': 3.255737505871401,
-            'subsample': 0.8409191153520594,
-            'colsample_bytree': 0.7834673458794292,
-            # 固定的參數
-            'random_state': Config.RANDOM_STATE,
-            'eval_metric': 'logloss',
-            'n_jobs': -1,
-            'early_stopping_rounds': 50,
-            'enable_categorical': False, 
-            'verbose': 0
+            "n_estimators": 2359,
+            "learning_rate": 0.03198713759881074,
+            "max_depth": 5,
+            "min_child_weight": 3,
+            "reg_lambda": 6.022982092917193e-08,
+            "reg_alpha": 0.003458899804040248,
+            "gamma": 0.0002651655957741115,
+            "subsample": 0.7754049349326726,
+            "colsample_bytree": 0.6581574816325996,
+            "colsample_bylevel": 0.8754537493172686,
+            "random_state": 42,
+            "verbose": 0,
+            "eval_metric": "auc",
+            "n_jobs": -1,
+            "verbosity": 0,
+            "enable_categorical": True,
+            "early_stopping_rounds": 50
         }
 
     # 實例化最終模型
