@@ -149,7 +149,44 @@
                 <div class="bank-card-hint">請在下方輸入您希望 AI 如何解釋預測結果。</div>
                 <div class="input-field-container">
                     <textarea class="bank-input-field" id="aiPrompt" rows="5" 
-                        placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">請作為一名資產管理顧問，根據客戶的流失機率和輸入特徵，提供一份專業的風險分析報告，包含：1. 風險評估等級。2. 主要風險點。3. 建議採取的客戶留存行動。請使用條列式呈現並且簡單扼要，約500個Tokens內。
+                        placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">請作為一名專業的資產管理顧問，根據客戶流失機率、客戶特徵與投資報酬（ROI）資訊，提供一份可直接用於決策的風險與留存分析報告。
+
+【已知資訊】
+- 流失機率（Churn Probability）
+- 客戶特徵（年齡、帳戶餘額、活躍度、產品使用狀況等）
+- 客戶終身價值（LTV）
+- 留存行銷成本（Retention Cost）
+- 預期挽留價值（Expected Retention Value）
+- ROI（Expected Retention Value − Retention Cost）
+
+【分析目的】
+從「風險控管」與「投資效益」角度，判斷是否值得投入客戶留存資源。
+
+【請依以下結構輸出（條列式、精簡清楚、總長度不超過 500 Tokens）】
+
+1️⃣ 風險評估等級  
+- 判定為「低 / 中 / 高」流失風險  
+- 以流失機率與關鍵特徵簡要說明原因  
+
+2️⃣ 主要風險點  
+- 列出 2–3 個最關鍵風險因子  
+- 說明其對流失或客戶價值的影響  
+
+3️⃣ ROI 與投資可行性  
+- 說明預期挽留價值與行銷成本  
+- 判斷 ROI 為正或負，並解釋商業意義  
+- 明確結論：是否建議投入留存資源  
+
+4️⃣ 建議行動  
+- 僅在 ROI 合理時提出具體留存行動  
+- 若 ROI 不佳，請明確說明不建議行銷並提出替代策略  
+
+【輸出風格】
+- 專業、理性、以投資報酬與決策效率為導向  
+- 避免模型與技術術語  
+- 內容務必精煉、可快速閱讀與執行
+請控制輸出在約 300–400 Tokens 之內。
+
                     </textarea>
                 </div>
                 
@@ -180,6 +217,68 @@
                     <div class="initial-message ">圖表 2: **單筆客戶局部 SHAP 影響力**</div>
                 </div>
             </div>
+        </div>
+
+        <hr class="bank-panel-divider">
+
+        <div class="bank-card-roi-panel-grid">
+
+            <div class="bank-card bank-roi-single">
+                <div class="bank-card-title">📈 單筆 ROI 投資回報分析</div>
+                <div class="bank-card-hint">
+                    根據單一客戶流失預測結果，估算行銷投資回報。
+                </div>
+
+                <div id="roiSingleContent" class="bank-card-roi-grid">
+                    <div class="feature-item">
+                        <p class="feature-item-label">流失機率</p>
+                        <span id="roiSingleProb" class="feature-item-value">-- %</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">預期挽留價值</p>
+                        <span id="roiSingleValue" class="feature-item-value">--</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">行銷成本</p>
+                        <span id="roiSingleCost" class="feature-item-value">--</span>
+                    </div>
+                    <div class="feature-item highlight-item"> <p class="feature-item-label">ROI</p>
+                        <span id="roiSingleResult" class="feature-item-value">--</span>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="bank-card bank-roi-batch">
+                <div class="bank-card-title">📊 批次 ROI 投資回報分析</div>
+                <div class="bank-card-hint">
+                    根據批次預測結果，估算整體行銷策略 ROI。
+                </div>
+
+                <div id="roiBatchContent" class="bank-card-roi-grid">
+                    <div class="feature-item">
+                        <p class="feature-item-label">客戶數量</p>
+                        <span id="roiBatchCount" class="feature-item-value">--</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">平均流失機率</p>
+                        <span id="roiBatchProb" class="feature-item-value">-- %</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">總預期挽留價值</p>
+                        <span id="roiBatchValue" class="feature-item-value">--</span>
+                    </div>
+                    <div class="feature-item">
+                        <p class="feature-item-label">總行銷成本</p>
+                        <span id="roiBatchCost" class="feature-item-value">--</span>
+                    </div>
+                    <div class="feature-item highlight-item">
+                        <p class="feature-item-label">總體 ROI</p>
+                        <span id="roiBatchResult" class="feature-item-value">--</span>
+                    </div>
+                </div>
+            </div>
+
         </div>
 
         <hr class="bank-panel-divider">
@@ -297,50 +396,8 @@
             </div>
         </div>
 
-        <hr class="bank-panel-divider">
+        
 
-        <div class="bank-card bank-roi-panel" id="roiPanel">
-            <div class="bank-card-title">
-                <svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 576 512"><path fill="currentColor" d="M312 24V34.5c6.4 1.2 12.6 2.7 18.2 4.2c12.8 3.4 20.4 16.6 17 29.4s-16.6 20.4-29.4 17c-10.9-2.9-21.1-4.7-30.2-5.6c-7.8-.8-16-1.5-24-1.5c-29 0-53.3 5.8-71.4 21.4c-17.7 15.3-26.2 36.3-26.2 60.5c0 14.3 3.3 27 9.8 38.2c6.4 11 15.5 20.4 27.6 28.5c23.5 15.9 59.8 28.6 111.7 41.5c31 7.7 65.5 17.6 93.3 33.7c31.6 18.3 53.6 47.2 53.6 86.6c0 40.5-13.6 72.8-37.5 96.6c-24.2 24.1-59.3 36.9-105.7 36.9c-14.4 0-26.6-.7-36.8-2.3l0 10.3c0 13.3-10.7 24-24 24s-24-10.7-24-24l0-9.8c-7.9 1.1-16.2 1.7-24.9 1.7c-47.5 0-89-13-118.6-43.5c-6.1-6.3-10.7-13.7-13.6-21.7c-2.8-7.9-2.2-16.5 1.8-24.2s11.3-13.1 19.3-15l.4-.1c12.8-3.1 25.8 4.7 28.9 17.5c6 24.5 32.7 43 78.1 43c10.3 0 20.8-1 30.5-3.3c35.6-8.3 50.8-27.4 50.8-51.5c0-12.2-3.1-22.9-8.9-32.3c-6-9.8-15.1-18.3-28.7-26.3c-23.9-14-58.5-25.2-111.2-38.3c-36.9-9.2-76.3-20.8-105-39.2C13.2 236.4 0 207 0 168.3C0 125.7 14.3 92.2 41.6 67.2c27-24.8 66.8-39.2 118.4-39.2c12.8 0 25.1 1.2 36.6 3.6V24c0-13.3 10.7-24 24-24s24 10.7 24 24z"/></svg>
-                ROI 投資回報分析
-            </div>
-            <div class="bank-card-hint">基於預測結果與利潤排名 (Profit Ranking) 策略的最佳化建議。</div>
-            
-            <div class="roi-stats-grid">
-                <div class="roi-stat-box">
-                    <div class="stat-label">總 LTV (潛在價值)</div>
-                    <div class="stat-value" id="roiTotalLtv">---</div>
-                </div>
-                <div class="roi-stat-box">
-                    <div class="stat-label">建議挽留人數</div>
-                    <div class="stat-value highlight" id="roiActionCount">---</div>
-                </div>
-                <div class="roi-stat-box">
-                    <div class="stat-label">預估總淨利 (ROI)</div>
-                    <div class="stat-value success" id="roiTotalNet">---</div>
-                </div>
-                <div class="roi-stat-box">
-                    <div class="stat-label">預估挽留成本</div>
-                    <div class="stat-value" id="roiCost">---</div>
-                </div>
-            </div>
-
-            <div class="roi-top-targets">
-                <div class="bank-card-hint" style="margin-top: 15px;">🚀 <strong>TOP 5 優先挽留目標 (最高 ENR)</strong></div>
-                <table class="fl-table" style="margin-top: 10px;">
-                    <thead>
-                        <tr>
-                            <th>客戶 ID</th>
-                            <th>流失機率</th>
-                            <th>客戶終身價值 (LTV)</th>
-                            <th>預期淨回報 (ENR)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="roiTopTargetsBody">
-                        </tbody>
-                </table>
-            </div>
-        </div>
 
     </div>
 

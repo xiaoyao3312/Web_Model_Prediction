@@ -173,6 +173,16 @@ body {
 
 }
 
+#customerChurnBank .bank-card-roi-panel-grid {
+    /* 佈局方式與結構 */
+    display:               grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows:    auto 1fr;
+    grid-template-areas:
+        "roi_single roi_batch";
+
+}
+
 /* 2.2 Grid 區域分配與尺寸 */
 #customerChurnBank .bank-input-feature-panel { grid-area: input_feature; }
 #customerChurnBank .bank-ai-prompt-panel     { grid-area: ai_prompt;     height: auto; }
@@ -181,6 +191,9 @@ body {
 #customerChurnBank .bank-batch-upload-panel  { grid-area: batch_upload; }
 #customerChurnBank .bank-batch-feature-panel { grid-area: batch_feature; height: auto; }
 #customerChurnBank .bank-batch-result-panel  { grid-area: batch_result;  height: auto; grid-row: 1 / 3; }
+
+#customerChurnBank .bank-roi-single-batch-panel  { grid-area: roi_single; }
+#customerChurnBank .bank-roi-batch-panel  { grid-area: roi_batch;  height: auto; grid-row: 1 / 3; }
 
 #customerChurnBank .bank-api-key-container,
 #customerChurnBank .bank-input-feature-container,
@@ -678,19 +691,31 @@ body {
     color: var(--success-color);
 }
 
-/* RWD: 在手機版讓 ROI 面板也適應 */
-@media (max-width: 1024px) {
-    .bank-roi-panel {
-        grid-column: span 1;
-    }
+.bank-card-roi-grid {
+    display:               grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    min-height:            150px;
 }
+
+/* 強調顯示的項目（例如 ROI 結果） */
+.feature-item.highlight-item {
+    border: 1px solid var(--success-color);
+    background-color: rgba(0, 128, 0, 0.05);
+}
+
+.feature-item.highlight-item .feature-item-value {
+    color: var(--success-color);
+    font-size: 1.2rem; /* 稍微大一點 */
+}
+
 
 
 
 /* 8.3 螢幕寬度 <= 1023px (Tablet/Mobile) - 堆疊佈局 */
 @media (max-width: 1023px) {
     #customerChurnBank .bank-card-panel-grid,
-    #customerChurnBank .bank-card-batch-panel-grid {
+    #customerChurnBank .bank-card-batch-panel-grid,
+    #customerChurnBank .bank-card-roi-panel-grid {
         display:        flex;
         flex-direction: column;
     }
@@ -717,4 +742,5 @@ body {
     #customerChurnBank .bank-margin-left-btn-640px {
         margin-left: 0px;
     }
+
 }

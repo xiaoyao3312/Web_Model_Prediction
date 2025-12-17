@@ -417,6 +417,8 @@ async function runPredictionAndExplain() {
         }
 
         renderChartsFromBase64(charts);
+        updateSingleROI(churnProb);
+
 
     } catch (error) {
         console.error("預測或解釋失敗:", error);
@@ -458,10 +460,10 @@ async function uploadAndPredictBatch() {
     uploadBatchBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 處理中...';
     uploadBatchBtn.disabled = true;
 
-    // 重置單筆分析區塊
-    document.getElementById('explanationOutput').innerHTML = '<div class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</div>';
-    document.getElementById('chartDisplay').innerHTML = '<div class="initial-message">批次預測結果圖表不在此區塊顯示。</div>';
-    document.getElementById('predictionOutput').innerHTML = '<div class="initial-message">批次預測正在執行中。單筆分析結果區域已重置...</div'; 
+    const batchRoiContent = document.getElementById('batchRoiContent');
+    if (batchRoiContent) {
+        batchRoiContent.innerHTML = '<div class="initial-message loading-message">計算總體效益中...</div>';
+    }
     
     if (filterStats) filterStats.innerHTML = '';
     if (batchResultBody) batchResultBody.innerHTML = '<tr><td colspan="3" class="initial-message"><i class="fas fa-spinner fa-spin"></i> 正在處理資料...</td></tr>';
@@ -516,6 +518,7 @@ async function uploadAndPredictBatch() {
                     }
                     // 渲染表格
                     filterAndRenderBatchResults();
+                    updateBatchROI(originalBatchData);
                     alert(`批次分析成功！共處理 ${originalBatchData.length} 筆客戶資料。`);
 
                     
@@ -928,6 +931,7 @@ async function runPredictionOnly() {
         }
 
         renderChartsFromBase64(charts);
+        updateSingleROI(churnProb);
 
     } catch (error) {
         if (errorMsg) {
@@ -1122,4 +1126,55 @@ function renderRoiPanel(roiData) {
 
     // 顯示面板
     roiPanel.style.display = 'block';
+}
+
+
+function updateSingleROI(churnProb) {
+    const customerValue = 20000;
+    const cost = 1000;
+
+    const expectedValue = churnProb * customerValue;
+    const roi = expectedValue - cost;
+
+    document.getElementById('roiSingleProb').textContent =
+        (churnProb * 100).toFixed(2) + ' %';
+
+    document.getElementById('roiSingleValue').textContent =
+        'NT$ ' + expectedValue.toFixed(0);
+
+    document.getElementById('roiSingleCost').textContent =
+        'NT$ ' + cost;
+
+    const roiEl = document.getElementById('roiSingleResult');
+    roiEl.textContent = 'NT$ ' + roi.toFixed(0);
+    roiEl.style.color = roi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
+}
+
+function updateBatchROI(batchResults) {
+    const count = batchResults.length;
+    if (!count) return;
+
+    const customerValue = 20000;
+    const cost = 800;
+
+    const avgProb =
+        batchResults.reduce((s, r) => s + r.probability, 0) / count;
+
+    const expectedValue = avgProb * customerValue * count;
+    const totalCost = cost * count;
+    const roi = expectedValue - totalCost;
+
+    document.getElementById('roiBatchCount').textContent = count;
+    document.getElementById('roiBatchProb').textContent =
+        (avgProb * 100).toFixed(2) + ' %';
+
+    document.getElementById('roiBatchValue').textContent =
+        'NT$ ' + expectedValue.toFixed(0);
+
+    document.getElementById('roiBatchCost').textContent =
+        'NT$ ' + totalCost.toFixed(0);
+
+    const roiEl = document.getElementById('roiBatchResult');
+    roiEl.textContent = 'NT$ ' + roi.toFixed(0);
+    roiEl.style.color = roi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
 }
