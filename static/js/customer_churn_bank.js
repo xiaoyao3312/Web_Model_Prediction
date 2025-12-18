@@ -384,20 +384,38 @@ async function runPredictionAndExplain() {
             throw new Error(predictResult.error || `預測 API 錯誤 (Status: ${predictResponse.status})`);
         }
 
+        // --- 修正點：確保從 predictResult 中取得對應變數 ---
         const churnProb = predictResult.prediction;
-        const readableFeatures = predictResult.readable_features;
+        const readableFeatures = predictResult.readable_features || {}; // 防止後端沒傳導致報錯
         const charts = predictResult.charts || [];
 
+        // --- 1. 計算 ROI 相關數據 ---
+        const customerValue = 20000; 
+        const retentionCost = 500;
+        const successRate = 0.20;
+        const expectedValue = churnProb * customerValue * successRate;
+        const netProfit = expectedValue - retentionCost;
+        const isSuggestAction = netProfit > 0;
+
+        // --- 2. 組裝給 AI 的 Full Prompt ---
+        // 現在 readableFeatures 已經被定義了
         const formattedFeatures = Object.keys(readableFeatures)
             .map(key => `- ${key}: ${readableFeatures[key]}`)
             .join('\n');
 
         const fullPrompt =
-            `模型預測的客戶流失機率為 ${(churnProb * 100).toFixed(2)}%。客戶輸入特徵如下：\n${formattedFeatures}\n\n` +
+            `模型預測的客戶流失機率為 ${(churnProb * 100).toFixed(2)}%。\n` +
+            `【財務 ROI 分析數據】(由系統計算得出，請務必參考)：\n` +
+            `- 預期挽留價值: NT$ ${Math.round(expectedValue).toLocaleString()}\n` +
+            `- 挽留行銷成本: NT$ ${retentionCost.toLocaleString()}\n` +
+            `- 淨投資回報 (ROI): NT$ ${Math.round(netProfit).toLocaleString()}\n` +
+            `- 系統建議行動: ${isSuggestAction ? '建議執行挽留' : '不建議挽留'}\n\n` +
+            `客戶輸入特徵如下：\n${formattedFeatures}\n\n` +
             `關鍵特徵影響因素分析:\n${predictResult.explanation_prompt}\n\n` +
-            `請根據以上資訊，並遵循以下使用者指令，提供結構化解釋和行動建議：\n\n【使用者指令】\n${aiPrompt}`;
+            `請根據以上資訊（特別是 ROI 數據與建議行動），提供結構化解釋。注意：你的分析結論必須與系統建議行動保持一致：\n\n【使用者指令】\n${aiPrompt}`;
 
-        const predictionHtml = `<div class="bank-card-hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(3)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
+        // --- 3. 更新畫面顯示 (Prediction Output) ---
+        const predictionHtml = `<div class="bank-card-hint"> 流失機率 : <span class="${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
         if (predictionOutput) {
             predictionOutput.innerHTML = predictionHtml;
         }
@@ -930,7 +948,7 @@ async function runPredictionOnly() {
 
         // ✨ 修改點 3: 將結果輸出到 predictionOutput
         if (predictionOutput) {
-            predictionOutput.innerHTML = `<div class="bank-card-hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(3)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <div>`;
+            predictionOutput.innerHTML = `<div class="bank-card-hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(2)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <div>`;
         }
 
         renderChartsFromBase64(charts);
@@ -1112,7 +1130,7 @@ function renderRoiPanel(roiData) {
     // 填入統計數據
     roiTotalLtv.textContent = fmtMoney(roiData.total_ltv);
     roiActionCount.textContent = fmtNum(roiData.actionable_count) + " 位";
-    roiTotalNet.textContent = fmtMoney(roiData.total_net_roi);
+    roiTotalNet.textContent = fmtMoney(roiData.total_net_enr);
     roiCost.textContent = fmtMoney(roiData.retention_cost);
 
     // 填入 Top 5 表格
@@ -1138,62 +1156,63 @@ function renderRoiPanel(roiData) {
 
 
 function updateSingleROI(churnProb) {
-    const customerValue = 20000;
-    const cost = 1000;
+    // 這裡的數值建議與後端 Python 常數保持一致
+    const customerValue = 20000; 
+    const retentionCost = 500;
+    const successRate = 0.20;
 
-    const expectedValue = churnProb * customerValue;
-    const roi = expectedValue - cost;
+    // ENR = (LTV * P * SR) - RC
+    const expectedValue = churnProb * customerValue * successRate;
+    const netProfit = expectedValue - retentionCost;
 
-    document.getElementById('roiSingleProb').textContent =
-        (churnProb * 100).toFixed(2) + ' %';
+    // 填入數據
+    document.getElementById('roiSingleProb').textContent = (churnProb * 100).toFixed(2) + ' %';
+    document.getElementById('roiSingleValue').textContent = 'NT$ ' + Math.round(expectedValue).toLocaleString();
+    document.getElementById('roiSingleCost').textContent = 'NT$ ' + retentionCost.toLocaleString();
 
-    document.getElementById('roiSingleValue').textContent =
-        'NT$ ' + expectedValue.toFixed(0);
-
-    document.getElementById('roiSingleCost').textContent =
-        'NT$ ' + cost;
-
+    // 淨收益 ROI
     const roiEl = document.getElementById('roiSingleResult');
-    roiEl.textContent = 'NT$ ' + roi.toFixed(0);
-    roiEl.style.color = roi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
+    roiEl.textContent = 'NT$ ' + Math.round(netProfit).toLocaleString();
+    roiEl.style.color = netProfit >= 0 ? 'var(--success-color)' : 'var(--error-color)';
+
+    // 是否建議挽留 (對應你 HTML 的最後一格)
+    const actionEl = document.getElementById('roiSingleAction');
+    if (netProfit > 0) {
+        actionEl.textContent = "建議執行";
+        actionEl.style.color = 'var(--success-color)';
+    } else {
+        actionEl.textContent = "不具效益";
+        actionEl.style.color = 'var(--error-color)';
+    }
 }
 
-// 修改 customer_churn_bank.js 中的 updateBatchROI 函數
 function updateBatchROI(roiData) {
-    if (!roiData || typeof roiData !== 'object') return;
+    if (!roiData) return;
 
-    // 1. 取得數據
-    // 總人數：從全域變數 globalBatchData (原始 CSV 筆數) 取得
-    const totalCount = globalBatchData.length;
-    // 建議挽留人數：從後端計算好的 roi 物件取得
-    const actionableCount = roiData.actionable_count || 0;
+    // 填入數據
+    document.getElementById('roiBatchTotalLtv').textContent = 'NT$ ' + Math.round(roiData.total_ltv).toLocaleString();
+    document.getElementById('roiBatchActionableCount').textContent = roiData.actionable_count + " 位";
+    document.getElementById('roiBatchCost').textContent = 'NT$ ' + Math.round(roiData.retention_cost).toLocaleString();
     
-    const totalCost = roiData.retention_cost || 0;
-    const netRoi = roiData.total_net_roi || 0;
-    const expectedReturn = roiData.expected_return || 0;
+    // 預期淨收益 (ENR)
+    const netEnrEl = document.getElementById('roiBatchNetEnr');
+    netEnrEl.textContent = 'NT$ ' + Math.round(roiData.total_net_enr).toLocaleString();
+    netEnrEl.style.color = roiData.total_net_enr >= 0 ? 'var(--success-color)' : 'var(--error-color)';
 
-    // 2. 更新畫面
-    // 填入總人數
-    document.getElementById('roiBatchTotalCount').textContent = totalCount;
-    // 填入建議挽留人數
-    document.getElementById('roiBatchActionableCount').textContent = actionableCount;
+    // 整體 ROI %
+    const roiPctEl = document.getElementById('roiBatchRoi');
+    roiPctEl.textContent = (roiData.total_roi * 100).toFixed(2) + ' %';
+    roiPctEl.style.color = roiData.total_roi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
 
-    // 計算平均流失機率
-    if (totalCount > 0) {
-        const avgProb = globalBatchData.reduce((s, r) => s + r.probability, 0) / totalCount;
-        document.getElementById('roiBatchProb').textContent = (avgProb * 100).toFixed(2) + ' %';
+    // 整體策略建議
+    const batchActionEl = document.getElementById('roiBatchAction');
+    if (roiData.actionable_count > 0) {
+        batchActionEl.textContent = "建議對目標名單執行";
+        batchActionEl.style.color = 'var(--success-color)';
+    } else {
+        batchActionEl.textContent = "目前無獲利目標";
+        batchActionEl.style.color = 'var(--error-color)';
     }
-
-    // 金額部分加上千分位
-    document.getElementById('roiBatchValue').textContent = 
-        'NT$ ' + Math.round(expectedReturn).toLocaleString();
-
-    document.getElementById('roiBatchCost').textContent = 
-        'NT$ ' + Math.round(totalCost).toLocaleString();
-
-    const roiEl = document.getElementById('roiBatchResult');
-    roiEl.textContent = 'NT$ ' + Math.round(netRoi).toLocaleString();
-    roiEl.style.color = netRoi >= 0 ? 'var(--success-color)' : 'var(--error-color)';
 }
 
 // 1. 全域變數定義

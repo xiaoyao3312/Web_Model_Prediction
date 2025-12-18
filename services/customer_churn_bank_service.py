@@ -307,29 +307,17 @@ class CustomerChurnBankService:
         # --- 4. 統計結果 ---
         total_ltv_all = df['LTV'].sum()
         actionable_count = len(actionable)
-        total_roi = actionable['ENR'].sum() if not actionable.empty else 0.0
+        total_enr = actionable['ENR'].sum() if not actionable.empty else 0.0
         total_cost = actionable_count * USER_RETENTION_COST
-        total_return = total_roi + total_cost # 預期總收益 (含成本回收?) 或是單純 ROI
-
-
-        # 準備前 5 名高價值客戶資料供前端顯示
-        top_targets = []
-        if not actionable.empty:
-            top_5 = actionable.head(5)
-            # 轉換為 dict list
-            top_targets = top_5[['id', 'LTV', 'ENR', 'Churn_Prob']].to_dict('records')
-            # 格式化數值
-            for item in top_targets:
-                item['LTV'] = round(item['LTV'], 2)
-                item['ENR'] = round(item['ENR'], 2)
-                item['Churn_Prob'] = round(item['Churn_Prob'], 4)
+        
+        # 計算整體 ROI
+        total_roi = (total_enr / total_cost) if total_cost > 0 else 0.0
 
         return {
             'total_ltv': total_ltv_all,
             'actionable_count': actionable_count,
-            'total_net_roi': total_roi,
+            'total_net_enr': total_enr,
             'retention_cost': total_cost,
-            'expected_return': total_roi + total_cost, # 挽留後預期總收益
-            'top_targets': top_targets
+            'total_roi': total_roi,
+            # 這裡不回傳 top_targets，讓前端純顯示統計
         }
-    

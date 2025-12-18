@@ -242,48 +242,54 @@
                         <p class="feature-item-label">行銷成本</p>
                         <span id="roiSingleCost" class="feature-item-value">--</span>
                     </div>
-                    <div class="feature-item highlight-item"> <p class="feature-item-label">ROI</p>
+                    <div class="feature-item highlight-item">
+                        <p class="feature-item-label">ROI (淨收益)</p>
                         <span id="roiSingleResult" class="feature-item-value">--</span>
                     </div>
+
+                    <div class="feature-item highlight-item">
+                        <p class="feature-item-label">是否建議挽留</p>
+                        <span id="roiSingleAction" class="feature-item-value">--</span>
+                    </div>
+
                 </div>
             </div>
 
 
             <div class="bank-card bank-roi-batch">
                 <div class="bank-card-title">📊 批次 ROI 投資回報分析</div>
-                <div class="bank-card-hint">
-                    根據批次預測結果，估算整體行銷策略 ROI。
-                </div>
+                <div class="bank-card-hint">根據批次預測結果，估算整體行銷策略 ROI。</div>
 
                 <div id="roiBatchContent" class="bank-card-roi-grid">
                     <div class="feature-item">
-                        <p class="feature-item-label">總客戶人數</p>
-                        <span id="roiBatchTotalCount" class="feature-item-value">--</span>
+                        <p class="feature-item-label">總客戶 LTV (現值)</p>
+                        <span id="roiBatchTotalLtv" class="feature-item-value">--</span>
                     </div>
-
                     <div class="feature-item">
                         <p class="feature-item-label">建議挽留人數</p>
                         <span id="roiBatchActionableCount" class="feature-item-value">--</span>
                     </div>
                     <div class="feature-item">
-                        <p class="feature-item-label">平均流失機率</p>
-                        <span id="roiBatchProb" class="feature-item-value">-- %</span>
-                    </div>
-                    <div class="feature-item">
-                        <p class="feature-item-label">總預期挽留價值</p>
-                        <span id="roiBatchValue" class="feature-item-value">--</span>
-                    </div>
-                    <div class="feature-item">
                         <p class="feature-item-label">總行銷成本</p>
                         <span id="roiBatchCost" class="feature-item-value">--</span>
                     </div>
-                    <div class="feature-item highlight-item">
-                        <p class="feature-item-label">總體 ROI</p>
-                        <span id="roiBatchResult" class="feature-item-value">--</span>
+                    <div class="feature-item">
+                        <p class="feature-item-label">預期淨收益 (ENR)</p>
+                        <span id="roiBatchNetEnr" class="feature-item-value">--</span>
                     </div>
+                    <div class="feature-item highlight-item">
+                        <p class="feature-item-label">整體投資報酬率 (ROI)</p>
+                        <span id="roiBatchRoi" class="feature-item-value">--</span>
+                    </div>
+
+                    <div class="feature-item highlight-item">
+                        <p class="feature-item-label">是否建議挽留</p>
+                        <span id="roiBatchAction" class="feature-item-value">--</span>
+                    </div>
+
                 </div>
             </div>
-
+            
         </div>
 
         <hr class="bank-panel-divider">
@@ -364,6 +370,7 @@
                 
                 <div class="bank-card-hint">請點擊批次分析結果列表中的任一列，以查看詳細特徵。</div>
                 <div id="featureGrid">
+
                     <div class="feature-item">
                         <p class="feature-item-label">客戶年齡</p>
                         <span class="feature-item-value" data-target="Age">---</span>
