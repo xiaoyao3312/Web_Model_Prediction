@@ -1248,7 +1248,7 @@ function updateSelectionDetails(customer) {
             span.textContent = 'NT$ ' + Number(val).toLocaleString();
         } else if (key === 'Gender') {
             span.textContent = (val == 1 || val === 'Female' || val === '女') ? '女' : '男';
-        } else if (key === 'HasCrbank-card' || key === 'IsActiveMember') {
+        } else if (key === 'HasCrCard' || key === 'IsActiveMember') {
             span.textContent = (val == 1) ? '是' : '否';
         } else if (key === 'Geography') {
             const geoMap = { 'France': '法國', 'Spain': '西班牙', 'Germany': '德國' };
