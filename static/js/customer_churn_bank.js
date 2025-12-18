@@ -6,10 +6,12 @@ const storage = sessionStorage;
 let isApiKeyActive = false;
 let geminiApiKey = null;
 
-// 自動判斷後端 API 網址
-const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
-    ? 'http://127.0.0.1:5000' 
-    : 'https://ai-churn-prediction-system.onrender.com';
+// 🟢 [修正]：使用相對路徑，讓瀏覽器自動偵測後端位置，解決跨域與網址錯誤問題
+const API_BASE_URL = ''; 
+
+// const API_BASE_URL = (window.location.hostname === '127.0.0.1' || window.location.hostname === 'localhost')
+//     ? 'http://127.0.0.1:5000' 
+//     : 'https://ai-churn-prediction-system.onrender.com';
 
 const API_PREDICT_ENDPOINT = '/api/customer_churn_bank/predict';
 const API_BATCH_ENDPOINT = '/api/customer_churn_bank/predict_batch';
