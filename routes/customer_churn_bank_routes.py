@@ -122,36 +122,53 @@ class FeatureEngineerForAPI:
         """執行第一階段的特徵工程：處理類別映射、新增基礎衍生特徵。"""
         df_copy = df.copy()
         
-        # 處理 Gender (將數值 0/1 轉換為 Male/Female)
-        if df_copy['Gender'].dtype in ['int64', 'float64']:
-            df_copy['Gender'] = df_copy['Gender'].replace({0: 'Male', 1: 'Female'})
-        df_copy['Gender'] = df_copy['Gender'].astype('category')
+        # --- 1. 統一 Gender 轉換邏輯 ---
+        def convert_gender(val):
+            s = str(val).strip().lower()
+            if s in ['1', '1.0', 'female']:
+                return 1
+            elif s in ['0', '0.0', 'male']:
+                return 0
+            return 0 # 預設為 Male
 
-        # 處理 Geography (將數值 0/1/2 轉換為 France/Spain/Germany)
-        geo_map = {0: 'France', 1: 'Spain', 2: 'Germany'}
+        df_copy['Gender'] = df_copy['Gender'].apply(convert_gender).astype(int)
+
+        # --- 2. 修正 Geography 處理 ---
         if df_copy['Geography'].dtype in ['int64', 'float64']:
+            geo_map = {0: 'France', 1: 'Spain', 2: 'Germany'}
             df_copy['Geography'] = df_copy['Geography'].replace(geo_map)
-        df_copy['Geography'] = df_copy['Geography'].astype('category')
+        else:
+            df_copy['Geography'] = df_copy['Geography'].astype(str).str.strip().str.capitalize()
 
-        # 衍生特徵：Age 分箱
+        # --- 3. 衍生特徵計算 (在轉成 Category 之前計算數值邏輯) ---
+        # Age 分箱
         df_copy['Age_bin'] = pd.cut(df_copy['Age'], bins=[0, 25, 35, 45, 60, np.inf],
                                      labels=['very_young', 'young', 'mid', 'mature', 'senior'],
-                                     right=False).astype('category')
-        # 衍生特徵：是否擁有 2 個產品
+                                     right=False)
+        
+        # 是否擁有 2 個產品
         df_copy['Is_two_products'] = (df_copy['NumOfProducts'] == 2).astype(int)
-        # 衍生特徵：德國女性、德國非活躍會員、餘額為零、Tenure 取對數
-        df_copy['Germany_Female'] = ((df_copy['Geography'] == 'Germany') & (df_copy['Gender'] == 'Female')).astype(int)
+        
+        # 德國女性 (這裡關鍵：Gender 已經是 1 代表女性)
+        df_copy['Germany_Female'] = ((df_copy['Geography'] == 'Germany') & (df_copy['Gender'] == 1)).astype(int)
+        
+        # 德國非活躍會員
         df_copy['Germany_Inactive'] = ((df_copy['Geography'] == 'Germany') & (df_copy['IsActiveMember'] == 0)).astype(int)
+        
+        # 餘額為零
         df_copy['Has_Zero_Balance'] = (df_copy['Balance'] == 0).astype(int)
+        
+        # Tenure 取對數
         df_copy['Tenure_log'] = np.log1p(df_copy['Tenure'])
 
-        # 轉換欄位類型
+        # --- 4. 統一轉換類型 (最後再轉 Category) ---
         int_cols = ['HasCrCard', 'IsActiveMember', 'NumOfProducts', 'Is_two_products',
                     'Has_Zero_Balance', 'Germany_Female', 'Germany_Inactive']
         cat_cols = ['Geography', 'Age_bin', 'Gender']
+        
         df_copy = FeatureEngineerForAPI.cast_columns(df_copy, int_cols=int_cols, cat_cols=cat_cols)
 
-        # 移除不必要的欄位
+        # --- 5. 移除不必要的欄位 ---
         cols_to_drop = ['CustomerId', 'Tenure', 'Surname', 'RowNumber']
         df_copy.drop(columns=[col for col in cols_to_drop if col in df_copy.columns], inplace=True, errors='ignore')
 
@@ -327,8 +344,8 @@ def predict_churn():
                 })
                 
             # 6. 處理可讀性輸出
-            geography_map = {0: "法國 (France)", 1: "西班牙 (Spain)", 2: "德國 (Germany)"}
-            gender_map = {0: "男性 (Male)", 1: "女性 (Female)"}
+            geography_map = {0: "France", 1: "Spain", 2: "Germany"}
+            gender_map = {0: "Male", 1: "Female"}
             readable_data = {
                 '信用分數': data.get('CreditScore', 0),
                 '年齡': data.get('Age', 0),

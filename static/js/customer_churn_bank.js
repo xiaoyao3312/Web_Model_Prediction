@@ -177,11 +177,11 @@ const VALIDATION_RULES = {
     'Balance': { min: 0, max: 300000, integer: false, msg: "帳戶餘額 必須介於 0 到 300000 之間，小數點是允許的。" },
     'EstimatedSalary': { min: 0, max: 200000, integer: false, msg: "估計薪資 必須介於 0 到 200000 之間，小數點是允許的。" },
     'CreditScore': { min: 350, max: 850, integer: true, msg: "信用分數 必須介於 350 到 850 之間的整數。" },
-    'Gender': { min: 0, max: 1, integer: true, msg: "生理性別 只能輸入 0 (男) 或 1 (女)。" },
+    'Gender': { min: 0, max: 1, integer: true, msg: "生理性別 只能輸入 Male 或 Female。" },
     'NumOfProducts': { min: 1, max: 4, integer: true, msg: "產品數量 只能輸入 1、2、3 或 4。" },
-    'Geography': { min: 0, max: 2, integer: true, msg: "國家 只能輸入 0 (法國), 1 (西班牙) 或 2 (德國)。" },
-    'HasCrCard': { min: 0, max: 1, integer: true, msg: "持有信用卡 只能輸入 0 (否) 或 1 (是)。" },
-    'IsActiveMember': { min: 0, max: 1, integer: true, msg: "活躍會員 只能輸入 0 (否) 或 1 (是)。" },
+    'Geography': { min: 0, max: 2, integer: true, msg: "國家 只能輸入 France, Spain 或 Germany" },
+    'HasCrCard': { min: 0, max: 1, integer: true, msg: "持有信用卡 只能輸入 否 或 是。" },
+    'IsActiveMember': { min: 0, max: 1, integer: true, msg: "活躍會員 只能輸入 否 或 是。" },
 };
 
 // 定義要顯示的特徵及其中文名稱和順序 (共 10 個核心特徵)
@@ -1082,10 +1082,11 @@ function displayFeatureDetails(data) {
                 displayValue = rawValue === 1 ? '是' : '否';
             } else if (key === 'Geography') {
                 // 處理國家文字顯示
-                const geoMap = { 0: '法國', 1: '西班牙', 2: '德國' };
+                const geoMap = { 0: 'France', 1: 'Spain', 2: 'Germany' };
                 displayValue = geoMap[rawValue] || rawValue;
             } else if (key === 'Gender') {
-                displayValue = rawValue === 1 ? '女' : '男';
+                const isFemale = (rawValue === 1 || rawValue === '1' || String(rawValue).toLowerCase() === 'female');
+                displayValue = isFemale ? 'Female' : 'Male';
             } else if (typeof rawValue === 'number') {
                 displayValue = Math.round(rawValue); 
             }
