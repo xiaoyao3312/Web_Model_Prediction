@@ -650,7 +650,7 @@ body {
 #customerChurnBank .feature-item-value {
     /* 樣式對應: text-lg text-blue-600 font-semibold block */
     font-size:     var(--h6-font-size);
-    color:         var(--fabColorControl-global-bg-color);
+    color:         var(--fabColorControl-global-font-color);
     margin-bottom: 10px;
     display:       block;
 }
@@ -681,20 +681,6 @@ body {
     font-size: 0.9rem;
     color: #94a3b8;
     margin-bottom: 8px;
-}
-
-.roi-stat-box .stat-value {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: var(--text-color);
-}
-
-.roi-stat-box .stat-value.highlight {
-    color: var(--primary-color);
-}
-
-.roi-stat-box .stat-value.success {
-    color: var(--success-color);
 }
 
 .bank-card-roi-grid {
