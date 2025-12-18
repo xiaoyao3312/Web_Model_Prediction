@@ -950,7 +950,7 @@ async function runPredictionOnly() {
 
         // ✨ 修改點 3: 將結果輸出到 predictionOutput
         if (predictionOutput) {
-            predictionOutput.innerHTML = `<div class="bank-card-hint"> 流失機率 : <span ${churnProb > 0.5 ? 'high-risk' : 'low-risk'}>${(churnProb * 100).toFixed(2)} % </span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) <div>`;
+            predictionOutput.innerHTML = `<div class="bank-card-hint"> 流失機率 : <span class="${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
         }
 
         renderChartsFromBase64(charts);

@@ -655,58 +655,11 @@ body {
     display:       block;
 }
 
-/* 🌟 ROI Panel Styles */
-.bank-roi-panel {
-    grid-column: span 3; /* 讓它橫跨整個寬度 */
-    margin-top: 20px;
-}
-
-.roi-stats-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 15px;
-    margin-top: 15px;
-    margin-bottom: 20px;
-}
-
-.roi-stat-box {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 8px;
-    padding: 15px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.roi-stat-box .stat-label {
-    font-size: 0.9rem;
-    color: #94a3b8;
-    margin-bottom: 8px;
-}
 
 .bank-card-roi-grid {
     display:               grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     min-height:            150px;
-}
-
-/* 強調顯示的項目（例如 ROI 結果） */
-.feature-item.highlight-item {
-    border: 1px solid var(--success-color);
-    background-color: rgba(0, 128, 0, 0.05);
-}
-
-.feature-item.highlight-item .feature-item-value {
-    color: var(--success-color);
-    font-size: 1.2rem; /* 稍微大一點 */
-}
-
-#batchResultBody tr:not(.bank-card-hint) {
-    cursor: pointer;
-    transition: background-color 0.2s;
-}
-
-#batchResultBody tr:not(.bank-card-hint):hover {
-    background-color: rgba(0, 0, 0, 0.05);
 }
 
 
