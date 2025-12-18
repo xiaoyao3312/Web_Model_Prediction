@@ -777,10 +777,14 @@ function filterAndRenderBatchResults() {
             document.querySelectorAll('#batchResultBody tr').forEach(rowEl => {
                 rowEl.classList.remove('selected-row');
             });
-
+            
             // B. 為當前點擊的行添加選中標記 (CSS 會改變樣式)
             this.classList.add('selected-row');
 
+            const fillBtn = document.getElementById('fillSelectedDataBtn');
+            if (fillBtn) {
+                fillBtn.disabled = false;
+            }
             // C. 解析並顯示詳情
             try {
                 // 從 dataset 中解析完整的行數據 (包含 10 個特徵)
@@ -1225,9 +1229,6 @@ function renderBatchTable(page) {
             // 更新 UI 狀態
             const fillBtn = document.getElementById('fillSelectedDataBtn');
             if (fillBtn) fillBtn.disabled = false;
-            
-            const hint = document.getElementById('selectionHint');
-            if (hint) hint.style.display = 'none';
 
             updateSelectionDetails(row);
         });
@@ -1241,41 +1242,47 @@ function renderBatchTable(page) {
 document.getElementById('fillSelectedDataBtn').addEventListener('click', function() {
     const featureValues = document.querySelectorAll('#featureGrid .feature-item-value');
     
+    // 1. 執行填值邏輯
     featureValues.forEach(span => {
         const featureName = span.getAttribute('data-target');
         let valueText = span.textContent.trim();
-        
-        if (valueText === '---') return;
+        if (valueText === '---' || !featureName) return;
 
-        // ✨ 關鍵修正：如果是數字欄位，先去掉千分位逗號
-        // 使用正則表達式把所有的逗號替換為空字串
         const cleanValue = valueText.replace(/,/g, '');
-        // 同時去掉逗號和所有非數字/小數點的字元
-        // const cleanValue = valueText.replace(/[^-0-9.]/g, '');
-
         const targetInput = document.querySelector(`#inputForm [data-feature-name="${featureName}"]`);
         
         if (targetInput) {
             if (targetInput.classList.contains('dropdown-input')) {
-                // 下拉選單通常顯示的是文字（如「法國」），所以用原始文字去匹配
                 targetInput.value = valueText;
-                
                 const container = targetInput.closest('.dropdown-container');
                 const dropdownItems = container.querySelectorAll('.dropdown-item');
-                
                 dropdownItems.forEach(item => {
                     if (item.textContent.trim() === valueText) {
                         targetInput.setAttribute('data-value', item.getAttribute('data-value'));
                     }
                 });
             } else {
-                // ✨ 一般輸入框填入去掉逗號後的純數字
                 targetInput.value = cleanValue;
             }
-            
             targetInput.dispatchEvent(new Event('input', { bubbles: true }));
         }
     });
 
-    console.log('選中客戶資料已成功填入表單（已處理格式化問題）');
+    // 2. 執行捲動邏輯 (移出 forEach 之外，只執行一次)
+    const targetSection = document.getElementById('inputForm'); 
+    if (targetSection) {
+        // 使用平滑滾動
+        const yOffset = -100; // 如果你有固定導覽列，可以調整這個位移量
+        const y = targetSection.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: 'smooth' });
+
+        // 閃爍提示效果
+        targetSection.style.transition = 'background-color 0.5s';
+        targetSection.style.backgroundColor = '#f0f9ff';
+        setTimeout(() => {
+            targetSection.style.backgroundColor = 'transparent';
+        }, 1000);
+    }
+
+    console.log('選中客戶資料已成功填入並捲動至表單');
 });
