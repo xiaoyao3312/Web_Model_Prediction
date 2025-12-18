@@ -1038,43 +1038,48 @@ function renderChartsFromBase64(charts) {
  */
 function displayFeatureDetails(data) {
     const grid = document.getElementById('featureGrid');
+    if (!grid) return;
 
-    grid.innerHTML = ''; // 清空舊內容
+    grid.innerHTML = ''; 
 
-    // 依序渲染 10 個特徵
     FEATURE_DISPLAY_ORDER.forEach(key => {
         const label = FEATURE_DISPLAY_MAP[key];
-        let value = data[key];
+        let rawValue = data ? data[key] : '---'; // 取得原始值
+        let displayValue = rawValue;
         
-        // 數值格式化處理 (邏輯不變)
-        if (key === 'Balance' || key === 'EstimatedSalary') {
-            // 格式化為貨幣，顯示兩位小數
-            value = new Intl.NumberFormat('en-US', {
-                minimumFractionDigits: 2,
-                maximumFractionDigits: 2
-            }).format(value);
-        } else if (key === 'HasCrCard' || key === 'IsActiveMember') {
-            // 0/1 轉換為 是/否
-            value = value === 1 ? '是' : '否';
-        } else if (typeof value === 'number') {
-             // 其他數字特徵（如年齡、信用分數）取整
-             value = Math.round(value); 
+        // 數值格式化處理
+        if (data) {
+            if (key === 'Balance' || key === 'EstimatedSalary') {
+                displayValue = new Intl.NumberFormat('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                }).format(rawValue);
+            } else if (key === 'HasCrCard' || key === 'IsActiveMember') {
+                displayValue = rawValue === 1 ? '是' : '否';
+            } else if (key === 'Geography') {
+                // 處理國家文字顯示
+                const geoMap = { 0: '法國', 1: '西班牙', 2: '德國' };
+                displayValue = geoMap[rawValue] || rawValue;
+            } else if (key === 'Gender') {
+                displayValue = rawValue === 1 ? '女' : '男';
+            } else if (typeof rawValue === 'number') {
+                displayValue = Math.round(rawValue); 
+            }
         }
 
-        // 建立特徵顯示元素
         const itemDiv = document.createElement('div');
-        // 應用新的 CSS 類別，移除所有 Tailwind 類別
         itemDiv.className = 'feature-item'; 
 
         const labelP = document.createElement('p');
-        // 應用新的 CSS 類別
         labelP.className = 'feature-item-label';
         labelP.textContent = label;
 
         const valueSpan = document.createElement('span');
-        // 應用新的 CSS 類別
         valueSpan.className = 'feature-item-value';
-        valueSpan.textContent = value;
+        valueSpan.textContent = displayValue;
+        
+        // ✨ 關鍵修正：必須加上這個屬性，按鈕才抓得到它是哪個欄位
+        valueSpan.setAttribute('data-target', key); 
         
         itemDiv.appendChild(labelP);
         itemDiv.appendChild(valueSpan);
@@ -1232,71 +1237,45 @@ function renderBatchTable(page) {
     renderPagination();
 }
 
-// 3. 更新細節面板 (將資料填入 --- 的地方)
-function updateSelectionDetails(customer) {
-    const detailPanel = document.getElementById('featureGrid'); // 確保 ID 與你 HTML 一致
-    if (!detailPanel) return;
 
-    const sourceSpans = detailPanel.querySelectorAll('[data-target]');
-    
-    sourceSpans.forEach(span => {
-        const key = span.getAttribute('data-target');
-        let val = customer[key.toLowerCase()] || customer[key] || '---';
-
-        // 格式化特定欄位
-        if (key === 'Balance' || key === 'EstimatedSalary') {
-            span.textContent = 'NT$ ' + Number(val).toLocaleString();
-        } else if (key === 'Gender') {
-            span.textContent = (val == 1 || val === 'Female' || val === '女') ? '女' : '男';
-        } else if (key === 'HasCrCard' || key === 'IsActiveMember') {
-            span.textContent = (val == 1) ? '是' : '否';
-        } else if (key === 'Geography') {
-            const geoMap = { 'France': '法國', 'Spain': '西班牙', 'Germany': '德國' };
-            span.textContent = geoMap[val] || val;
-        } else {
-            span.textContent = val;
-        }
-    });
-}
-
-// 4. 點擊按鈕：從預覽面板同步到輸入框 (單一出口，最穩健)
 document.getElementById('fillSelectedDataBtn').addEventListener('click', function() {
-    const sourceSpans = document.querySelectorAll('#featureGrid [data-target]');
+    const featureValues = document.querySelectorAll('#featureGrid .feature-item-value');
     
-    sourceSpans.forEach(span => {
-        const featureKey = span.getAttribute('data-target');
-        const displayValue = span.textContent.trim();
+    featureValues.forEach(span => {
+        const featureName = span.getAttribute('data-target');
+        let valueText = span.textContent.trim();
+        
+        if (valueText === '---') return;
 
-        if (displayValue === '---') return;
+        // ✨ 關鍵修正：如果是數字欄位，先去掉千分位逗號
+        // 使用正則表達式把所有的逗號替換為空字串
+        const cleanValue = valueText.replace(/,/g, '');
+        // 同時去掉逗號和所有非數字/小數點的字元
+        // const cleanValue = valueText.replace(/[^-0-9.]/g, '');
 
-        const targetInput = document.querySelector(`#inputForm [data-feature-name="${featureKey}"]`);
+        const targetInput = document.querySelector(`#inputForm [data-feature-name="${featureName}"]`);
         
         if (targetInput) {
             if (targetInput.classList.contains('dropdown-input')) {
-                targetInput.value = displayValue;
+                // 下拉選單通常顯示的是文字（如「法國」），所以用原始文字去匹配
+                targetInput.value = valueText;
                 
-                // 設定 data-value
-                let mappingVal = displayValue;
-                if (displayValue === '是' || displayValue === '女') mappingVal = '1';
-                if (displayValue === '否' || displayValue === '男') mappingVal = '0';
-                if (featureKey === 'Geography') {
-                    const geoMap = { '法國': '0', '西班牙': '1', '德國': '2' };
-                    mappingVal = geoMap[displayValue] || '0';
-                }
-                targetInput.setAttribute('data-value', mappingVal);
+                const container = targetInput.closest('.dropdown-container');
+                const dropdownItems = container.querySelectorAll('.dropdown-item');
+                
+                dropdownItems.forEach(item => {
+                    if (item.textContent.trim() === valueText) {
+                        targetInput.setAttribute('data-value', item.getAttribute('data-value'));
+                    }
+                });
             } else {
-                const numericValue = displayValue.replace(/[NT\$,\s]/g, '');
-                targetInput.value = numericValue;
+                // ✨ 一般輸入框填入去掉逗號後的純數字
+                targetInput.value = cleanValue;
             }
-            targetInput.dispatchEvent(new Event('input'));
-            targetInput.dispatchEvent(new Event('change'));
+            
+            targetInput.dispatchEvent(new Event('input', { bubbles: true }));
         }
     });
 
-    // 平滑捲動
-    const inputPanel = document.querySelector('.bank-input-feature-panel');
-    if (inputPanel) {
-        window.scrollTo({ top: inputPanel.offsetTop - 20, behavior: 'smooth' });
-    }
-    alert("客戶資料已成功同步至輸入表單！");
+    console.log('選中客戶資料已成功填入表單（已處理格式化問題）');
 });

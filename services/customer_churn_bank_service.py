@@ -311,6 +311,7 @@ class CustomerChurnBankService:
         total_cost = actionable_count * USER_RETENTION_COST
         total_return = total_roi + total_cost # 預期總收益 (含成本回收?) 或是單純 ROI
 
+
         # 準備前 5 名高價值客戶資料供前端顯示
         top_targets = []
         if not actionable.empty:

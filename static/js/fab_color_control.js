@@ -187,8 +187,8 @@ window.ThemeControl = (function() {
         finalY = y;
         if (y < EDGE_MARGIN) {
             finalY = EDGE_MARGIN;
-        } else if (y > windowH - fabColorControlH - EDGE_MARGIN) {
-            finalY = windowH - fabColorControlH - EDGE_MARGIN;
+        } else if (y > windowH - fabColorControlbH - EDGE_MARGIN) {
+            finalY = windowH - fabColorControlbH - EDGE_MARGIN;
         }
 
         fabColorControl.style.top = finalY + "px";
