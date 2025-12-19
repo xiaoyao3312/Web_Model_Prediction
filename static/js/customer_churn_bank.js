@@ -339,8 +339,9 @@ function initializeDropdowns() {
     });
 }
 
+
 // =========================================================================
-// 執行模型預測並取得 AI 解釋 (原功能)
+// 執行模型預測並取得 AI 解釋 (修正版：同步 ROI 數據)
 // =========================================================================
 async function runPredictionAndExplain() {
     if (!isApiKeyActive || !geminiApiKey) {
@@ -386,58 +387,80 @@ async function runPredictionAndExplain() {
             throw new Error(predictResult.error || `預測 API 錯誤 (Status: ${predictResponse.status})`);
         }
 
-        // --- 修正點：確保從 predictResult 中取得對應變數 ---
         const churnProb = predictResult.prediction;
-        const readableFeatures = predictResult.readable_features || {}; // 防止後端沒傳導致報錯
+        const readableFeatures = predictResult.readable_features || {}; 
         const charts = predictResult.charts || [];
 
-        // --- 1. 計算 ROI 相關數據 ---
-        const customerValue = 20000; 
-        const retentionCost = 500;
-        const successRate = 0.20;
-        const expectedValue = churnProb * customerValue * successRate;
-        const netProfit = expectedValue - retentionCost;
+        // ============================================================
+        // 【關鍵修正：同步動態 ROI 計算邏輯】
+        // ============================================================
+        // 1. 從輸入資料中抓取數值 (確保與 updateSingleROI 邏輯一致)
+        const balance = parseFloat(inputData.Balance) || 0;
+        const products = parseInt(inputData.NumOfProducts) || 1;
+        const isActive = parseInt(inputData.IsActiveMember) || 0;
+        const hasCard = parseInt(inputData.HasCrCard) || 0;
+
+        // 2. 定義利潤常數 (與前端面板完全對應)
+        const NIM_RATE = 0.02;           
+        const PRODUCT_PROFIT = 50.0;     
+        const ACTIVE_CARD_PROFIT = 30.0; 
+        const RETENTION_COST = 500;      
+        const SUCCESS_RATE = 0.20;       
+        const L_MAX = 10.0;              
+
+        // 3. 計算該客戶專屬的 LTV
+        const annualProfit = (balance * NIM_RATE) + (products * PRODUCT_PROFIT) + (isActive && hasCard ? ACTIVE_CARD_PROFIT : 0);
+        const lifespan = Math.min(1 / Math.max(churnProb, 0.1), L_MAX);
+        const LTV = annualProfit * lifespan;
+
+        // 4. 計算投資回報
+        const expectedRetentionValue = LTV * churnProb * SUCCESS_RATE;
+        const netProfit = expectedRetentionValue - RETENTION_COST;
+        const roiPercent = (netProfit / RETENTION_COST) * 100;
         const isSuggestAction = netProfit > 0;
 
-        // --- 2. 組裝給 AI 的 Full Prompt ---
-        // 現在 readableFeatures 已經被定義了
+        // ============================================================
+        // 【組裝 Prompt：將算好的精確數據餵給 AI】
+        // ============================================================
         const formattedFeatures = Object.keys(readableFeatures)
             .map(key => `- ${key}: ${readableFeatures[key]}`)
             .join('\n');
 
         const fullPrompt =
-            `模型預測的客戶流失機率為 ${(churnProb * 100).toFixed(2)}%。\n` +
-            `【財務 ROI 分析數據】(由系統計算得出，請務必參考)：\n` +
-            `- 預期挽留價值: NT$ ${Math.round(expectedValue).toLocaleString()}\n` +
-            `- 挽留行銷成本: NT$ ${retentionCost.toLocaleString()}\n` +
-            `- 淨投資回報 (ROI): NT$ ${Math.round(netProfit).toLocaleString()}\n` +
+            `模型預測的客戶流失風險為 ${(churnProb * 100).toFixed(2)}%。\n` +
+            `【財務 ROI 分析數據】(由系統計算得出，請務必以此數據撰寫報告)：\n` +
+            `- 流失機率: ${(churnProb * 100).toFixed(2)}%\n` +
+            `- 預期挽留價值: NT$ ${Math.round(expectedRetentionValue).toLocaleString()}\n` +
+            `- 挽留行銷成本: NT$ ${RETENTION_COST.toLocaleString()}\n` +
+            `- 預期淨收益 (ENR): NT$ ${Math.round(netProfit).toLocaleString()}\n` +
+            `- 投資報酬率 (ROI): ${roiPercent.toFixed(2)}%\n` +
             `- 系統建議行動: ${isSuggestAction ? '建議執行挽留' : '不建議挽留'}\n\n` +
             `客戶輸入特徵如下：\n${formattedFeatures}\n\n` +
             `關鍵特徵影響因素分析:\n${predictResult.explanation_prompt}\n\n` +
-            `請根據以上資訊（特別是 ROI 數據與建議行動），提供結構化解釋。注意：你的分析結論必須與系統建議行動保持一致：\n\n【使用者指令】\n${aiPrompt}`;
+            `請根據以上資訊（特別是 ROI 數據與建議行動），提供結構化解釋。注意：你的分析結論與數據必須與系統給出的數據保持百分之百一致：\n\n【使用者指令】\n${aiPrompt}`;
 
         // --- 3. 更新畫面顯示 (Prediction Output) ---
-        const predictionHtml = `<div class="bank-card-hint"> 流失機率 : <span class="${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
+        const predictionHtml = `<div class="bank-card-hint"> 流失風險 : <span class="${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
         if (predictionOutput) {
             predictionOutput.innerHTML = predictionHtml;
         }
         
         if (explanationOutput) explanationOutput.innerHTML = `<div class="initial-message loading-message">正在生成 AI 解釋與行動建議...</div>`;
-        
 
+        // 呼叫 Gemini API
         const explanation = await getAiExplanation(fullPrompt, geminiApiKey);
 
         const loadingMessageElement = explanationOutput.querySelector('.loading-message');
         if (loadingMessageElement) {
-            loadingMessageElement.outerHTML = explanation;
-        } else {
-            // 如果找不到 loading 訊息，就直接附加 (保險機制)
-            if (explanationOutput) explanationOutput.innerHTML += explanation;
+            loadingMessageElement.outerHTML = `<div class="ai-response-content">${explanation}</div>`;
+        } else if (explanationOutput) {
+            explanationOutput.innerHTML = explanation;
         }
 
-        renderChartsFromBase64(charts);
+        // 同步更新右側單筆 ROI 面板
         updateSingleROI(churnProb);
-
+        // 渲染圖表
+        renderChartsFromBase64(charts);
 
     } catch (error) {
         console.error("預測或解釋失敗:", error);
@@ -445,17 +468,12 @@ async function runPredictionAndExplain() {
             errorMsg.innerHTML = `錯誤: <br>${error.message.replace(/\n/g, '<br>')}`;
             errorMsg.classList.remove('bank-hidden');
         }
-
         if (explanationOutput) explanationOutput.innerHTML = '<div class="initial-message">預測或 AI 解釋失敗。</div>';
-        if (chartDisplay) chartDisplay.innerHTML = '<div class="initial-message">圖表生成失敗。</div>';
-        if (predictionOutput) predictionOutput.innerHTML = '<div class="initial-message">預測或 AI 解釋失敗。</div>';
-        
     } finally {
         if (AiAnalyzeButton) AiAnalyzeButton.disabled = !isApiKeyActive;
         if (predictOnlyBtn) predictOnlyBtn.disabled = false;
     }
 }
-
 
 // =========================================================================
 // 批次 CSV 預測
@@ -710,7 +728,7 @@ function filterAndRenderBatchResults() {
     }
     const thresholdDecimal = thresholdPercent / 100;
 
-    // 2. 進行篩選：找出 機率 >= 門檻值 **AND** ID 包含搜索詞 的客戶
+    // 2. 進行篩選：找出 風險 >= 門檻值 **AND** ID 包含搜索詞 的客戶
     let filteredData = originalBatchData.filter(row => {
         const probFilter = row.probability >= thresholdDecimal;
         // 確保 row.id 存在且可轉換為字串
@@ -748,7 +766,7 @@ function filterAndRenderBatchResults() {
             <strong>總筆數</strong>: ${originalBatchData.length} &nbsp; | &nbsp; 
             <strong>篩選後符合條件客戶數</strong>: 
             <span class="high-risk">${currentFilteredData.length}</span> 位
-            (機率 > ${thresholdPercent}%)
+            (風險 > ${thresholdPercent}%)
         `;
         statsDiv.style.fontWeight = '500';
     }
@@ -764,7 +782,7 @@ function filterAndRenderBatchResults() {
     // 8. 渲染數據
     if (finalData.length === 0) {
         let message = totalCount === 0 
-            ? '沒有符合篩選條件 (機率/ID) 的客戶' 
+            ? '沒有符合篩選條件 (風險/ID) 的客戶' 
             : '找不到當前頁面數據 (可能是分頁錯誤)';
         
         if (tbody) tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">${message}</td></tr>`;
@@ -774,7 +792,7 @@ function filterAndRenderBatchResults() {
     // 8. 渲染數據
     if (finalData.length === 0) {
         let message = totalCount === 0 
-            ? '沒有符合篩選條件 (機率/ID) 的客戶' 
+            ? '沒有符合篩選條件 (風險/ID) 的客戶' 
             : '找不到當前頁面數據 (可能是分頁錯誤)';
         
         if (tbody) tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; padding:20px; color: #94a3b8;">${message}</td></tr>`;
@@ -828,7 +846,7 @@ function filterAndRenderBatchResults() {
         const riskClass = isHighRisk ? 'high-risk' : 'low-risk';
         const riskLabel = isHighRisk ? '高風險' : '低風險';
 
-        // 渲染 3 個欄位 (ID, 流失機率, 風險等級)
+        // 渲染 3 個欄位 (ID, 流失風險, 風險等級)
         tr.innerHTML = `
             <td style="padding: 12px; text-align: center;">${row.id ?? 'N/A'}</td> 
             <td style="padding: 12px; font-weight: bold; text-align: center;">
@@ -897,7 +915,7 @@ function resetBatchView() {
     const idSearchInput = document.getElementById('idSearchInput');
     const thresholdInput = document.getElementById('thresholdInput');
     if (idSearchInput) idSearchInput.value = '';
-    // 將流失機率門檻值重設為 50
+    // 將流失風險門檻值重設為 50
     if (thresholdInput) thresholdInput.value = '50';
     
     // --- 關鍵新增：清空特徵詳情面板 START ---
@@ -950,7 +968,7 @@ async function runPredictionOnly() {
 
         // ✨ 修改點 3: 將結果輸出到 predictionOutput
         if (predictionOutput) {
-            predictionOutput.innerHTML = `<div class="bank-card-hint"> 流失機率 : <span class="${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
+            predictionOutput.innerHTML = `<div class="bank-card-hint"> 流失風險 : <span class="${churnProb > 0.5 ? 'high-risk' : 'low-risk'}">${(churnProb * 100).toFixed(2)}%</span> ( ${churnProb > 0.5 ? '⚠️ 高風險流失客戶' : '✅ 低風險流失客戶'} ) </div>`;
         }
 
         renderChartsFromBase64(charts);
@@ -1158,27 +1176,61 @@ function renderRoiPanel(roiData) {
 }
 
 
+/**
+ * 更新單筆 ROI 分析面板
+ * 修正點：加入 LTV 動態計算邏輯，並區分 ENR 與 ROI%
+ */
+/**
+ * 更新單筆 ROI 分析面板
+ * 自動從前端表單 (inputForm) 抓取最新數值進行動態 LTV 計算
+ */
 function updateSingleROI(churnProb) {
-    // 這裡的數值建議與後端 Python 常數保持一致
-    const customerValue = 20000; 
-    const retentionCost = 500;
-    const successRate = 0.20;
+    // 1. 強制從前端表單抓取最新資料
+    const age = parseFloat(document.getElementById('input_Age')?.value) || 0;
+    const balance = parseFloat(document.getElementById('input_Balance')?.value) || 0;
+    const products = parseInt(document.getElementById('input_NumOfProducts')?.value) || 1;
+    const isActive = parseInt(document.getElementById('input_IsActiveMember')?.getAttribute('data-value')) || 0;
+    const hasCard = parseInt(document.getElementById('input_HasCrCard')?.getAttribute('data-value')) || 0;
 
-    // ENR = (LTV * P * SR) - RC
-    const expectedValue = churnProb * customerValue * successRate;
-    const netProfit = expectedValue - retentionCost;
+    // 2. 定義利潤常數 (與後端邏輯同步)
+    const NIM_RATE = 0.02;           // 餘額年利率收益
+    const PRODUCT_PROFIT = 50.0;     // 每個產品固定收益
+    const ACTIVE_CARD_PROFIT = 30.0; // 活躍持卡收益
+    const RETENTION_COST = 500;      // 挽留成本
+    const SUCCESS_RATE = 0.20;       // 挽留成功率
+    const L_MAX = 10.0;              // 最大預期壽命
 
-    // 填入數據
+    // 3. 計算該客戶專屬的 LTV
+    // 年利潤 = (餘額 * 2%) + (產品數 * 50) + (活躍持卡 * 30)
+    const annualProfit = (balance * NIM_RATE) + (products * PRODUCT_PROFIT) + (isActive && hasCard ? ACTIVE_CARD_PROFIT : 0);
+    
+    // 預期壽命 L = 1 / 流失風險 (限制在 1-10 年之間)
+    const lifespan = Math.min(1 / Math.max(churnProb, 0.1), L_MAX);
+    const LTV = annualProfit * lifespan;
+
+    // 4. 計算投資報酬
+    const expectedRetentionValue = LTV * churnProb * SUCCESS_RATE;
+    const netProfit = expectedRetentionValue - RETENTION_COST;
+    const roiPercent = (netProfit / RETENTION_COST) * 100;
+
+    // 5. 更新 UI 介面
     document.getElementById('roiSingleProb').textContent = (churnProb * 100).toFixed(2) + ' %';
-    document.getElementById('roiSingleValue').textContent = 'NT$ ' + Math.round(expectedValue).toLocaleString();
-    document.getElementById('roiSingleCost').textContent = 'NT$ ' + retentionCost.toLocaleString();
+    document.getElementById('roiSingleValue').textContent = 'NT$ ' + Math.round(expectedRetentionValue).toLocaleString();
+    document.getElementById('roiSingleCost').textContent = 'NT$ ' + RETENTION_COST.toLocaleString();
+    
+    // 更新 ENR (淨收益)
+    const enrEl = document.getElementById('roiSingleResult');
+    enrEl.textContent = 'NT$ ' + Math.round(netProfit).toLocaleString();
+    enrEl.style.color = netProfit >= 0 ? 'var(--success-color)' : 'var(--error-color)';
 
-    // 淨收益 ROI
-    const roiEl = document.getElementById('roiSingleResult');
-    roiEl.textContent = 'NT$ ' + Math.round(netProfit).toLocaleString();
-    roiEl.style.color = netProfit >= 0 ? 'var(--success-color)' : 'var(--error-color)';
+    // 更新 ROI %
+    const roiEl = document.getElementById('roiSingleRoi');
+    if (roiEl) {
+        roiEl.textContent = roiPercent.toFixed(2) + ' %';
+        roiEl.style.color = roiPercent >= 0 ? 'var(--success-color)' : 'var(--error-color)';
+    }
 
-    // 是否建議挽留 (對應你 HTML 的最後一格)
+    // 更新決策建議
     const actionEl = document.getElementById('roiSingleAction');
     if (netProfit > 0) {
         actionEl.textContent = "建議執行";
@@ -1300,7 +1352,7 @@ document.getElementById('fillSelectedDataBtn').addEventListener('click', functio
 
         // 閃爍提示效果
         targetSection.style.transition = 'background-color 0.5s';
-        targetSection.style.backgroundColor = '#f0f9ff';
+        targetSection.style.backgroundColor = 'var(--customerChurnBank-global-bg-color)';
         setTimeout(() => {
             targetSection.style.backgroundColor = 'transparent';
         }, 1000);

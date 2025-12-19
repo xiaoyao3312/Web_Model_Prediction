@@ -340,7 +340,7 @@ def predict_churn():
                 final_charts.append({
                     "type": "image/png", 
                     "base64_data": chart_base64_local,
-                    "title": f"單筆客戶 SHAP 特徵分析 流失機率 : {proba_churn:.4f}"
+                    "title": f"單筆客戶 SHAP 特徵分析 流失風險 : {proba_churn:.4f}"
                 })
                 
             # 6. 處理可讀性輸出
@@ -359,7 +359,7 @@ def predict_churn():
                 '性別': gender_map.get(data.get('Gender', -1), '未知')
             }
             
-            explanation_prompt_snippet = f"模型預測的客戶流失機率為 {proba_churn:.4f}。\n關鍵特徵資訊:\n{feature_importance_text}"
+            explanation_prompt_snippet = f"模型預測的客戶流失風險為 {proba_churn:.4f}。\n關鍵特徵資訊:\n{feature_importance_text}"
             
             # 7. 返回結果
             return jsonify({

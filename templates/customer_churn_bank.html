@@ -150,10 +150,10 @@
                 <div class="input-field-container">
                     <textarea class="bank-input-field" id="aiPrompt" rows="5" 
                         placeholder="例如: 假設我是客戶經理，請用專業且具體的語言，結合輸入參數解釋流失風險，並提供三個具體的維護行動建議。">
-請作為一名專業的資產管理顧問，根據客戶流失機率、客戶特徵與投資報酬（ROI）資訊，提供一份可直接用於決策的風險與留存分析報告。
+請作為一名專業的資產管理顧問，根據客戶流失風險、客戶特徵與投資報酬（ROI）資訊，提供一份可直接用於決策的風險與留存分析報告。
 
 【已知資訊】
-- 流失機率（Churn Probability）
+- 流失風險（Churn Probability）
 - 客戶特徵（年齡、帳戶餘額、活躍度、產品使用狀況等）
 - 客戶終身價值（LTV）
 - 留存行銷成本（Retention Cost）
@@ -167,7 +167,7 @@
 
 1️⃣ 風險評估等級  
 - 判定為「低 / 中 / 高」流失風險  
-- 以流失機率與關鍵特徵簡要說明原因  
+- 以流失風險與關鍵特徵簡要說明原因  
 
 2️⃣ 主要風險點  
 - 列出 2–3 個最關鍵風險因子  
@@ -206,7 +206,7 @@
 
                 <div class="bank-card-title"><svg class="bank-card-title-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640"><path fill="currentColor" d="M420.9 448C428.2 425.7 442.8 405.5 459.3 388.1C492 353.7 512 307.2 512 256C512 150 426 64 320 64C214 64 128 150 128 256C128 307.2 148 353.7 180.7 388.1C197.2 405.5 211.9 425.7 219.1 448L420.8 448zM416 496L224 496L224 512C224 556.2 259.8 592 304 592L336 592C380.2 592 416 556.2 416 512L416 496zM312 176C272.2 176 240 208.2 240 248C240 261.3 229.3 272 216 272C202.7 272 192 261.3 192 248C192 181.7 245.7 128 312 128C325.3 128 336 138.7 336 152C336 165.3 325.3 176 312 176z"/></svg>模型預測結果</div>
                 <div class="output-content" id="predictionOutput">
-                    <div class="initial-message" id="initialMessage">執行模型預測按鈕，即刻為您判斷客戶流失機率。</div>
+                    <div class="initial-message" id="initialMessage">執行模型預測按鈕，即刻為您判斷客戶流失風險。</div>
                 </div>
 
                 <hr class="bank-panel-divider">
@@ -231,7 +231,7 @@
 
                 <div id="roiSingleContent" class="bank-card-roi-grid">
                     <div class="feature-item">
-                        <p class="feature-item-label">流失機率</p>
+                        <p class="feature-item-label">流失風險</p>
                         <span id="roiSingleProb" class="feature-item-value">-- %</span>
                     </div>
                     <div class="feature-item">
@@ -243,10 +243,13 @@
                         <span id="roiSingleCost" class="feature-item-value">--</span>
                     </div>
                     <div class="feature-item highlight-item">
-                        <p class="feature-item-label">ROI (淨收益)</p>
+                        <p class="feature-item-label">預期淨收益 (ENR)</p>
                         <span id="roiSingleResult" class="feature-item-value">--</span>
                     </div>
-
+                    <div class="feature-item highlight-item">
+                        <p class="feature-item-label">投資報酬率 (ROI)</p>
+                        <span id="roiSingleRoi" class="feature-item-value">--</span>
+                    </div>
                     <div class="feature-item highlight-item">
                         <p class="feature-item-label">是否建議挽留</p>
                         <span id="roiSingleAction" class="feature-item-value">--</span>
@@ -316,7 +319,7 @@
                     </div>
                     
                     <div class="bank-filter-controls-container">
-                        <label for="thresholdInput">篩選流失機率大於：</label>
+                        <label for="thresholdInput">篩選流失風險大於：</label>
                         <input class="bank-input-field" type="number" id="thresholdInput" value="50" min="0" max="100" style="width: 70px;">
                         <label >%</label>
                         <button id="filterDataBtn" class="bank-analyze-btn bank-margin-left-btn">
@@ -342,7 +345,7 @@
                                     ID<label class="sort-icon"></label>
                                 </th>
                                 <th data-sort-key="probability" data-sort-order="none">
-                                    流失機率<label class="sort-icon"></label>
+                                    流失風險<label class="sort-icon"></label>
                                 </th>
                                 <th data-sort-key="risk" data-sort-order="none">
                                     風險等級<label class="sort-icon"></label>

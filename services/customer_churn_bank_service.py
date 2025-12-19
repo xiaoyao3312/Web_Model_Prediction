@@ -168,7 +168,7 @@ class CustomerChurnBankService:
             fe_pipeline_func: 從 routes 層傳遞下來的 FE 函數 (e.g., run_v2_preprocessing)。
             
         Returns:
-            包含預測結果、機率和局部 SHAP 數據的字典。
+            包含預測結果、風險和局部 SHAP 數據的字典。
         """
         
         if self.model is None:
@@ -187,7 +187,7 @@ class CustomerChurnBankService:
         X_predict = self._align_features(processed_df)
 
         # 3. 進行預測
-        # predict_proba 返回的是 (n_samples, n_classes)，取第二個類別 (流失) 的機率
+        # predict_proba 返回的是 (n_samples, n_classes)，取第二個類別 (流失) 的風險
         probability_class_1 = self.model.predict_proba(X_predict)[:, 1][0]
         prediction = int(probability_class_1 >= 0.5)
 
@@ -198,8 +198,8 @@ class CustomerChurnBankService:
         feature_importance_text = "主要影響因素 (局部 SHAP 值):\n"
         if local_shap_values:
             for feature, shap_value in local_shap_values.items():
-                # SHAP 值 > 0 表示推高流失機率
-                sign = "推高流失機率 (+)" if shap_value > 0 else "推低流失機率 (-)"
+                # SHAP 值 > 0 表示推高流失風險
+                sign = "推高流失風險 (+)" if shap_value > 0 else "推低流失風險 (-)"
                 feature_importance_text += f"- {feature}: {sign} (影響值: {abs(shap_value):.4f})\n"
         else:
             feature_importance_text = "SHAP 分析工具未成功初始化或計算失敗。"
@@ -273,7 +273,7 @@ class CustomerChurnBankService:
         USER_SUCCESS_RATE = 0.20
 
         # --- 2. LTV 計算 ---
-        # 確保機率欄位存在 (Route 層傳入時應為 'Exited_Probability' 或 'probability')
+        # 確保風險欄位存在 (Route 層傳入時應為 'Exited_Probability' 或 'probability')
         prob_col = 'Exited_Probability' if 'Exited_Probability' in df.columns else 'probability'
         if prob_col not in df.columns:
             return {} # 無法計算

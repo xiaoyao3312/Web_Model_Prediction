@@ -635,7 +635,8 @@ body {
 
 /* 2. 單個特徵項目 (.feature-item) */
 #customerChurnBank .feature-item:hover {
-    box-shadow:       var(--customerChurnBank-box-shadow-hover)
+    box-shadow:       var(--customerChurnBank-box-shadow-hover);
+    transform:        translateY(-1px);
 }
 
 /* 特徵數值 */
