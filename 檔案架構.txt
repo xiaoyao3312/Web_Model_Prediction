@@ -1,9 +1,9 @@
-Web_Learning_Model 專案目錄結構說明
+Web_Model_Prediction 專案目錄結構說明
 
 在PowerShell輸入
 tree "C:\Users\user\Desktop\Web_Model_Prediction" /F
 
-C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
+C:\Users\user\Desktop\Web_Model_Prediction
 │  app.py
 │  config.py
 │  css_notes.py
