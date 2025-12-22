@@ -21,6 +21,7 @@ C:\USERS\USER\DESKTOP\WEB_MODEL_PREDICTION
 ├─projects
 │  └─customer_churn_bank_code
 │      │  customer_churn_bank_model.joblib
+│      │  customer_churn_bank_roi.ipynb
 │      │  customer_churn_bank_shap.py
 │      │  customer_churn_bank_test.csv
 │      │  customer_churn_bank_train.csv

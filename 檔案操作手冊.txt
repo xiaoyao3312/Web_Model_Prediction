@@ -1,18 +1,18 @@
 Web_Learning_Model 專案操作手冊
 
 更新專案到 GitHub
-git status                                # 1️⃣ 檢查狀態
-git add .                                 # 2️⃣ 暫存修改
-git commit -m ""                          # 3️⃣ Commit
-git push                                  # 4️⃣ 推送到 GitHub
+git status               # 1️⃣ 檢查狀態
+git add .                # 2️⃣ 暫存修改
+git commit -m ""         # 3️⃣ Commit
+git push                 # 4️⃣ 推送到 GitHub
 
 背景顏色調整小工具(color_bg_control) 使用方法（任意頁面）
-引入 CSS：
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/color_bg_control.css') }}">
-引入 JS（放在 <body> 結尾）：
-    <script src="{{ url_for('static', filename='js/color_bg_control.js') }}"></script>
+引入 CSS：                   <link rel="stylesheet" href="{{ url_for('static', filename='css/color_bg_control.css') }}">
+引入 JS（放在 <body> 結尾）： <script src="{{ url_for('static', filename='js/color_bg_control.js') }}"></script>
 
 專案操作手冊 - Web 模型預測平台
+建議使用 ANACONDA 下載 VSCODE 的 PYTHON 3.11.14 環境 開啟後再依照以下操作流程
+
 放在桌面的路徑
 cd C:\Users\user\Desktop\Web_Model_Prediction
 
@@ -33,7 +33,3 @@ python customer_churn_bank_shap.py
 
 這是 customer_churn_bank 所需要的重要欄位
 id CreditScore	Geography	Gender	Age	Tenure	Balance	NumOfProducts	HasCrCard	IsActiveMember	EstimatedSalary
-
-幫我更改 給我完整程式碼
-
-幫我處理UNICODE字元的問題
