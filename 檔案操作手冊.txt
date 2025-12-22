@@ -1,4 +1,4 @@
-Web_Learning_Model 專案操作手冊
+WEB_MODEL_PREDICTION 專案操作手冊
 
 更新專案到 GitHub
 git status               # 1️⃣ 檢查狀態
